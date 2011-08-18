@@ -72,6 +72,7 @@ class PageSection_SetupPortal extends Extension_PageSection {
 
 		if(null != ($instance = DAO_CommunityTool::get($tool_id))) {
 			$tool = DevblocksPlatform::getExtension($instance->extension_id, true);
+			
 			$tpl->assign('tool', $tool);
 			$tpl->assign('instance', $instance);
 		}

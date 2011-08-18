@@ -2,3 +2,6 @@
 .htaccess
 .settings/*
 .externalToolBuilders
+plugins/*
+spike-tests/*
+patches/*

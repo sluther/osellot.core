@@ -490,15 +490,15 @@ class Model_CommunitySession {
 			return;
 		}
 		
-		$this->setProperty('sc_login', $contact);
-		
+		$this->setProperty('hb_login', $contact);
 		DAO_ContactPerson::update($contact->id, array(
 			DAO_ContactPerson::LAST_LOGIN => time(),
 		));
+		
 	}
 	
 	function logout() {
-		$this->setProperty('sc_login', null);
+		$this->setProperty('hb_login', null);
 	}
 	
 	function setProperties($properties) {

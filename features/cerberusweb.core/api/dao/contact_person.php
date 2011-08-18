@@ -22,6 +22,15 @@ class DAO_ContactPerson extends DevblocksORMHelper {
 	const LAST_LOGIN = 'last_login';
 	const AUTH_SALT = 'auth_salt';
 	const AUTH_PASSWORD = 'auth_password';
+	const PHONE = 'phone';
+	const NAME = 'name';
+	const ADDRESS_LINE1 = 'address_line1';
+	const ADDRESS_LINE2 = 'address_line2';
+	const ADDRESS_CITY = 'address_city';
+	const ADDRESS_PROVINCE = 'address_province';
+	const ADDRESS_POSTAL = 'address_postal';
+	const POSITION = 'position';
+	const IS_AGENCY = 'is_agency';
 
 	static function create($fields) {
 		$db = DevblocksPlatform::getDatabaseService();
@@ -59,7 +68,8 @@ class DAO_ContactPerson extends DevblocksORMHelper {
 		list($where_sql, $sort_sql, $limit_sql) = self::_getWhereSQL($where, $sortBy, $sortAsc, $limit);
 		
 		// SQL
-		$sql = "SELECT id, email_id, created, last_login, auth_salt, auth_password ".
+		$sql = "SELECT id, email_id, created, last_login, auth_salt, auth_password, ".
+				"phone, name, address_line1, address_line2, address_city, address_province, address_postal, position, is_agency ".
 			"FROM contact_person ".
 			$where_sql.
 			$sort_sql.
@@ -86,6 +96,23 @@ class DAO_ContactPerson extends DevblocksORMHelper {
 	}
 	
 	/**
+	* @param integer $id
+	* @return Model_ContactPerson	 */
+	static function getAgency($id) {
+		$objects = self::getWhere(sprintf("%s = %d AND %s = %d",
+			self::ID,
+			$id,
+			self::IS_AGENCY,
+			1
+		));
+		
+		if(isset($objects[$id]))
+			return $objects[$id];
+		
+		return null;
+	}
+	
+	/**
 	 * @param resource $rs
 	 * @return Model_ContactPerson[]
 	 */
@@ -100,6 +127,14 @@ class DAO_ContactPerson extends DevblocksORMHelper {
 			$object->last_login = intval($row['last_login']);
 			$object->auth_salt = $row['auth_salt'];
 			$object->auth_password = $row['auth_password'];
+			$object->phone = $row['phone'];
+			$object->name = $row['name'];
+			$object->address_line1 = $row['address_line1'];
+			$object->address_line2 = $row['address_line2'];
+			$object->address_city = $row['address_city'];
+			$object->address_province = $row['address_province'];
+			$object->address_postal = $row['address_postal'];
+			$object->position = $row['position'];
 			$objects[$object->id] = $object;
 		}
 		
@@ -173,6 +208,15 @@ class DAO_ContactPerson extends DevblocksORMHelper {
 			"contact_person.last_login as %s, ".
 			"contact_person.auth_salt as %s, ".
 			"contact_person.auth_password as %s, ".
+			"contact_person.phone as %s, ".
+			"contact_person.name as %s, ".
+			"contact_person.address_line1 as %s, ".
+			"contact_person.address_line2 as %s, ".
+			"contact_person.address_city as %s, ".
+			"contact_person.address_province as %s, ".
+			"contact_person.address_postal as %s, ".
+			"contact_person.position as %s, ".
+			"contact_person.is_agency as %s, ".
 			"address.first_name as %s, ".
 			"address.last_name as %s, ".
 			"address.email as %s ",
@@ -182,6 +226,15 @@ class DAO_ContactPerson extends DevblocksORMHelper {
 				SearchFields_ContactPerson::LAST_LOGIN,
 				SearchFields_ContactPerson::AUTH_SALT,
 				SearchFields_ContactPerson::AUTH_PASSWORD,
+				SearchFields_ContactPerson::PHONE,
+				SearchFields_ContactPerson::NAME,
+				SearchFields_ContactPerson::ADDRESS_LINE1,
+				SearchFields_ContactPerson::ADDRESS_LINE2,
+				SearchFields_ContactPerson::ADDRESS_CITY,
+				SearchFields_ContactPerson::ADDRESS_PROVINCE,
+				SearchFields_ContactPerson::ADDRESS_POSTAL,
+				SearchFields_ContactPerson::POSITION,
+				SearchFields_ContactPerson::IS_AGENCY,
 				SearchFields_ContactPerson::ADDRESS_FIRST_NAME,
 				SearchFields_ContactPerson::ADDRESS_LAST_NAME,
 				SearchFields_ContactPerson::ADDRESS_EMAIL
@@ -260,8 +313,7 @@ class DAO_ContactPerson extends DevblocksORMHelper {
 			$join_sql.
 			$where_sql.
 			($has_multiple_values ? 'GROUP BY contact_person.id ' : '').
-			$sort_sql;
-			
+			$sort_sql;	
 		if($limit > 0) {
     		$rs = $db->SelectLimit($sql,$limit,$page*$limit) or die(__CLASS__ . '('.__LINE__.')'. ':' . $db->ErrorMsg()); /* @var $rs ADORecordSet */
 		} else {
@@ -329,6 +381,15 @@ class SearchFields_ContactPerson implements IDevblocksSearchFields {
 	const LAST_LOGIN = 'c_last_login';
 	const AUTH_SALT = 'c_auth_salt';
 	const AUTH_PASSWORD = 'c_auth_password';
+	const PHONE = 'c_phone';
+	const NAME = 'c_name';
+	const ADDRESS_LINE1 = 'c_address_line1';
+	const ADDRESS_LINE2 = 'c_address_line2';
+	const ADDRESS_CITY = 'c_address_city';
+	const ADDRESS_PROVINCE = 'c_address_province';
+	const ADDRESS_POSTAL = 'c_address_postal';
+	const POSITION = 'c_position';
+	const IS_AGENCY = 'c_is_agency';
 	
 	const ADDRESS_EMAIL = 'a_email';
 	const ADDRESS_FIRST_NAME = 'a_first_name';
@@ -352,6 +413,15 @@ class SearchFields_ContactPerson implements IDevblocksSearchFields {
 			self::LAST_LOGIN => new DevblocksSearchField(self::LAST_LOGIN, 'contact_person', 'last_login', $translate->_('dao.contact_person.last_login')),
 			self::AUTH_SALT => new DevblocksSearchField(self::AUTH_SALT, 'contact_person', 'auth_salt', $translate->_('dao.contact_person.auth_salt')),
 			self::AUTH_PASSWORD => new DevblocksSearchField(self::AUTH_PASSWORD, 'contact_person', 'auth_password', $translate->_('dao.contact_person.auth_password')),
+			self::PHONE => new DevblocksSearchField(self::PHONE, 'contact_person', 'phone', $translate->_('dao.contact_person.phone')),
+			self::NAME => new DevblocksSearchField(self::NAME, 'contact_person', 'name', $translate->_('dao.contact_person.name')),
+			self::ADDRESS_LINE1 => new DevblocksSearchField(self::ADDRESS_LINE1, 'contact_person', 'address_line1', $translate->_('dao.contact_person.address_line1')),
+			self::ADDRESS_LINE2 => new DevblocksSearchField(self::ADDRESS_LINE2, 'contact_person', 'address_line2', $translate->_('dao.contact_person.address_line2')),
+			self::ADDRESS_CITY => new DevblocksSearchField(self::ADDRESS_CITY, 'contact_person', 'address_city', $translate->_('dao.contact_person.address_city')),
+			self::ADDRESS_PROVINCE => new DevblocksSearchField(self::ADDRESS_PROVINCE, 'contact_person', 'address_province', $translate->_('dao.contact_person.address_province')),
+			self::ADDRESS_POSTAL => new DevblocksSearchField(self::ADDRESS_POSTAL, 'contact_person', 'address_postal', $translate->_('dao.contact_person.address_postal')),
+			self::POSITION => new DevblocksSearchField(self::POSITION, 'contact_person', 'position', $translate->_('dao.contact_person.position')),
+			self::IS_AGENCY => new DevblocksSearchField(self::IS_AGENCY, 'contact_person', 'is_agency', $translate->_('dao.contact_person.is_agency')),
 			
 			self::ADDRESS_EMAIL => new DevblocksSearchField(self::ADDRESS_EMAIL, 'address', 'email', $translate->_('common.email')),
 			self::ADDRESS_FIRST_NAME => new DevblocksSearchField(self::ADDRESS_FIRST_NAME, 'address', 'first_name', $translate->_('address.first_name')),
@@ -386,6 +456,15 @@ class Model_ContactPerson {
 	public $last_login;
 	public $auth_salt;
 	public $auth_password;
+	public $phone;
+	public $name;
+	public $address_line1;
+	public $address_line2;
+	public $address_city;
+	public $address_province;
+	public $address_postal;
+	public $position;
+	public $is_agency;
 	
 	private $_addresses = array();
 	
@@ -428,8 +507,16 @@ class View_ContactPerson extends C4_AbstractView implements IAbstractView_Subtot
 			SearchFields_ContactPerson::ADDRESS_FIRST_NAME,
 			SearchFields_ContactPerson::ADDRESS_LAST_NAME,
 			SearchFields_ContactPerson::ADDRESS_EMAIL,
+			SearchFields_ContactPerson::PHONE,
+			SearchFields_ContactPerson::NAME,
 			SearchFields_ContactPerson::CREATED,
 			SearchFields_ContactPerson::LAST_LOGIN,
+			SearchFields_ContactPerson::ADDRESS_LINE1,
+			SearchFields_ContactPerson::ADDRESS_LINE2,
+			SearchFields_ContactPerson::ADDRESS_CITY,
+			SearchFields_ContactPerson::ADDRESS_PROVINCE,
+			SearchFields_ContactPerson::ADDRESS_POSTAL,
+			SearchFields_ContactPerson::POSITION,
 		);
 		// Filter fields
 		$this->addColumnsHidden(array(
@@ -564,11 +651,20 @@ class View_ContactPerson extends C4_AbstractView implements IAbstractView_Subtot
 			case SearchFields_ContactPerson::ADDRESS_LAST_NAME:
 			case SearchFields_ContactPerson::AUTH_SALT:
 			case SearchFields_ContactPerson::AUTH_PASSWORD:
+			case SearchFields_ContactPerson::NAME:
+			case SearchFields_ContactPerson::ADDRESS_LINE1:
+			case SearchFields_ContactPerson::ADDRESS_LINE2:
+			case SearchFields_ContactPerson::ADDRESS_CITY:
+			case SearchFields_ContactPerson::ADDRESS_PROVINCE:
+			case SearchFields_ContactPerson::ADDRESS_POSTAL:				
 				$tpl->display('devblocks:cerberusweb.core::internal/views/criteria/__string.tpl');
 				break;
 			case SearchFields_ContactPerson::ID:
+			case SearchFields_ContactPerson::PHONE:
+			case SearchFields_ContactPerson::POSITION:
 				$tpl->display('devblocks:cerberusweb.core::internal/views/criteria/__number.tpl');
 				break;
+			case SearchFields_ContactPerson::IS_AGENCY:
 			case 'placeholder_bool':
 				$tpl->display('devblocks:cerberusweb.core::internal/views/criteria/__bool.tpl');
 				break;
@@ -625,6 +721,13 @@ class View_ContactPerson extends C4_AbstractView implements IAbstractView_Subtot
 			case SearchFields_ContactPerson::ADDRESS_LAST_NAME:
 			case SearchFields_ContactPerson::AUTH_SALT:
 			case SearchFields_ContactPerson::AUTH_PASSWORD:
+			case SearchFields_ContactPerson::NAME:
+			case SearchFields_ContactPerson::ADDRESS_LINE1:
+			case SearchFields_ContactPerson::ADDRESS_LINE2:
+			case SearchFields_ContactPerson::ADDRESS_CITY:
+			case SearchFields_ContactPerson::ADDRESS_PROVINCE:
+			case SearchFields_ContactPerson::ADDRESS_POSTAL:
+			case SearchFields_ContactPerson::POSITION:
 				// force wildcards if none used on a LIKE
 				if(($oper == DevblocksSearchCriteria::OPER_LIKE || $oper == DevblocksSearchCriteria::OPER_NOT_LIKE)
 				&& false === (strpos($value,'*'))) {
@@ -633,6 +736,7 @@ class View_ContactPerson extends C4_AbstractView implements IAbstractView_Subtot
 				$criteria = new DevblocksSearchCriteria($field, $oper, $value);
 				break;
 			case SearchFields_ContactPerson::ID:
+			case SearchFields_ContactPerson::PHONE:
 				$criteria = new DevblocksSearchCriteria($field,$oper,$value);
 				break;
 				
@@ -647,6 +751,7 @@ class View_ContactPerson extends C4_AbstractView implements IAbstractView_Subtot
 				break;
 				
 			case 'placeholder_bool':
+			case SearchFields_ContactPerson::IS_AGENCY:
 				@$bool = DevblocksPlatform::importGPC($_REQUEST['bool'],'integer',1);
 				$criteria = new DevblocksSearchCriteria($field,$oper,$bool);
 				break;

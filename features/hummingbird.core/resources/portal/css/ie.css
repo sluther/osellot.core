@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+/*
+	thegoodfoodbox.ca v1	
+	Internet Explorer Fixes
+*/
+
+nav ul { display: inline-block; }
+nav ul { display: inline; }
+nav ul li { display: inline-block; }
+nav ul li { display: inline; }
+nav ul a { display: inline-block; }
+nav { text-align: center; padding-bottom: 0; }
+nav li { text-align: left; }
+nav a strong { font-weight: bold; }
+
+body { background-position: 0 -1px; }
+
+address { font-style: normal; }
+
+#content { overflow: hidden; zoom: 1; }
+
+h2 a.rss { margin-bottom: 2px; }

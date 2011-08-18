@@ -1,0 +1,1 @@
+<a href="{devblocks_url}c=config&a=gateway{/devblocks_url}">Gateway Configuration</a>

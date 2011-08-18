@@ -48,6 +48,7 @@
 		<td width="99%" valign="top">
 			<div id="content">
 			{if !empty($module)}
+			{var_dump($module)}
 			{$module->writeResponse($module_response)}
 			{/if}
 			</div>

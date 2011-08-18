@@ -1,0 +1,19 @@
+@charset "UTF-8";
+
+/*
+	Print Stylesheet
+*/
+
+a:link:after,
+a:visited:after,
+a:hover:after,
+a:active:after {
+content: " <" attr(href) "> ";
+color: grey;
+font-style: italic;
+font-weight: normal;
+}
+a[href^="/"]:after { content: " <http://janpingel.com"attr(href)"> "; }
+#work a:link:after, #work a[href^="/"]:after { content: ""; }
+#main-nav, #email { display: none; } 
+#main-content, footer, div.logotype { margin: 0; }

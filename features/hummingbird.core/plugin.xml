@@ -1,0 +1,665 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.devblocks.com/schema/plugin.xsd">
+	<id>hummingbird.core</id>
+	<name>[Hummingbird] Core</name>
+	<description>This plugin adds a billing system to your Cerberus Installation</description>
+	<author>WebGroup Media, LLC.</author>
+	<revision>0</revision>
+	<link>http://wiki.hummingbird.com/wiki/1.x</link>
+	
+    <!-- Plugin Dependencies -->
+	
+	<!--<dependencies>
+		<require plugin_id="cerberusweb.core" version="5.5.0" />
+	</dependencies>-->
+    
+    <patches>
+		<patch version="1.0.0-beta" revision="1" file="patches/1.0.0-beta.php" />
+	</patches>
+    
+   	<!-- Controller Routing -->
+
+	<uri_routing>
+		<uri name="billing" controller="core.controller.page" />
+	</uri_routing>
+	
+    
+    <!-- Exported Classes -->
+    
+    <class_loader>
+	    <file path="api/dao/agency.php">
+			<class name="DAO_Agency" />
+			<class name="Model_Agency" />
+			<class name="SearchFields_Agency" />
+			<class name="View_Agency" />
+		</file>
+        <file path="api/dao/customer_profile.php">
+    	    <class name="DAO_CustomerProfile" />
+    	    <class name="Model_CustomerProfile" />
+    	    <class name="SearchFields_CustomerProfile" />
+    	    <class name="View_CustomerProfile" />
+        </file>
+        <file path="api/dao/gateway.php">
+    	    <class name="DAO_Gateway" />
+    	    <class name="Model_Gateway" />
+    	    <class name="SearchFields_Gateway" />
+    	    <class name="View_Gateway" />
+    	    <class name="DAO_GatewaySetting" />
+        </file>
+        <file path="api/dao/invoice.php">
+    	    <class name="DAO_Invoice" />
+    	    <class name="Model_Invoice" />
+    	    <class name="SearchFields_Invoice" />
+    	    <class name="View_Invoice" />
+       	    <class name="DAO_InvoiceItem" />
+    	    <class name="Model_InvoiceItem" />
+    	    <class name="DAO_InvoiceAttribute" />
+    	    <class name="Model_InvoiceAttribute" />
+        </file>
+        <file path="api/dao/payment_profile.php">
+    	    <class name="DAO_PaymentProfile" />
+    	    <class name="Model_PaymentProfile" />
+    	    <class name="SearchFields_PaymentProfile" />
+    	    <class name="View_PaymentProfile" />
+        </file>
+        <file path="api/dao/payment_profile_extra.php">
+    	    <class name="DAO_PaymentProfileExtra" />
+    	    <class name="Model_PaymentProfileExtra" />
+    	    <class name="SearchFields_PaymentProfileExtra" />
+    	    <class name="View_PaymentProfileExtra" />
+        </file>
+        <file path="api/dao/product.php">
+    	    <class name="DAO_Product" />
+    	    <class name="Model_Product" />
+    	    <class name="SearchFields_Product" />
+    	    <class name="View_Product" />
+        </file>
+        <file path="api/dao/transaction.php">
+    	    <class name="DAO_Transaction" />
+    	    <class name="Model_Transaction" />
+    	    <class name="SearchFields_Transaction" />
+    	    <class name="View_Transaction" />
+        </file>
+        <file path="api/App.php">
+    	    <class name="Extension_Portal_Hummingbird_Controller" />
+    	    <class name="Extension_Agency_Portal_Hummingbird_Controller" />
+    	    <class name="Extension_Tab_Billing_Hummingbird" />
+    	    <class name="Extension_Gateway_Hummingbird" />
+        </file>
+        <file path="api/uri/portal/ajax.php">
+			<class name="UmHbAjaxController" />
+		</file>
+    </class_loader>
+    
+    
+	<!-- Templates -->
+	
+	<templates set="hummingbird.portal">
+		<template path="portal/index.tpl" />
+		<template path="portal/header.tpl" />
+		<template path="portal/footer.tpl" />
+		<template path="portal/account/edit.tpl" />
+		<template path="portal/account/history.tpl" />
+		<template path="portal/account/index.tpl" />
+		<template path="portal/agency/index.tpl" />
+		<template path="portal/agency/login/login.tpl" />
+		<template path="portal/agency/order/checkout.tpl" />
+		<template path="portal/agency/order/confirm.tpl" />
+		<template path="portal/agency/order/index.tpl" />
+		<template path="portal/login/confirmed.tpl" />
+		<template path="portal/login/login.tpl" />
+		<template path="portal/login/register.tpl" />
+		<template path="portal/order/checkout.tpl" />
+		<template path="portal/order/confirm.tpl" />
+		<template path="portal/order/index.tpl" />
+	</templates>
+ 
+	<extensions>
+		<!-- Controllers -->
+		<!--
+		<extension point="devblocks.controller">
+			<id>core.controller.page</id>
+			<name>Hummingbird Controller</name>
+			<class>
+				<file>api/plugin.classes.php</file>
+				<name>ChPageController</name>
+			</class>
+			<params>
+			</params>
+		</extension>
+		
+		<extension point="devblocks.controller">
+			<id>portal.controller.hummingbird</id>
+			<name>Hummingbird Portal Controller</name>
+			<class>
+				<file>api/uri/portal.php</file>
+				<name>Portal_HummingbirdController</name>
+			</class>
+			<params>
+				<param key="uri" value="hummingbird_portal" />
+			</params>
+		</extension>
+		-->
+		<extension point="portal.controller.hummingbird">
+			<id>login.portal.controller.hummingbird</id>
+			<name>Login</name>
+			<class>
+				<file>api/uri/portal/login.php</file>
+				<name>LoginPortal_HummingbirdController</name>
+			</class>
+			<params>
+				<param key="uri" value="login" />
+				<param key="menu_title" value="login.portal.hummingbird" />
+			</params>
+		</extension>
+		
+		<extension point="portal.controller.hummingbird">
+			<id>account.portal.controller.hummingbird</id>
+			<name>My Account</name>
+			<class>
+				<file>api/uri/portal/account.php</file>
+				<name>AccountPortal_HummingbirdController</name>
+			</class>
+			<params>
+				<param key="uri" value="account" />
+				<param key="menu_title" value="account.portal.hummingbird" />
+			</params>
+		</extension>
+		
+		<extension point="portal.controller.hummingbird">
+			<id>order.portal.controller.hummingbird</id>
+			<name>Order</name>
+			<class>
+				<file>api/uri/portal/order.php</file>
+				<name>OrderPortal_HummingbirdController</name>
+			</class>
+			<params>
+				<param key="uri" value="order" />
+				<param key="menu_title" value="order.portal.hummingbird" />
+			</params>
+		</extension>
+		
+		<extension point="portal.controller.hummingbird">
+			<id>agency.portal.controller.hummingbird</id>
+			<name>Agency</name>
+			<class>
+				<file>api/uri/portal/agency.php</file>
+				<name>AgencyPortal_HummingbirdController</name>
+			</class>
+			<params>
+				<param key="uri" value="agency" />
+				<param key="menu_title" value="agency.portal.hummingbird" />
+			</params>
+		</extension>
+		
+		<extension point="agency.portal.controller.hummingbird">
+			<id>account.agency.portal.controller.hummingbird</id>
+			<name>Account</name>
+			<class>
+				<file>api/uri/portal/agency/account.php</file>
+				<name>AccountAgencyPortal_HummingbirdController</name>
+			</class>
+			<params>
+				<param key="uri" value="account" />
+				<param key="menu_title" value="account.portal.hummingbird" />
+			</params>
+		</extension>
+		
+		<extension point="agency.portal.controller.hummingbird">
+			<id>login.agency.portal.controller.hummingbird</id>
+			<name>Login</name>
+			<class>
+				<file>api/uri/portal/agency/login.php</file>
+				<name>LoginAgencyPortal_HummingbirdController</name>
+			</class>
+			<params>
+				<param key="uri" value="login" />
+				<param key="menu_title" value="login.portal.hummingbird" />
+			</params>
+		</extension>
+		
+		<extension point="agency.portal.controller.hummingbird">
+			<id>order.agency.portal.controller.hummingbird</id>
+			<name>Order</name>
+			<class>
+				<file>api/uri/portal/agency/order.php</file>
+				<name>OrderAgencyPortal_HummingbirdController</name>
+			</class>
+			<params>
+				<param key="uri" value="order" />
+				<param key="menu_title" value="order.portal.hummingbird" />
+			</params>
+		</extension>
+		
+		<!-- Usermeet Tools -->
+		
+		<extension point="usermeet.tool">
+			<id>hummingbird.portal</id>
+			<name>Hummingbird Portal</name>
+			<class>
+				<file>api/App.php</file>
+				<name>UmHbApp</name>
+			</class>
+			<params>
+				<param key="template_set" value="hummingbird.portal" />
+			</params>
+		</extension>
+		
+		<!-- Login Extensions -->
+
+		<extension point="usermeet.login.authenticator">
+			<id>default.auth.login.hb</id>
+			<name>Hummingbird (Default)</name>
+			<class>
+				<file>api/UmHbApp.php</file>
+				<name>UmHbLoginAuthenticator</name>
+			</class>
+			<params>
+				<param key="switcher_icon" value="images/mail.png" />
+				<param key="switcher_label" value="Log in with email and password" />
+			</params>
+		</extension>
+		
+		<!-- Pages -->
+		<extension point="cerberusweb.page">
+			<id>page.hummingbird.core</id>
+			<name>Hummingbird Main Page</name>
+			<class>
+				<file>api/App.php</file>
+				<name>HummingbirdPage</name>
+			</class>
+			<params>
+				<param key="uri" value="billing" />
+    			<param key="menutitle" value="title.hummingbird.core" />
+			</params>
+		</extension>
+        <!--
+        <extension point="cerberusweb.page">
+			<id>signin.page.hummingbird.core</id>
+			<name>Signin Page</name>
+			<class>
+				<file>api/uri/login.php</file>
+				<name>ChSignInPage</name>
+			</class>
+			<params>
+				<param key="uri" value="login" />
+				<param key="menutitle" value="" />
+			</params>
+		</extension>
+        
+        <extension point="cerberusweb.page">
+			<id>core.page.profiles</id>
+			<name>Profiles Pages</name>
+			<class>
+				<file>api/uri/profiles.php</file>
+				<name>Page_Profiles</name>
+			</class>
+			<params>
+				<param key="uri" value="profiles" />
+				<param key="menutitle" value="" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.page">
+			<id>core.page.contacts</id>
+			<name>Contacts Page</name>
+			<class>
+				<file>api/uri/contacts.php</file>
+				<name>ChContactsPage</name>
+			</class>
+			<params>
+				<param key="uri" value="contacts" />
+				<param key="menutitle" value="core.menu.address_book" />
+				<param key="acl" value="core.addybook" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.page">
+			<id>core.page.configuration</id>
+			<name>Setup Page</name>
+			<class>
+				<file>api/uri/config.php</file>
+				<name>ChConfigurationPage</name>
+			</class>
+			<params>
+				<param key="uri" value="config" />
+				<param key="menutitle" value="" />
+			</params>
+		</extension>
+		-->
+		<!-- App Tabs -->
+		
+		<extension point="tab.billing.hummingbird">
+        	<id>dashboard.tab.billing.hummingbird</id>
+			<name>Dashboard Tab</name>
+			<class>
+				<file>api/uri/dashboard.php</file>
+				<name>DashboardTab_Billing_Hummingbird</name>
+			</class>
+			<params>
+				<param key="title" value="dashboard.tab.billing" />
+				<param key="uri" value="dashboard" />
+			</params>
+        </extension>
+        
+        <extension point="tab.billing.hummingbird">
+        	<id>invoices.tab.billing.hummingbird</id>
+			<name>Invoices Tab</name>
+			<class>
+				<file>api/uri/invoices.php</file>
+				<name>InvoicesTab_Billing_Hummingbird</name>
+			</class>
+			<params>
+				<param key="title" value="invoices.tab.billing" />
+				<param key="uri" value="invoices" />
+			</params>
+        </extension>
+
+        <extension point="tab.billing.hummingbird">
+        	<id>customers.tab.billing.hummingbird</id>
+			<name>Customers Tab</name>
+			<class>
+				<file>api/uri/customers.php</file>
+				<name>CustomersTab_Billing_Hummingbird</name>
+			</class>
+			<params>
+				<param key="title" value="customers.tab.billing" />
+				<param key="uri" value="customers" />
+			</params>
+        </extension>
+        
+        <extension point="tab.billing.hummingbird">
+        	<id>products.tab.billing.hummingbird</id>
+			<name>Products Tab</name>
+			<class>
+				<file>api/uri/products.php</file>
+				<name>ProductsTab_Billing_Hummingbird</name>
+			</class>
+			<params>
+				<param key="title" value="products.tab.billing" />
+				<param key="uri" value="products" />
+			</params>
+        </extension>
+        
+		<extension point="tab.billing.hummingbird">
+        	<id>agencies.tab.billing.hummingbird</id>
+			<name>Agencies Tab</name>
+			<class>
+				<file>api/uri/agencies.php</file>
+				<name>AgenciesTab_Billing_Hummingbird</name>
+			</class>
+			<params>
+				<param key="title" value="agencies.tab.billing" />
+				<param key="uri" value="agencies" />
+			</params>
+        </extension>
+        
+        <!-- Gateways -->
+        
+        <extension point="gateway.hummingbird.core">
+        	<id>authnet.gateway.hummingbird.core</id>
+			<name>Authorize.net Gateway</name>
+			<class>
+				<file>api/gateway/authnet.php</file>
+				<name>AuthNet</name>
+			</class>
+			<params>
+				<param key="menutitle" value="authnet.gateway.hummingbird.core" />
+				<param key="cc" value="true" />
+			</params>
+        </extension>
+        
+		<extension point="gateway.hummingbird.core">
+        	<id>paypal.gateway.hummingbird.core</id>
+			<name>PayPal</name>
+			<class>
+				<file>api/gateway/paypal.php</file>
+				<name>PayPal_Gateway</name>
+			</class>
+			<params>
+				<param key="menutitle" value="paypal.gateway.hummingbird.core" />
+			</params>
+        </extension>
+
+		<extension point="gateway.hummingbird.core">
+        	<id>googlecheckout.gateway.hummingbird.core</id>
+			<name>Google Checkout Gateway</name>
+			<class>
+				<file>api/gateway/googlecheckout.php</file>
+				<name>GoogleCheckout</name>
+			</class>
+			<params>
+				<param key="menutitle" value="googlecheckout.gateway.hummingbird.core" />
+			</params>
+        </extension>
+        
+        <!-- Setup Menu -->
+        
+        <extension point="cerberusweb.ui.page.menu">
+    		<id>menu.setup.hummingbird.core</id>
+    		<name>Hummingbird Configuration</name>
+    		<class>
+    			<file>api/App.php</file>
+    			<name>PageMenu_Setup_Hummingbird</name>
+    		</class>
+    		<params>
+    			<param key="page_id" value="core.page.configuration" />
+    			<param key="menu_id" value="core.setup.menu.plugins" />
+    		</params>
+    	</extension>
+    	
+    	<!-- Setup Menu Items -->
+        
+        <extension point="cerberusweb.ui.page.menu.item">
+    		<id>gateway.menu.setup.hummingbird.core</id>
+    		<name>Gateway Configuration</name>
+    		<class>
+    			<file>api/uri/config/gateway.php</file>
+    			<name>PageMenuItem_GatewayMenu_Setup_Hummingbird</name>
+    		</class>
+    		<params>
+    			<param key="page_id" value="core.page.configuration" />
+    			<param key="menu_id" value="menu.setup.hummingbird.core" />
+    		</params>
+    	</extension>
+    	
+    	<!-- Setup Page Sections -->
+    	
+    	<extension point="cerberusweb.ui.page.section">
+			<id>setup.hummingbird.core</id>
+			<name>Hummingbird Setup</name>
+			<class>
+				<file>api/App.php</file>
+				<name>SetupSection_Hummingbird</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="hummingbird" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.ui.page.section">
+			<id>gateway.setup.hummingbird.core</id>
+			<name>Gateway Setup</name>
+			<class>
+				<file>api/uri/config/gateway.php</file>
+				<name>Gateway_SetupSection_Hummingbird</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="gateway" />
+			</params>
+		</extension>
+		<!--
+    	<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.acl</id>
+			<name>ACL Section</name>
+			<class>
+				<file>api/uri/config/acl.php</file>
+				<name>PageSection_SetupACL</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="acl" />
+			</params>
+		</extension>
+	
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.branding</id>
+			<name>Branding Section</name>
+			<class>
+				<file>api/uri/config/branding.php</file>
+				<name>PageSection_SetupBranding</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="branding" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.fields</id>
+			<name>Custom Fields Section</name>
+			<class>
+				<file>api/uri/config/fields.php</file>
+				<name>PageSection_SetupCustomFields</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="fields" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.groups</id>
+			<name>Groups Section</name>
+			<class>
+				<file>api/uri/config/groups.php</file>
+				<name>PageSection_SetupGroups</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="groups" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.license</id>
+			<name>License Section</name>
+			<class>
+				<file>api/uri/config/license.php</file>
+				<name>PageSection_SetupLicense</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="license" />
+			</params>
+		</extension>
+
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.plugins</id>
+			<name>Plugins Section</name>
+			<class>
+				<file>api/uri/config/plugins.php</file>
+				<name>PageSection_SetupPlugins</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="plugins" />
+			</params>
+		</extension>
+	
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.portal</id>
+			<name>Portal Section</name>
+			<class>
+				<file>api/uri/config/portal.php</file>
+				<name>PageSection_SetupPortal</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="portal" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.portals</id>
+			<name>Portals Section</name>
+			<class>
+				<file>api/uri/config/portals.php</file>
+				<name>PageSection_SetupPortals</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="portals" />
+			</params>
+		</extension>
+	
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.scheduler</id>
+			<name>Scheduler Section</name>
+			<class>
+				<file>api/uri/config/scheduler.php</file>
+				<name>PageSection_SetupScheduler</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="scheduler" />
+			</params>
+		</extension>
+	
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.security</id>
+			<name>Security Section</name>
+			<class>
+				<file>api/uri/config/security.php</file>
+				<name>PageSection_SetupSecurity</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="security" />
+			</params>
+		</extension>
+	
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.workers</id>
+			<name>Workers Section</name>
+			<class>
+				<file>api/uri/config/workers.php</file>
+				<name>PageSection_SetupWorkers</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="workers" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.page">
+			<id>core.page.preferences</id>
+			<name>Preferences Page</name>
+			<class>
+				<file>api/uri/preferences.php</file>
+				<name>ChPreferencesPage</name>
+			</class>
+			<params>
+				<param key="uri" value="preferences" />
+				<param key="menutitle" value="" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.page">
+			<id>core.page.profiles</id>
+			<name>Profiles Pages</name>
+			<class>
+				<file>api/uri/profiles.php</file>
+				<name>Page_Profiles</name>
+			</class>
+			<params>
+				<param key="uri" value="profiles" />
+				<param key="menutitle" value="" />
+			</params>
+		</extension>
+		-->
+	</extensions>
+	
+</plugin>
