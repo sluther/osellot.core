@@ -1,26 +1,35 @@
 			<div id="place">
 				<form action="" method="post" id="buy">
-					<input type="hidden" name="a" value="doCheckout">					
+					<input type="hidden" name="a" value="doCheckout">
+					<span>The clients's first and last names.</span>
+					<div>
+						<label for="name" class="">Full name</label>
+						<input type="text" size="35" value="" name="name" id="name">
+					</div>
 					<fieldset>
 						<legend>Pickup or delivery</legend>
 						<span>Select whether you want to pickup your order or have it delivered.</span>
 						<div class="options">
 							<div>
-								<input type="radio" checked="checked" value="true" name="delivery" id="delivery">
-								<label for="delivery">I want it delivered ($3)</label><br>
+								<input type="radio" checked="checked" value="1" name="delivery" id="delivery">
+								<label for="delivery">Client wants it delivered ($3)</label><br>
 							</div>
 							<div>
-								<input type="radio" value="false" name="delivery" id="pickup">
-								<label for="pickup">I will pickup my order</label>
+								<input type="radio" value="0" name="delivery" id="pickup">
+								<label for="pickup">Client will pickup the order</label>
 							</div>
 						</div>
 						<br>
 						<div id="pickup_delivery">
 							<div id="deliveryForm">
-								<span>The street address you would like the order delivered to.</span>
+								<span>The client's street address the order will be delivered to.</span>
 								<div>
-									<label for="dstreet">Street address</label>
-									<input type="text" size="35" value="" name="dstreet" id="daddress">
+									<label for="dline1">Line 1</label>
+									<input type="text" size="35" value="" name="dline1" id="dline1">
+								</div>
+								<div>
+									<label for="dline2">Line 2</label>
+									<input type="text" size="35" value="" name="dline2" id="dline2">
 								</div>
 								<div class="condensed">
 									<label for="dmunicipality">Municipality</label>
@@ -39,71 +48,8 @@
 									<input type="text" size="35" value="" name="dpostal" id="postal">
 								</div>
 							</div>
-							<div id="pickupForm" style="display: none; visibility: hidden">
-								<span>The location you would like to pickup the order from.</span>
-								<label for="pickuploc">Location:</label> 
-								<select name="pickuploc" id="pickuploc">
-									<option selected="selected" value="fernwood">Fernwood Community Centre</option>
-									<option value="another1">Another location 1</option>
-									<option value="another2">Another location 2</option>
-									<option value="another3">Another location 3</option>
-								</select>
-							</div>
-							<br>
-						</div>
 					</fieldset>
-					<fieldset>
-						<legend>Payment details</legend>
-						<span>Select a payment method.</span>
-						<div class="options">
-							{foreach $checkout_plugins as $plugin}
-							<div>
-								<input type="radio" value="{$plugin->id}" name="plugin" id="checkout_option_{$plugin->id}"{if $plugin === $default_plugin} checked="checked"{/if}>
-								<label for="{$plugin->id}"><img alt="{$plugin->manifest->name}" src="./layout/images/paypal.png"></label>
-							</div>
-							{/foreach}
-						</div>
-						<div id="checkoutForm">
-							<div id="checkoutPlugin">
-							{$default_plugin->checkout()}
-							</div>
-							<span>Your billing address.</span>
-							<div>
-								<label for="bline1">Address line 1</label>
-								<input type="text" size="35" value="" name="bline1" id="b-line1">
-							</div>
-							<div>
-								<label for="bline2">Address line 2</label>
-								<input type="text" size="35" value="" name="bline2" id="b-line2">
-							</div>
-							<div class="condensed">
-								<label for="bcity">City</label>
-								<input type="text" size="35" value="" name="bcity" id="b-city">
-							</div>
-							<div class="condensed">
-								<label for="bzip">Postal code</label>
-								<input type="text" size="35" value="" name="bzip" id="b-zip">
-							</div>
-							<div>
-								<label for="bstate">Province:</label>
-								<select name="bstate" id="b-state">
-									<option value="ab">Alberta</option>
-									<option selected="selected" value="bc">British Columbia</option>
-									<option value="mb">Manitoba</option>
-									<option value="nb">New Brunswick</option>
-									<option value="nf">Newfoundland &amp; Labrador</option>
-									<option value="nt">Northwest Territories</option>
-									<option value="ns">Nova Scotia</option>
-									<option value="nu">Nunavut</option>
-									<option value="on">Ontario</option>
-									<option value="pe">Prince Edward Island</option>
-									<option value="qc">Quebec</option>
-									<option value="sk">Saskatchewan</option>
-									<option value="yk">Yukon</option>
-								</select>
-							</div>
-						</div>
-					</fieldset>
+
 					<div class="submit">
 						<input type="submit" value="Proceed to confirmation" name="submit" id="submit">
 					</div>
@@ -114,7 +60,7 @@
 <script type="text/javascript">
 $('#buy input[name=delivery]')
 	.change(function(e) {
-		if(this.value == "false") {
+		if(this.value == "0") {
 			$("div#pickup_delivery div#deliveryForm").hide().css('visibility', 'hidden');
 			$("div#pickup_delivery div#pickupForm").show().css('visibility', 'visible');
 		} else {

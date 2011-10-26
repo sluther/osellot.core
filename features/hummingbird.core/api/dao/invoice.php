@@ -14,7 +14,9 @@ class DAO_Invoice extends DevblocksORMHelper {
 	}
 	
 	static function addAttribute($invoice_id, $name, $value) {
-		DAO_InvoiceAttribute::setInvoiceAttribute($invoice_id, $name, $value);
+		if(!is_null($value)) {
+			DAO_InvoiceAttribute::setInvoiceAttribute($invoice_id, $name, $value);
+		}
 	}
 	
 	static function create($fields) {
@@ -81,7 +83,7 @@ class DAO_Invoice extends DevblocksORMHelper {
 	* @param integer $account_id
 	* @return Model_Invoice[]
 	*/
-	static function getByAccount($account_id) {
+	static function getAllByAccount($account_id) {
 		$objects = self::getWhere(sprintf("%s = %d",
 			self::ACCOUNT_ID,
 			$account_id
@@ -120,7 +122,6 @@ class DAO_Invoice extends DevblocksORMHelper {
 	static function getPaidByAccount($account_id) {
 		return self::getByAccountAndStatus($account_id, array('1', '2'));
 	}
-	
 	
 	/**
 	* @param integer $account_id

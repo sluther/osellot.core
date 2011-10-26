@@ -17,6 +17,20 @@ class AgencyPortal_HummingbirdController extends Extension_Portal_Hummingbird_Co
 		return $available_modules;
 	}
 	
+	private function _getModuleByUri($stack) {
+		array_shift($stack); // agency
+		$module_uri = array_shift($stack);
+		
+		$modules = $this->_getModules();
+		if(isset($modules[$module_uri])) {
+			$module = $modules[$module_uri];
+		} else {
+			$module = $modules['login'];
+		}
+		
+		return $module;
+	}
+	
     public function handleRequest(DevblocksHttpRequest $request) {
     	$stack = $request->path;
         array_shift($stack); // agency
@@ -55,11 +69,6 @@ class AgencyPortal_HummingbirdController extends Extension_Portal_Hummingbird_Co
 		$active_profile = $umsession->getProperty('hb_login', null);
 		$is_agency = $umsession->getProperty('agency', false);
 		
-		
-		if(!$is_agency) {
-			DevblocksPlatform::redirect(new DevblocksHttpResponse());
-		}
-		
 		$stack = $response->path;
 		
 		array_shift($stack); // agency
@@ -74,7 +83,7 @@ class AgencyPortal_HummingbirdController extends Extension_Portal_Hummingbird_Co
 		} else {
 			// Are they logged in?
 			$module = reset($modules);
-			if($active_profile == null) {
+			if($active_profile == null || !$is_agency) {
 				$module = $modules['login'];
 			} else {
 				$module = $modules['account']; // account
@@ -85,6 +94,49 @@ class AgencyPortal_HummingbirdController extends Extension_Portal_Hummingbird_Co
 		$tpl->assign('module_response', new DevblocksHttpResponse($stack));
 		
 		$tpl->display('devblocks:hummingbird.core:portal_'.ChPortalHelper::getCode() . ":portal/agency/index.tpl");
+	}
+	
+	public function getClass(DevblocksHttpResponse $response) {
+		$stack = $response->path;
+		$class = 'agency ';
+		array_shift($stack); // agency
+		@$module = array_shift($stack);
+		@$section = array_shift($stack);
+		
+		if(null !== $module) {
+			if ($module == 'order') {
+				$class .= 'order ';
+				if($section == null) {
+					$class .= 'cart';
+				} else {
+					$class .= $section;
+				}
+			} else {			
+				if(null !== $section) {
+					$class .= $section;
+				} else {
+					$class .= $module;
+				}
+			}
+		} else {
+			$class .= 'splash';
+		}
+		return $class;
+	}
+	
+	
+	public function getTitle(DevblocksHttpResponse $response) {
+		$stack = $response->path;
+		
+		$module = $this->_getModuleByUri($stack);
+		return $module->getTitle($response);
+	}
+	
+	public function getHeader(DevblocksHttpResponse $response) {
+		$stack = $response->path;
+		
+		$module = $this->_getModuleByUri($stack);
+		return $module->getHeader($response);
 	}
 	
 	public function hasCustomMenu() {
@@ -99,7 +151,7 @@ class AgencyPortal_HummingbirdController extends Extension_Portal_Hummingbird_Co
 		$stack = $response->path;
 		
 		$titles = array(
-			'agency' => 'Agency Management Portal',
+			'agency' => 'Agency Order Management',
 			'agency/order' => 'Place an Order',
 			'agency/order/modify' => 'Modify an Order');
 		$path = '';

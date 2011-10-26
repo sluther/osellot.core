@@ -5,7 +5,6 @@
 			<th>Ship date</th>
 			<th>Boxes</th>
 			<th>Delivery</th>
-
 			<th>Cost</th>
 		</tr>
 		<tr>
@@ -30,46 +29,26 @@
 			<!--
 			<th>Pickup my order from:</th>
 			-->
-			<th>Payment method:</th>
-			<th>Bill to:</th>
 		</tr>
 		<tr>
 			<td>
-				{if $order.attributes.delivery}
+				{if $order.attributes.pickup}
 				{$active_profile->getPrimaryAddress()->first_name} {$active_profile->getPrimaryAddress()->last_name}<br>
-				{$order.attributes.delivery_address.street}<br>
-				{$order.attributes.delivery_address.municipality} {$order.attributes.address.postal}
+				{$order.attributes.pickup_location.line1}<br>
+				{if !empty($order.attributes.pickup_location.line2)}{$order.attributes.pickup_location.line2}<br>{/if}
+				{$order.attributes.pickup_location.city}, {$order.attributes.pickup_location.province} {$order.attributes.pickup_location.postal}
 				{else}
+				{$order.attributes.delivery_address.name}<br>
+				{$order.attributes.delivery_address.line1}<br>
+				{if !empty($order.attributes.delivery_address.line2)}{$order.attributes.delivery_address.line2}<br>{/if}
+				{$order.attributes.delivery_address.city}, {$order.attributes.delivery_address.province} {$order.attributes.delivery_address.postal}
 				{$order.attributes.pickup_location}
 				{/if}
 			</td>
 			<!--
 			<td>Fernwood Community Centre</td>
 			-->
-			<td>
-				<dl>
-					{if $plugin->getParam('cc')}
-					<dt>Credit Card</dt>
-					<dd>Visa</dd>
-
-					<dt>Number</dt>
-					<dd>1234 5678 9012 3456</dd>
-					<dt>Expiry</dt>
-					<dd>2016 / 09</dd>
-					<dt>CVV</dt>
-					<dd>123</dd>
-					{else}
-					{$plugin->manifest->name}
-					{/if}
-				</dl>
-			</td>
-			<td>
-				{$active_profile->getPrimaryAddress()->first_name} {$active_profile->getPrimaryAddress()->last_name}<br>
-				{$order.attributes.billing_address.line1} {$order.attributes.billing_address.line2}<br>
-				{$order.attributes.billing_address.city}, {$order.attributes.billing_address.state} {$order.attributes.billing_address.zip}
-			</td>
 		</tr>
-
 	</table>
 	<form id="buy" method="post" action="">
 		<input type="hidden" name="a" value="doConfirm">
@@ -78,6 +57,6 @@
 			<input type="submit" id="submit" name="submit" value="Confirm order">
 		</div>
 	</form>
-	<div class="return"><a class="button" href="/order-place2.html">&#8249; Back</a></div>
+	<div class="return"><a class="button" href="{devblocks_url}c=agency&a=order&action=checkout{/devblocks_url}">&#8249; Back</a></div>
 
 </div>

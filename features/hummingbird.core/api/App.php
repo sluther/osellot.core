@@ -380,20 +380,17 @@ abstract class Extension_Portal_Hummingbird_Controller extends DevblocksExtensio
 		$stack = $response->path;
 		$class = 'order ';
 		
-		if(null !== $module = array_shift($stack)) {
-			if($module == 'agency') {
-				$class = 'agency ';
-			} elseif ($module == 'order') {
+		@$module = array_shift($stack);
+		@$section = array_shift($stack);
+		
+		if(null !== $module) {
+			if ($module == 'order') {
 				$module = 'cart';
 			}
-			if(null !== $section = array_shift($stack)) {
+			if(null !== $section) {
 				$class .= $section;
 			} else {
-				if($module == 'agency') {
-					$class .= 'splash';
-				} else {
-					$class .= $module;
-				}
+				$class .= $module;
 			}
 		} else {
 			$class .= 'login';
@@ -1059,7 +1056,8 @@ class UmHbLoginAuthenticator extends Extension_HbLoginAuthenticator {
 		
 		@$email = DevblocksPlatform::importGPC($_REQUEST['email']);
 		@$pass = DevblocksPlatform::importGPC($_REQUEST['password']);
-
+		
+		$response = array('portal',ChPortalHelper::getCode(), 'login');
 		// Clear the past session
 		$umsession->logout();
 		try {
@@ -1084,8 +1082,6 @@ class UmHbLoginAuthenticator extends Extension_HbLoginAuthenticator {
 				header("Location: " . $url_writer->write('', true));
 				exit;
 			} else {
-				$response = array('portal',ChPortalHelper::getCode(), 'login');
-				
 				// Not registered
 				if(empty($addy->contact_person_id) || null == ($contact = DAO_ContactPerson::get($addy->contact_person_id)))
 					throw new Exception("Login failed.");

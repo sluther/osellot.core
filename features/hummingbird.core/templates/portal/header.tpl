@@ -58,7 +58,6 @@
 
 			</div>
 		</header>
-
 		<div id="main-nav">
 			<nav role="navigation">
 				<ul>
@@ -68,7 +67,6 @@
 					<li class="selected"><a href="http://order.thegoodfoodbox.ca/"><span><strong>Ordering</strong><br> order online or in person</a></span></li>
 					<li><a href="/contact/"><span><strong>Contact</strong><br> reach us by phone or email</a></span></li>
 					<li><a href="/news/"><span><strong>News</strong><br> our newsletter &amp; weblog</a></span></li>
-
 				</ul>
 			</nav>
 		</div>
@@ -81,7 +79,8 @@
 			{/foreach}
 			</ol>
 			{/if}
+			{if $is_agency}<div class="wrapper">{/if}
 			<h1>{$module->getHeader($module_response)}</h1>
-			{if !empty($active_profile) && !$is_agency}
-			<div class="account">Signed in as: {$active_profile->getPrimaryAddress()->email} (<a href="{devblocks_url}a=account&c=edit{/devblocks_url}">edit account</a> | <a href="{devblocks_url}c=login&a=signout{/devblocks_url}">sign-out</a>)</div>
+			{if !empty($active_profile)}
+				<div class="account">Signed in as: {$active_profile->getPrimaryAddress()->email} ({if !$is_agency}<a href="{devblocks_url}a=account&c=edit{/devblocks_url}">edit account</a> | <a href="{devblocks_url}c=login&a=signout{/devblocks_url}">sign-out</a>{else}<a href="{devblocks_url}c=agency&a=login&action=signout{/devblocks_url}">sign-out</a>{/if}) </div>
 			{/if}

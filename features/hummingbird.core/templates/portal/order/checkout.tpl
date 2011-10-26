@@ -1,16 +1,16 @@
 			<div id="place">
 				<form action="" method="post" id="buy">
-					<input type="hidden" name="a" value="doCheckout">					
+					<input type="hidden" name="a" value="doCheckout">
 					<fieldset>
 						<legend>Pickup or delivery</legend>
 						<span>Select whether you want to pickup your order or have it delivered.</span>
 						<div class="options">
 							<div>
-								<input type="radio" checked="checked" value="true" name="delivery" id="delivery">
+								<input type="radio" checked="checked" value="1" name="delivery" id="delivery">
 								<label for="delivery">I want it delivered ($3)</label><br>
 							</div>
 							<div>
-								<input type="radio" value="false" name="delivery" id="pickup">
+								<input type="radio" value="0" name="delivery" id="pickup">
 								<label for="pickup">I will pickup my order</label>
 							</div>
 						</div>
@@ -19,12 +19,16 @@
 							<div id="deliveryForm">
 								<span>The street address you would like the order delivered to.</span>
 								<div>
-									<label for="dstreet">Street address</label>
-									<input type="text" size="35" value="" name="dstreet" id="daddress">
+									<label for="dline1">Line 1</label>
+									<input type="text" size="35" value="" name="dline1" id="dline1">
+								</div>
+								<div>
+									<label for="dline2">Line 2</label>
+									<input type="text" size="35" value="" name="dline2" id="dline2">
 								</div>
 								<div class="condensed">
 									<label for="dmunicipality">Municipality</label>
-									<input type="text" size="35" value="" name="dmunicipality" id="municipality">
+									<input type="text" size="35" value="" name="dmunicipality" id="dmunicipality">
 									<!--
 									<select id="municipality" name="municipality">
 										<option value="victoria" selected="selected">Victoria</option>
@@ -81,12 +85,12 @@
 								<input type="text" size="35" value="" name="bcity" id="b-city">
 							</div>
 							<div class="condensed">
-								<label for="bzip">Postal code</label>
-								<input type="text" size="35" value="" name="bzip" id="b-zip">
+								<label for="bpostal">Postal code</label>
+								<input type="text" size="35" value="" name="bpostal" id="b-postal">
 							</div>
 							<div>
-								<label for="bstate">Province:</label>
-								<select name="bstate" id="b-state">
+								<label for="bprovince">Province:</label>
+								<select name="bprovince" id="b-province">
 									<option value="ab">Alberta</option>
 									<option selected="selected" value="bc">British Columbia</option>
 									<option value="mb">Manitoba</option>
@@ -114,7 +118,7 @@
 <script type="text/javascript">
 $('#buy input[name=delivery]')
 	.change(function(e) {
-		if(this.value == "false") {
+		if(this.value == "0") {
 			$("div#pickup_delivery div#deliveryForm").hide().css('visibility', 'hidden');
 			$("div#pickup_delivery div#pickupForm").show().css('visibility', 'visible');
 		} else {

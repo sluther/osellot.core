@@ -132,7 +132,7 @@ class AccountPortal_HummingbirdController extends Extension_Portal_Hummingbird_C
 	public function getTitle(DevblocksHttpResponse $response) {
 		$stack = $response->path;
 		$title = '';
-		array_shift($stack); // login
+		array_shift($stack); // account
 		$section = array_shift($stack);
 		switch($section) {
 			case 'edit':
@@ -152,7 +152,7 @@ class AccountPortal_HummingbirdController extends Extension_Portal_Hummingbird_C
 	public function getHeader(DevblocksHttpResponse $response) {
 		$stack = $response->path;
 		$header = '';
-		array_shift($stack); // login
+		array_shift($stack); // account
 		$section = array_shift($stack);
 		switch($section) {
 			case 'edit':
@@ -163,7 +163,7 @@ class AccountPortal_HummingbirdController extends Extension_Portal_Hummingbird_C
 				break;
 			default:
 				$header = 'Order Online from the Good Food Box';
-			break;
+				break;
 		}
 	
 		return $header;

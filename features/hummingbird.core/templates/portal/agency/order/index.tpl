@@ -7,12 +7,12 @@
 						${number_format($product->price, 2)}
 						{if array_key_exists($product->id, $cart.items)}
 						<span class="edit">
-						   <a href="{devblocks_url}c=order&a=cart&section=remove&item_id={$product->id}{/devblocks_url}" class="button">&ndash;</a>
-						   <a href="{devblocks_url}c=order&a=cart&section=add&item_id={$product->id}{/devblocks_url}" class="button">+</a>
+						   <a href="{devblocks_url}c=agency&a=order&action=cart&section=remove&item_id={$product->id}{/devblocks_url}" class="button">&ndash;</a>
+						   <a href="{devblocks_url}c=agency&a=order&action=cart&section=add&item_id={$product->id}{/devblocks_url}" class="button">+</a>
 						</span>
 						{else}
 						<span class="add">
-							<a class="button" href="{devblocks_url}c=order&a=cart&section=add&item_id={$product->id}{/devblocks_url}">Add to cart</a>
+							<a class="button" href="{devblocks_url}c=agency&a=order&action=cart&section=add&item_id={$product->id}{/devblocks_url}">Add to cart</a>
 						</span>
 						{/if}
 					</div>
@@ -36,8 +36,8 @@
 				</div>
 				<form id="buy" method="post" action="">
 					<div class="submit">
-						<a class="button" href="{devblocks_url}c=order&a=checkout{/devblocks_url}">Proceed to checkout</a>
+						<a class="button" href="{devblocks_url}c=agency&a=order&action=cart&action=checkout{/devblocks_url}">Proceed to checkout</a>
 					</div>
 				</form>
-				<div class="return"><a class="button" href="{devblocks_url}c=account{/devblocks_url}">&#8249; Back to my account</a></div>
+				<div class="return"><a class="button" href="{devblocks_url}c=agency&a=account{/devblocks_url}">&#8249; Back to my account</a></div>
 			</div>

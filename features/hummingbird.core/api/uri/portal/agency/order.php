@@ -11,46 +11,26 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 		
 		$stack = $response->path;
 		
+		array_shift($stack); // agency
 		array_shift($stack); // order
 		$section = array_shift($stack);
 		
 		switch($section) {
 			case 'checkout':
-				$enabled_plugins = DAO_Gateway::getEnabled();
-				$checkout_plugins = array();
-				foreach($enabled_plugins as $plugin) {
-					$plugins[] = DevblocksPlatform::getExtension($plugin->extension_id, true);				
-				}
-				
-				$tpl->assign('checkout_plugins', $plugins);
-				$default_plugin = array_shift($plugins);
-				$tpl->assign('default_plugin', $default_plugin);
-				$tpl->display('devblocks:hummingbird.core::portal/order/checkout.tpl');
+				$tpl->display('devblocks:hummingbird.core::portal/agency/order/checkout.tpl');
 				break;
 			case 'confirm':
 				$order = $umsession->getProperty('hb_order', null);
 				if($order === null)
-					DevblocksPlatform::redirect(new DevblocksHttpResponse(array('order')));
-				
-				$plugin_id = $order['attributes']['checkout_plugin'];
-				$plugin = DevblocksPlatform::getExtension($plugin_id, true);
+					DevblocksPlatform::redirect(new DevblocksHttpResponse(array('agency', 'order')));
 				
 				$tpl->assign('order', $order);
-				$tpl->assign('plugin', $plugin);
-				$tpl->display('devblocks:hummingbird.core::portal/order/confirm.tpl');
+				$tpl->display('devblocks:hummingbird.core::portal/agency/order/confirm.tpl');
 				break;
 			case 'process':
 				$order = $umsession->getProperty('hb_order', null);
 				if($order === null)
-					DevblocksPlatform::redirect(new DevblocksHttpResponse(array('order')));
-				
-				$plugin_id = $order['attributes']['checkout_plugin'];
-				$plugin = DevblocksPlatform::getExtension($plugin_id, true);
-				
-				$plugin->processTransaction($order);
-				break;
-			case 'postback':
-				
+					DevblocksPlatform::redirect(new DevblocksHttpResponse(array('agency', 'order')));
 				break;
 			default:
 				$products = DAO_Product::getWhere();
@@ -66,7 +46,7 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 				}
 				
 				$tpl->assign('products', $products);
-				$tpl->display('devblocks:hummingbird.core::portal/order/index.tpl');
+				$tpl->display('devblocks:hummingbird.core::portal/agency/order/index.tpl');
 				break;
 		}
 	}
@@ -81,6 +61,7 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 		
 		array_shift($stack); // portal
 		array_shift($stack); // portal id
+		array_shift($stack); // agency
 		array_shift($stack); // order
 		array_shift($stack); // cart
 		
@@ -135,7 +116,7 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 				break;
 		};
 		
-		DevblocksPlatform::redirect(new DevblocksHttpResponse(array('order')));
+		DevblocksPlatform::redirect(new DevblocksHttpResponse(array('agency', 'order')));
 	}
 	
 	public function doCheckoutAction() {
@@ -144,52 +125,49 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 		$account = $umsession->getProperty('hb_login');
 		$cart = $umsession->getProperty('hb_cart', null);
 		
-		$delivery = DevblocksPlatform::importGPC($_REQUEST['delivery'], 'boolean', true);
-		$checkout_plugin = DevblocksPlatform::importGPC($_REQUEST['plugin'], 'string', '');
+		$delivery = DevblocksPlatform::importGPC($_REQUEST['delivery'], 'integer', 1);
+
 		if($cart === null)
-			DevblocksPlatform::redirect(new DevblocksHttpResponse(array('order')));
-		
-		$line1 = DevblocksPlatform::importGPC($_REQUEST['bline1'], 'string', '');
-		$line2 = DevblocksPlatform::importGPC($_REQUEST['bline2'], 'string', '');
-		$city = DevblocksPlatform::importGPC($_REQUEST['bcity'], 'string', '');
-		$state = DevblocksPlatform::importGPC($_REQUEST['bstate'], 'string', '');
-		$zip = DevblocksPlatform::importGPC($_REQUEST['bzip'], 'string', '');
-		
+			DevblocksPlatform::redirect(new DevblocksHttpResponse(array('agency', 'order')));
+				
 		// Create the order array
 		$order = array(
 			'items' => $cart['items'],
 			'attributes' => array(
-				'checkout_plugin' => $checkout_plugin,
 				'delivery' => $delivery,
-				'billing_address' => array(
-					'line1' => $line1,
-					'line2' => $line2,
-					'city' => $city,
-					'state' => $state,
-					'zip' => $zip
-				)
+				'pickup' => $delivery == false ? true : false,
 			),
 			'amount' => $cart['total'],
 			'account_id' => $account->id
 		);
 		
 		if($delivery) {
-			$street = DevblocksPlatform::importGPC($_REQUEST['dstreet'], 'string', '');
+			$name = DevblocksPlatform::importGPC($_REQUEST['name'], 'string', '');
+			$dline1 = DevblocksPlatform::importGPC($_REQUEST['dline1'], 'string', '');
+			$dline2 = DevblocksPlatform::importGPC($_REQUEST['dline2'], 'string', '');
 			$municipality = DevblocksPlatform::importGPC($_REQUEST['dmunicipality'], 'string', '');
 			$postal = DevblocksPlatform::importGPC($_REQUEST['dpostal'], 'string', '');
 			$order['attributes']['delivery_address'] = array(
-				'street' => $street,
+				'name' => $name,
+				'line1' => $dline1,
+				'line2' => $dline2,
 				'municipality' => $municipality,
 				'postal' => $postal
 			);
-			$order['amount'] += 3; 
+			$order['amount'] += 3;
 		} else {
-// 			$order['attributes']['pickup_location'] = 
+			$order['attributes']['pickup_location'] = array(
+				'line1' => $account->address_line1,
+				'line2' => $account->address_line2,
+				'city' => $account->address_city,
+				'province' => $account->address_province,
+				'postal' => $account->address_postal 
+			);
 		}
 		
 		// Save the order in the session
 		$umsession->setProperty('hb_order', $order);
-		DevblocksPlatform::redirect(new DevblocksHttpResponse(array('order', 'confirm')));
+		DevblocksPlatform::redirect(new DevblocksHttpResponse(array('agency', 'order', 'confirm')));
 	}
 	
 
@@ -204,10 +182,9 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 			DevblocksPlatform::redirect(new DevblocksHttpResponse(array('order')));
 		}
 		
-		$plugin_id = $order['attributes']['checkout_plugin'];
-		$plugin = DevblocksPlatform::getExtension($plugin_id, true);
-		
 		// Generate an order number
+		
+		// [TODO] Refactor this so it can be changed in settings
 		$number = mt_rand();
 		
 		// [TODO] Refactor this so we can create a new invoice without committing it to DB instantly
@@ -256,7 +233,8 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 	public function getTitle(DevblocksHttpResponse $response) {
 		$stack = $response->path;
 		$title = '';
-		array_shift($stack); // login
+		array_shift($stack); // agency
+		array_shift($stack); // order
 		$section = array_shift($stack);
 		switch($section) {
 			case 'checkout':
@@ -267,7 +245,7 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 				break;
 			default:
 				$title = 'Place an order (1 of 3)';
-			break;
+				break;
 		}
 	
 		return $title;
@@ -276,18 +254,19 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 	public function getHeader(DevblocksHttpResponse $response) {
 		$stack = $response->path;
 		$header = '';
-		array_shift($stack); // login
+		array_shift($stack); // agency
+		array_shift($stack); // order
 		$section = array_shift($stack);
 		switch($section) {
 			case 'checkout':
-				$header = 'Place an online order (part 2 of 3)';
+				$header = 'Place an order on behalf of a client (part 2 of 3)';
 				break;
 			case 'confirm':
-				$header = 'Place an online order (part 3 of 3)';
+				$header = 'Place an order on behalf of a client (part 3 of 3)';
 				break;
 			default:
-				$header = 'Place an online order (part 1 of 3)';
-			break;
+				$header = 'Place an order on behalf of a client (part 1 of 3)';
+				break;
 		}
 	
 		return $header;

@@ -11,7 +11,7 @@ class AccountAgencyPortal_HummingbirdController extends Extension_Agency_Portal_
 		$section = array_shift($stack);
 		switch($section) {
 			case 'history':
-				$invoices = DAO_Invoice::getPaidByAccount($active_profile->id);
+				$invoices = DAO_Invoice::getAllByAccount($active_profile->id);
 				$tpl->assign('invoices', $invoices);
 				$tpl->display('devblocks:hummingbird.core::portal/agency/account/history.tpl');
 				break;

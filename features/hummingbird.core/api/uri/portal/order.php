@@ -144,7 +144,7 @@ class OrderPortal_HummingbirdController extends Extension_Portal_Hummingbird_Con
 		$account = $umsession->getProperty('hb_login');
 		$cart = $umsession->getProperty('hb_cart', null);
 		
-		$delivery = DevblocksPlatform::importGPC($_REQUEST['delivery'], 'boolean', true);
+		$delivery = DevblocksPlatform::importGPC($_REQUEST['delivery'], 'integer', 1);
 		$checkout_plugin = DevblocksPlatform::importGPC($_REQUEST['plugin'], 'string', '');
 		if($cart === null)
 			DevblocksPlatform::redirect(new DevblocksHttpResponse(array('order')));
@@ -152,8 +152,8 @@ class OrderPortal_HummingbirdController extends Extension_Portal_Hummingbird_Con
 		$line1 = DevblocksPlatform::importGPC($_REQUEST['bline1'], 'string', '');
 		$line2 = DevblocksPlatform::importGPC($_REQUEST['bline2'], 'string', '');
 		$city = DevblocksPlatform::importGPC($_REQUEST['bcity'], 'string', '');
-		$state = DevblocksPlatform::importGPC($_REQUEST['bstate'], 'string', '');
-		$zip = DevblocksPlatform::importGPC($_REQUEST['bzip'], 'string', '');
+		$province = DevblocksPlatform::importGPC($_REQUEST['bprovince'], 'string', '');
+		$postal = DevblocksPlatform::importGPC($_REQUEST['bpostal'], 'string', '');
 		
 		// Create the order array
 		$order = array(
@@ -161,12 +161,13 @@ class OrderPortal_HummingbirdController extends Extension_Portal_Hummingbird_Con
 			'attributes' => array(
 				'checkout_plugin' => $checkout_plugin,
 				'delivery' => $delivery,
+				'pickup' => $delivery == false ? true : false,
 				'billing_address' => array(
 					'line1' => $line1,
 					'line2' => $line2,
 					'city' => $city,
-					'state' => $state,
-					'zip' => $zip
+					'state' => $province,
+					'postal' => $postal
 				)
 			),
 			'amount' => $cart['total'],
@@ -174,16 +175,25 @@ class OrderPortal_HummingbirdController extends Extension_Portal_Hummingbird_Con
 		);
 		
 		if($delivery) {
-			$street = DevblocksPlatform::importGPC($_REQUEST['dstreet'], 'string', '');
+			$dline1 = DevblocksPlatform::importGPC($_REQUEST['dline1'], 'string', '');
+			$dline2 = DevblocksPlatform::importGPC($_REQUEST['dline2'], 'string', '');
 			$municipality = DevblocksPlatform::importGPC($_REQUEST['dmunicipality'], 'string', '');
 			$postal = DevblocksPlatform::importGPC($_REQUEST['dpostal'], 'string', '');
 			$order['attributes']['delivery_address'] = array(
-				'street' => $street,
+				'line1' => $dline1,
+				'line2' => $dline2,
 				'municipality' => $municipality,
 				'postal' => $postal
 			);
 			$order['amount'] += 3; 
 		} else {
+			$order['attributes']['pickup_location'] = array(
+				'line1' => $account->address_line1,
+				'line2' => $account->address_line2,
+				'city' => $account->address_city,
+				'province' => $account->address_province,
+				'postal' => $account->address_postal 
+			);
 // 			$order['attributes']['pickup_location'] = 
 		}
 		
@@ -208,6 +218,7 @@ class OrderPortal_HummingbirdController extends Extension_Portal_Hummingbird_Con
 		$plugin = DevblocksPlatform::getExtension($plugin_id, true);
 		
 		// Generate an order number
+		// [TODO] Refactor this so it can be changed in settings
 		$number = mt_rand();
 		
 		// [TODO] Refactor this so we can create a new invoice without committing it to DB instantly
@@ -256,7 +267,7 @@ class OrderPortal_HummingbirdController extends Extension_Portal_Hummingbird_Con
 	public function getTitle(DevblocksHttpResponse $response) {
 		$stack = $response->path;
 		$title = '';
-		array_shift($stack); // login
+		array_shift($stack); // order
 		$section = array_shift($stack);
 		switch($section) {
 			case 'checkout':
@@ -267,7 +278,7 @@ class OrderPortal_HummingbirdController extends Extension_Portal_Hummingbird_Con
 				break;
 			default:
 				$title = 'Place an order (1 of 3)';
-			break;
+				break;
 		}
 	
 		return $title;
@@ -276,7 +287,7 @@ class OrderPortal_HummingbirdController extends Extension_Portal_Hummingbird_Con
 	public function getHeader(DevblocksHttpResponse $response) {
 		$stack = $response->path;
 		$header = '';
-		array_shift($stack); // login
+		array_shift($stack); // order
 		$section = array_shift($stack);
 		switch($section) {
 			case 'checkout':
@@ -287,7 +298,7 @@ class OrderPortal_HummingbirdController extends Extension_Portal_Hummingbird_Con
 				break;
 			default:
 				$header = 'Place an online order (part 1 of 3)';
-			break;
+				break;
 		}
 	
 		return $header;
