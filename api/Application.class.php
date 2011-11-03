@@ -308,7 +308,7 @@ class CerberusApplication extends DevblocksApplication {
 		$plugins = DevblocksPlatform::getPluginRegistry();
 		
 		// Update the application core (version by version)
-		if(!isset($plugins['hummingbird.core']))
+		if(!isset($plugins['cerberusweb.core']))
 			throw new Exception("Couldn't read application manifest.");
 	
 		$plugin_patches = array();
@@ -323,8 +323,8 @@ class CerberusApplication extends DevblocksApplication {
 				$plugin_patches[$p->id] = $p->getPatches();
 		}
 		
-		$core_patches = $plugin_patches['hummingbird.core'];
-		unset($plugin_patches['hummingbird.core']);
+		$core_patches = $plugin_patches['cerberusweb.core'];
+		unset($plugin_patches['cerberusweb.core']);
 		
 		/*
 		 * For each core release, patch plugins in dependency order
