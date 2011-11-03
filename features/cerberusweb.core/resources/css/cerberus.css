@@ -1277,3 +1277,26 @@ UL.ui-autocomplete.ui-menu .ui-menu-item a.ui-state-hover {
 /* jQuery Validation */
 
 label.error { color: rgb(255,0,0); padding-left: .5em; vertical-align: top; }
+
+
+
+/* Collating Table */
+table#collatingTable {
+	background-color: #bbb;
+}
+
+table#collatingTable tr {
+	background-color: #ddd;
+}
+
+table#collatingTable tr:first-child {
+	background-color: transparent;
+}
+
+table#collatingTable td {
+	padding: 5px;
+}
+table#collatingTable td input {
+	width: 100%;
+	padding: 0px;
+}
