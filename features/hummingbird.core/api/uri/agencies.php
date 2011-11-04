@@ -49,7 +49,7 @@ class AgenciesTab_Billing_Hummingbird extends Extension_Tab_Billing_Hummingbird 
 		$tpl->assign('context', $context);
 		$tpl->assign('context_id', $context_id);
 		
-		if(!empty($agency_id) && null != ($agency = DAO_Contact_Person::getAgency($agency_id))) {
+		if(!empty($agency_id) && null != ($agency = DAO_ContactPerson::getAgency($agency_id))) {
 			$tpl->assign('agency', $agency);
 				
 			if(null != ($address = DAO_Address::get($agency->email_id))) {

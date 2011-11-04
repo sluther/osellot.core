@@ -64,12 +64,12 @@
 		{foreach from=$view->view_columns item=column name=columns}
 			{if substr($column,0,3)=="cf_"}
 				{include file="devblocks:cerberusweb.core::internal/custom_fields/view/cell_renderer.tpl"}
-			{elseif $column=="a_id"}
-				<td>{$result.a_id}&nbsp;</td>
-			{elseif $column=="a_name"}
+			{elseif $column=="c_id"}
+				<td>{$result.c_id}&nbsp;</td>
+			{elseif $column=="c_name"}
 				<td>
-					{$result.a_name}
-					<button type="button" class="peek" style="visibility:hidden;padding:1px;margin:0px 5px;" onclick="genericAjaxPopup('peek','c=billing&a=handleTabAction&tab=agencies.tab.billing.hummingbird&action=showAgencyPanel&view_id={$view->id}&id={$result.a_id}', null, false, '600');"><span class="cerb-sprite2 sprite-document-search-result" style="margin-left:2px" title="{$translate->_('views.peek')}"></span></button>
+					<a href="javascript:;" onclick="genericAjaxPopup('peek','c=billing&a=handleTabAction&tab=agencies.tab.billing.hummingbird&action=showAgencyPanel&view_id={$view->id}&id={$result.c_id}', null, false, '600');">{$result.c_name}</a>
+					<button type="button" class="peek" style="visibility:hidden;padding:1px;margin:0px 5px;" onclick="genericAjaxPopup('peek','c=billing&a=handleTabAction&tab=agencies.tab.billing.hummingbird&action=showAgencyPanel&view_id={$view->id}&id={$result.c_id}', null, false, '600');"><span class="cerb-sprite2 sprite-document-search-result" style="margin-left:2px" title="{$translate->_('views.peek')}"></span></button>
 				</td>
 			{elseif $column=="a_email"}
 				<td>
@@ -79,12 +79,10 @@
 						<!-- [<a href="javascript:;">assign</a>]  -->
 					{/if}
 				</td>
-			{elseif $column=="a_created"}
-				<td><abbr title="{$result.$column|devblocks_date}">{$result.a_created|devblocks_prettytime}</abbr>&nbsp;</td>
-			{elseif $column=="a_last_login"}
-				<td><abbr title="{$result.$column|devblocks_date}">{$result.a_last_login|devblocks_prettytime}</abbr>&nbsp;</td>
-			{elseif $column=="o_closed_date"}
-				<td><abbr title="{$result.$column|devblocks_date}">{$result.o_closed_date|devblocks_prettytime}</abbr>&nbsp;</td>
+			{elseif $column=="c_created"}
+				<td><abbr title="{$result.$column|devblocks_date}">{$result.c_created|devblocks_prettytime}</abbr>&nbsp;</td>
+			{elseif $column=="c_last_login"}
+				<td><abbr title="{$result.$column|devblocks_date}">{$result.c_last_login|devblocks_prettytime}</abbr>&nbsp;</td>
 			{else}
 				<td>{$result.$column}</td>
 			{/if}
