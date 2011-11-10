@@ -116,6 +116,28 @@ class DAO_Invoice extends DevblocksORMHelper {
 	}
 	
 	/**
+	* @param integer $start
+	* @param integer $start
+	* @param array $statuses
+	* @return Model_Invoice[]
+	*/
+	static function getByDateRangeAndStatus($start, $end, $statuses) {
+		$objects = DAO_Invoice::getWhere(sprintf("%s >= %d AND %s <= %d AND %s IN (%s)",
+			DAO_Invoice::CREATED_DATE,
+			$start,
+			DAO_Invoice::CREATED_DATE,
+			$end,
+			DAO_Invoice::STATUS,
+			implode(',', $statuses)
+		));
+		
+		if(count($objects))
+			return $objects;
+		
+		return null;
+	}
+	
+	/**
 	* @param integer $account_id
 	* @return Model_Invoice[]
 	*/
