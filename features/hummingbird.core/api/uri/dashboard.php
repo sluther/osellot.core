@@ -7,7 +7,7 @@ class DashboardTab_Billing_Hummingbird extends Extension_Tab_Billing_Hummingbird
 // 		$items = DAO_Item::getWhere();
 // 		$tpl->assign('items', $items);
 		
-		$products = DAO_Product::getWhere();
+		$products = DAO_Product::getAll();
 		$tpl->assign('products', $products);
 		
 		$start = strtotime("Second wednesday of last month");

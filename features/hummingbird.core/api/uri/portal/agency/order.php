@@ -33,7 +33,7 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 					DevblocksPlatform::redirect(new DevblocksHttpResponse(array('agency', 'order')));
 				break;
 			default:
-				$products = DAO_Product::getWhere();
+				$products = DAO_Product::getAll();
 				
 				foreach($products as $id => $product) {
 					$settings = DAO_Product::getProductSettings($id);

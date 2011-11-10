@@ -71,7 +71,15 @@ class DAO_Product extends DevblocksORMHelper {
 	
 	/**
 	* @param integer $id
-	* @return Model_Product
+	* @return array Model_Product
+	*/
+	static function getAll() {
+		return self::getWhere();
+	}
+	
+	/**
+	* @param integer $id
+	* @return Model_ProductSetting
 	*/
 	static function getProductSettings($id) {
 		$settings = DAO_ProductSetting::getProductSettings($id);

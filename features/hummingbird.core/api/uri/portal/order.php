@@ -53,7 +53,7 @@ class OrderPortal_HummingbirdController extends Extension_Portal_Hummingbird_Con
 				
 				break;
 			default:
-				$products = DAO_Product::getWhere();
+				$products = DAO_Product::getAll();
 				
 				foreach($products as $id => $product) {
 					$settings = DAO_Product::getProductSettings($id);
