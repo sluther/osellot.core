@@ -125,8 +125,12 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 		$account = $umsession->getProperty('hb_login');
 		$cart = $umsession->getProperty('hb_cart', null);
 		
+		$name = DevblocksPlatform::importGPC($_REQUEST['name'], 'string', '');
+		$email = DevblocksPlatform::importGPC($_REQUEST['email'], 'string', '');
+		$phone = DevblocksPlatform::importGPC($_REQUEST['phone'], 'string', '');
+		
 		$delivery = DevblocksPlatform::importGPC($_REQUEST['delivery'], 'integer', 1);
-
+		
 		if($cart === null)
 			DevblocksPlatform::redirect(new DevblocksHttpResponse(array('agency', 'order')));
 				
@@ -136,13 +140,28 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 			'attributes' => array(
 				'delivery' => $delivery,
 				'pickup' => $delivery == false ? true : false,
+				'name' => $name,
 			),
 			'amount' => $cart['total'],
 			'account_id' => $account->id
 		);
 		
+		if(!empty($email))
+			$order['attributes']['email'] = $email;
+		
+		if(!empty($phone))
+			$order['attributes']['phone'] = $phone;
+		
 		if($delivery) {
-			$name = DevblocksPlatform::importGPC($_REQUEST['name'], 'string', '');
+			$boxCount = 0;
+			$deliveryCost = 3;
+			
+			foreach($order['items'] as $item) {
+				$boxCount += $item['quantity'];
+			}
+			
+			$remainder = $boxCount % 3;
+
 			$dline1 = DevblocksPlatform::importGPC($_REQUEST['dline1'], 'string', '');
 			$dline2 = DevblocksPlatform::importGPC($_REQUEST['dline2'], 'string', '');
 			$municipality = DevblocksPlatform::importGPC($_REQUEST['dmunicipality'], 'string', '');
@@ -154,7 +173,9 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 				'municipality' => $municipality,
 				'postal' => $postal
 			);
-			$order['amount'] += 3;
+			$order['amount'] += $deliveryCost * ($boxCount - $remainder);
+			if($remainder)
+				$order['amount'] += 3;
 		} else {
 			$order['attributes']['pickup_location'] = array(
 				'line1' => $account->address_line1,
@@ -169,7 +190,6 @@ class OrderAgencyPortal_HummingbirdController extends Extension_Agency_Portal_Hu
 		$umsession->setProperty('hb_order', $order);
 		DevblocksPlatform::redirect(new DevblocksHttpResponse(array('agency', 'order', 'confirm')));
 	}
-	
 
 	public function doConfirmAction() {
 		$tpl = DevblocksPlatform::getTemplateService();

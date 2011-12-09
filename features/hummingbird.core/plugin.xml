@@ -15,6 +15,7 @@
     
     <patches>
 		<patch version="1.0.0-beta" revision="1" file="patches/1.0.0-beta.php" />
+		<patch version="1.0.0-beta2" revision="2" file="patches/1.0.0-beta2.php" />
 	</patches>
     
    	<!-- Controller Routing -->
@@ -33,6 +34,17 @@
 			<class name="SearchFields_Agency" />
 			<class name="View_Agency" />
 		</file>
+		<file path="api/dao/box_item.php">
+			<class name="DAO_BoxItem" />
+			<class name="Model_BoxItem" />
+			<class name="SearchFields_BoxItem" />
+			<class name="View_BoxItem" />
+			<class name="DAO_BoxItemSource" />
+			<class name="Model_BoxItemSource" />
+			<class name="SearchFields_BoxItemSource" />
+			<class name="View_BoxItemSource" />			
+		</file>
+				
         <file path="api/dao/customer_profile.php">
     	    <class name="DAO_CustomerProfile" />
     	    <class name="Model_CustomerProfile" />
@@ -330,15 +342,28 @@
 		<!-- App Tabs -->
 		
 		<extension point="tab.billing.hummingbird">
-        	<id>dashboard.tab.billing.hummingbird</id>
-			<name>Dashboard Tab</name>
+        	<id>collating.tab.billing.hummingbird</id>
+			<name>Collating Tab</name>
 			<class>
-				<file>api/uri/dashboard.php</file>
-				<name>DashboardTab_Billing_Hummingbird</name>
+				<file>api/uri/collating.php</file>
+				<name>CollatingTab_Billing_Hummingbird</name>
 			</class>
 			<params>
-				<param key="title" value="dashboard.tab.billing" />
-				<param key="uri" value="dashboard" />
+				<param key="title" value="collating.tab.billing" />
+				<param key="uri" value="collating" />
+			</params>
+        </extension>
+        
+        <extension point="tab.billing.hummingbird">
+        	<id>packing.tab.billing.hummingbird</id>
+			<name>Packing Tab</name>
+			<class>
+				<file>api/uri/packing.php</file>
+				<name>PackingTab_Billing_Hummingbird</name>
+			</class>
+			<params>
+				<param key="title" value="packing.tab.billing" />
+				<param key="uri" value="packing" />
 			</params>
         </extension>
         

@@ -54,19 +54,19 @@
 			</div>
 			<div class="contact">
 				<a class="email" href="mailto:info@thegoodfoodbox.ca">info@thegoodfoodbox.ca</a> 
-				<a class="tel" href="tel:+1-250-381-1552;ext=172">+1 (250) 381-1552 ext. 172</a>
+				<a class="tel" href="tel:+1-250-893-7635">+1 (250) 893-7635</a>
 
 			</div>
 		</header>
 		<div id="main-nav">
 			<nav role="navigation">
 				<ul>
-					<li><a href="/about/"><span><strong>About</strong><br> the Good Food Box program</span></a></li>
-					<li><a href="/boxes/"><span><strong>Boxes</strong><br> what, how &amp; where to buy</a></span></li>
+					<li><a href="http://www.thegoodfoodbox.ca/about/"><span><strong>About</strong><br> the Good Food Box program</span></a></li>
+					<li><a href="http://www.thegoodfoodbox.ca/boxes/"><span><strong>Boxes</strong><br> what, how &amp; where to buy</a></span></li>
 
 					<li class="selected"><a href="http://order.thegoodfoodbox.ca/"><span><strong>Ordering</strong><br> order online or in person</a></span></li>
-					<li><a href="/contact/"><span><strong>Contact</strong><br> reach us by phone or email</a></span></li>
-					<li><a href="/news/"><span><strong>News</strong><br> our newsletter &amp; weblog</a></span></li>
+					<li><a href="http://www.thegoodfoodbox.ca/contact/"><span><strong>Contact</strong><br> reach us by phone or email</a></span></li>
+					<li><a href="http://www.thegoodfoodbox.ca/news/"><span><strong>News</strong><br> our newsletter &amp; weblog</a></span></li>
 				</ul>
 			</nav>
 		</div>

@@ -10,9 +10,9 @@
 		<tu tuid='title.hummingbird.core'>
 			<tuv xml:lang="en_US"><seg>Billing</seg></tuv>
 		</tu>
-        
-        <!-- Contact Person -->
-        <tu tuid='dao.contact_person.phone'>
+		
+		<!-- Contact Person -->
+		<tu tuid='dao.contact_person.phone'>
 			<tuv xml:lang="en_US"><seg>Phone Number</seg></tuv>
 		</tu>
 		<tu tuid='dao.contact_person.name'>
@@ -49,39 +49,39 @@
 			<tuv xml:lang="en_US"><seg>Is Agency</seg></tuv>
 		</tu>
 				
-        <!--  App Tabs -->
-		<tu tuid='dashboard.tab.billing'>
-			<tuv xml:lang="en_US"><seg>Dashboard</seg></tuv>
+		<!--  App Tabs -->
+		<tu tuid='collating.tab.billing'>
+			<tuv xml:lang="en_US"><seg>Collating</seg></tuv>
 		</tu>
-		
-        <tu tuid='products.tab.billing'>
+		<tu tuid='packing.tab.billing'>
+			<tuv xml:lang="en_US"><seg>Packing Sheets</seg></tuv>
+		</tu>
+		<tu tuid='products.tab.billing'>
 			<tuv xml:lang="en_US"><seg>Products</seg></tuv>
 		</tu>
-        
-        <tu tuid='invoices.tab.billing'>
+		<tu tuid='invoices.tab.billing'>
 			<tuv xml:lang="en_US"><seg>Invoices</seg></tuv>
 		</tu>
-        
-        <tu tuid='customers.tab.billing'>
+		<tu tuid='customers.tab.billing'>
 			<tuv xml:lang="en_US"><seg>Customers</seg></tuv>
 		</tu>
 		
-        <!-- Setup Tabs -->
-        
-        <tu tuid='gateway.setup.hummingbird'>
+		<!-- Setup Tabs -->
+		
+		<tu tuid='gateway.setup.hummingbird'>
 			<tuv xml:lang="en_US"><seg>Gateway Setup</seg></tuv>
 		</tu>
-        
-        <!-- Gateways -->
-        
-        <tu tuid='authnet.gateway.hummingbird.core'>
+		
+		<!-- Gateways -->
+		
+		<tu tuid='authnet.gateway.hummingbird.core'>
 			<tuv xml:lang="en_US"><seg>Authorize.Net</seg></tuv>
 		</tu>
-        
-        
-        <!-- Agency -->
-        
-        <tu tuid='agencies.tab.billing'>
+		
+		
+		<!-- Agency -->
+		
+		<tu tuid='agencies.tab.billing'>
 			<tuv xml:lang="en_US"><seg>Agencies</seg></tuv>
 		</tu>
 		<tu tuid='billing.agencies.add'>
@@ -94,202 +94,227 @@
 			<tuv xml:lang="en_US"><seg>Contact Information</seg></tuv>
 		</tu>
 
-        <!-- CustomerProfile -->
+		<!-- CustomerProfile -->
 
-        <tu tuid='customer_profile.id'>
-	        <tuv xml:lang="en_US"><seg>Id</seg></tuv>
-        </tu>
+		<tu tuid='customer_profile.id'>
+			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
+		</tu>
+		<tu tuid='customer_profile.address_id'>
+			<tuv xml:lang="en_US"><seg>Address Id</seg></tuv>
+		</tu>
+		<tu tuid='customer_profile.profile_id'>
+			<tuv xml:lang="en_US"><seg>Profile Id</seg></tuv>
+		</tu>
 
-        <tu tuid='customer_profile.address_id'>
-	        <tuv xml:lang="en_US"><seg>Address Id</seg></tuv>
-        </tu>
+		<!-- Gateway -->
 
-        <tu tuid='customer_profile.profile_id'>
-	        <tuv xml:lang="en_US"><seg>Profile Id</seg></tuv>
-        </tu>
+		<tu tuid='gateway.id'>
+			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
+		</tu>
+		<tu tuid='gateway.name'>
+			<tuv xml:lang="en_US"><seg>Name</seg></tuv>
+		</tu>
+		<tu tuid='gateway.extension_id'>
+			<tuv xml:lang="en_US"><seg>Extension Id</seg></tuv>
+		</tu>
+		<tu tuid='gateway.enabled'>
+			<tuv xml:lang="en_US"><seg>Enabled</seg></tuv>
+		</tu>
 
-        <!-- Gateway -->
+		<!-- Invoice -->
 
-        <tu tuid='gateway.id'>
-	        <tuv xml:lang="en_US"><seg>Id</seg></tuv>
-        </tu>
-
-        <tu tuid='gateway.name'>
-	        <tuv xml:lang="en_US"><seg>Name</seg></tuv>
-        </tu>
-
-        <tu tuid='gateway.extension_id'>
-	        <tuv xml:lang="en_US"><seg>Extension Id</seg></tuv>
-        </tu>
-
-        <tu tuid='gateway.enabled'>
-	        <tuv xml:lang="en_US"><seg>Enabled</seg></tuv>
-        </tu>
-
-        <!-- Invoice -->
-
-        <tu tuid='invoice.id'>
-	        <tuv xml:lang="en_US"><seg>Id</seg></tuv>
-        </tu>
-
-        <tu tuid='invoice.account_id'>
-	        <tuv xml:lang="en_US"><seg>Account Id</seg></tuv>
-        </tu>
-
-        <tu tuid='invoice.amount'>
-	        <tuv xml:lang="en_US"><seg>Amount</seg></tuv>
-        </tu>
-
-        <tu tuid='invoice.amount_paid'>
-	        <tuv xml:lang="en_US"><seg>Amount Paid</seg></tuv>
-        </tu>
-
-        <tu tuid='invoice.status'>
-	        <tuv xml:lang="en_US"><seg>Status</seg></tuv>
-        </tu>
-
-        <tu tuid='invoice.number'>
-	        <tuv xml:lang="en_US"><seg>Number</seg></tuv>
-        </tu>
-		
+		<tu tuid='invoice.id'>
+			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
+		</tu>
+		<tu tuid='invoice.account_id'>
+			<tuv xml:lang="en_US"><seg>Account Id</seg></tuv>
+		</tu>
+		<tu tuid='invoice.amount'>
+			<tuv xml:lang="en_US"><seg>Amount</seg></tuv>
+		</tu>
+		<tu tuid='invoice.amount_paid'>
+			<tuv xml:lang="en_US"><seg>Amount Paid</seg></tuv>
+		</tu>
+		<tu tuid='invoice.status'>
+			<tuv xml:lang="en_US"><seg>Status</seg></tuv>
+		</tu>
+		<tu tuid='invoice.number'>
+			<tuv xml:lang="en_US"><seg>Number</seg></tuv>
+		</tu>
 		<tu tuid='invoice.created_date'>
 			<tuv xml:lang="en_US"><seg>Order date</seg></tuv>
 		</tu>
 		
-        <!-- InvoiceItem -->
+		<!-- InvoiceItem -->
 
-        <tu tuid='invoice_item.id'>
-	        <tuv xml:lang="en_US"><seg>Id</seg></tuv>
-        </tu>
+		<tu tuid='invoice_item.id'>
+			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
+		</tu>
+		<tu tuid='invoice_item.amount'>
+			<tuv xml:lang="en_US"><seg>Amount</seg></tuv>
+		</tu>
+		<tu tuid='invoice_item.product_id'>
+			<tuv xml:lang="en_US"><seg>Product Id</seg></tuv>
+		</tu>
 
-        <tu tuid='invoice_item.amount'>
-	        <tuv xml:lang="en_US"><seg>Amount</seg></tuv>
-        </tu>
+		<!-- PaymentProfile -->
 
-        <tu tuid='invoice_item.product_id'>
-	        <tuv xml:lang="en_US"><seg>Product Id</seg></tuv>
-        </tu>
+		<tu tuid='payment_profile.id'>
+			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
+		</tu>
+		<tu tuid='payment_profile.address_id'>
+			<tuv xml:lang="en_US"><seg>Address Id</seg></tuv>
+		</tu>
+		<tu tuid='payment_profile.profile_id'>
+			<tuv xml:lang="en_US"><seg>Profile Id</seg></tuv>
+		</tu>
+		<tu tuid='payment_profile.plugin_id'>
+			<tuv xml:lang="en_US"><seg>Plugin Id</seg></tuv>
+		</tu>
 
-        <!-- PaymentProfile -->
+		<!-- PaymentProfileExtra -->
 
-        <tu tuid='payment_profile.id'>
-	        <tuv xml:lang="en_US"><seg>Id</seg></tuv>
-        </tu>
+		<tu tuid='payment_profile_extra.id'>
+			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
+		</tu>
+		<tu tuid='payment_profile_extra.profile_id'>
+			<tuv xml:lang="en_US"><seg>Profile Id</seg></tuv>
+		</tu>
+		<tu tuid='payment_profile_extra.name'>
+			<tuv xml:lang="en_US"><seg>Name</seg></tuv>
+		</tu>
+		<tu tuid='payment_profile_extra.value'>
+			<tuv xml:lang="en_US"><seg>Value</seg></tuv>
+		</tu>
 
-        <tu tuid='payment_profile.address_id'>
-	        <tuv xml:lang="en_US"><seg>Address Id</seg></tuv>
-        </tu>
+		<!-- Product -->
 
-        <tu tuid='payment_profile.profile_id'>
-	        <tuv xml:lang="en_US"><seg>Profile Id</seg></tuv>
-        </tu>
+		<tu tuid='product.id'>
+			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
+		</tu>
+		<tu tuid='product.price'>
+			<tuv xml:lang="en_US"><seg>Price</seg></tuv>
+		</tu>
+		<tu tuid='product.price_setup'>
+			<tuv xml:lang="en_US"><seg>Price Setup</seg></tuv>
+		</tu>
+		<tu tuid='product.recurring'>
+			<tuv xml:lang="en_US"><seg>Recurring</seg></tuv>
+		</tu>
+		<tu tuid='product.taxable'>
+			<tuv xml:lang="en_US"><seg>Taxable</seg></tuv>
+		</tu>
+		<tu tuid='product.sku'>
+			<tuv xml:lang="en_US"><seg>Sku</seg></tuv>
+		</tu>
+		<tu tuid='product.name'>
+			<tuv xml:lang="en_US"><seg>Name</seg></tuv>
+		</tu>
+		<tu tuid='product.description'>
+			<tuv xml:lang="en_US"><seg>Description</seg></tuv>
+		</tu>
 
-        <tu tuid='payment_profile.plugin_id'>
-	        <tuv xml:lang="en_US"><seg>Plugin Id</seg></tuv>
-        </tu>
+		<!-- ProductSetting -->
 
-        <!-- PaymentProfileExtra -->
+		<tu tuid='product_setting.id'>
+			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
+		</tu>
+		<tu tuid='product_setting.product_id'>
+			<tuv xml:lang="en_US"><seg>Product Id</seg></tuv>
+		</tu>
+		<tu tuid='product_setting.name'>
+			<tuv xml:lang="en_US"><seg>Name</seg></tuv>
+		</tu>
+		<tu tuid='product_setting.value'>
+			<tuv xml:lang="en_US"><seg>Value</seg></tuv>
+		</tu>
 
-        <tu tuid='payment_profile_extra.id'>
-	        <tuv xml:lang="en_US"><seg>Id</seg></tuv>
-        </tu>
+		<!-- Transaction -->
 
-        <tu tuid='payment_profile_extra.profile_id'>
-	        <tuv xml:lang="en_US"><seg>Profile Id</seg></tuv>
-        </tu>
+		<tu tuid='transaction.id'>
+			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
+		</tu>
+		<tu tuid='transaction.to_address_id'>
+			<tuv xml:lang="en_US"><seg>To Address Id</seg></tuv>
+		</tu>
+		<tu tuid='transaction.from_address_id'>
+			<tuv xml:lang="en_US"><seg>From Address Id</seg></tuv>
+		</tu>
+		<tu tuid='transaction.amount'>
+			<tuv xml:lang="en_US"><seg>Amount</seg></tuv>
+		</tu>
+		<tu tuid='transaction.plugin_id'>
+			<tuv xml:lang="en_US"><seg>Plugin Id</seg></tuv>
+		</tu>
+		<tu tuid='transaction.trans_id'>
+			<tuv xml:lang="en_US"><seg>Trans Id</seg></tuv>
+		</tu>
+		<tu tuid='transaction.profile_id'>
+			<tuv xml:lang="en_US"><seg>Profile Id</seg></tuv>
+		</tu>
+		<tu tuid='transaction.status'>
+			<tuv xml:lang="en_US"><seg>Status</seg></tuv>
+		</tu>
+		
+		<!-- BoxItem -->
 
-        <tu tuid='payment_profile_extra.name'>
-	        <tuv xml:lang="en_US"><seg>Name</seg></tuv>
-        </tu>
+		<tu tuid='box_item.id'>
+			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
+		</tu>
+		<tu tuid='box_item.item'>
+			<tuv xml:lang="en_US"><seg>Item</seg></tuv>
+		</tu>
+		<tu tuid='box_item.source'>
+			<tuv xml:lang="en_US"><seg>Source</seg></tuv>
+		</tu>
+		<tu tuid='box_item.origin'>
+			<tuv xml:lang="en_US"><seg>Origin</seg></tuv>
+		</tu>
+		<tu tuid='box_item.unit'>
+			<tuv xml:lang="en_US"><seg>Unit</seg></tuv>
+		</tu>
+		<tu tuid='box_item.weighed'>
+			<tuv xml:lang="en_US"><seg>Weighed</seg></tuv>
+		</tu>
+		<tu tuid='box_item.casecost'>
+			<tuv xml:lang="en_US"><seg>Case Cost</seg></tuv>
+		</tu>
+		<tu tuid='box_item.unitspercase'>
+			<tuv xml:lang="en_US"><seg>Units/Case</seg></tuv>
+		</tu>
+		<tu tuid='box_item.unitcost'>
+			<tuv xml:lang="en_US"><seg>Unitcost</seg></tuv>
+		</tu>
+		<tu tuid='box_item.casesneeded'>
+			<tuv xml:lang="en_US"><seg>Cases Needed</seg></tuv>
+		</tu>
+		<tu tuid='box_item.casesrounded'>
+			<tuv xml:lang="en_US"><seg>Cases Rounded</seg></tuv>
+		</tu>
+		<tu tuid='box_item.remainder'>
+			<tuv xml:lang="en_US"><seg>Remainder</seg></tuv>
+		</tu>
+		<tu tuid='box_item.guidance'>
+			<tuv xml:lang="en_US"><seg>Guidance</seg></tuv>
+		</tu>
+		<tu tuid='box_item.startdate'>
+			<tuv xml:lang="en_US"><seg>Date Start</seg></tuv>
+		</tu>
+		<tu tuid='box_item.enddate'>
+			<tuv xml:lang="en_US"><seg>Date End</seg></tuv>
+		</tu>
+		<tu tuid='box_item.totalcost'>
+			<tuv xml:lang="en_US"><seg>Totalcost</seg></tuv>
+		</tu>
+		
+		<!-- BoxItemSource -->
 
-        <tu tuid='payment_profile_extra.value'>
-	        <tuv xml:lang="en_US"><seg>Value</seg></tuv>
-        </tu>
-
-        <!-- Product -->
-
-        <tu tuid='product.id'>
-	        <tuv xml:lang="en_US"><seg>Id</seg></tuv>
-        </tu>
-
-        <tu tuid='product.price'>
-	        <tuv xml:lang="en_US"><seg>Price</seg></tuv>
-        </tu>
-
-        <tu tuid='product.price_setup'>
-	        <tuv xml:lang="en_US"><seg>Price Setup</seg></tuv>
-        </tu>
-
-        <tu tuid='product.recurring'>
-	        <tuv xml:lang="en_US"><seg>Recurring</seg></tuv>
-        </tu>
-
-        <tu tuid='product.taxable'>
-	        <tuv xml:lang="en_US"><seg>Taxable</seg></tuv>
-        </tu>
-
-        <tu tuid='product.sku'>
-	        <tuv xml:lang="en_US"><seg>Sku</seg></tuv>
-        </tu>
-
-        <tu tuid='product.name'>
-	        <tuv xml:lang="en_US"><seg>Name</seg></tuv>
-        </tu>
-
-        <tu tuid='product.description'>
-	        <tuv xml:lang="en_US"><seg>Description</seg></tuv>
-        </tu>
-
-        <!-- ProductSetting -->
-
-        <tu tuid='product_setting.id'>
-	        <tuv xml:lang="en_US"><seg>Id</seg></tuv>
-        </tu>
-
-        <tu tuid='product_setting.product_id'>
-	        <tuv xml:lang="en_US"><seg>Product Id</seg></tuv>
-        </tu>
-
-        <tu tuid='product_setting.name'>
-	        <tuv xml:lang="en_US"><seg>Name</seg></tuv>
-        </tu>
-
-        <tu tuid='product_setting.value'>
-	        <tuv xml:lang="en_US"><seg>Value</seg></tuv>
-        </tu>
-
-        <!-- Transaction -->
-
-        <tu tuid='transaction.id'>
-	        <tuv xml:lang="en_US"><seg>Id</seg></tuv>
-        </tu>
-
-        <tu tuid='transaction.to_address_id'>
-	        <tuv xml:lang="en_US"><seg>To Address Id</seg></tuv>
-        </tu>
-
-        <tu tuid='transaction.from_address_id'>
-	        <tuv xml:lang="en_US"><seg>From Address Id</seg></tuv>
-        </tu>
-
-        <tu tuid='transaction.amount'>
-	        <tuv xml:lang="en_US"><seg>Amount</seg></tuv>
-        </tu>
-
-        <tu tuid='transaction.plugin_id'>
-	        <tuv xml:lang="en_US"><seg>Plugin Id</seg></tuv>
-        </tu>
-
-        <tu tuid='transaction.trans_id'>
-	        <tuv xml:lang="en_US"><seg>Trans Id</seg></tuv>
-        </tu>
-
-        <tu tuid='transaction.profile_id'>
-	        <tuv xml:lang="en_US"><seg>Profile Id</seg></tuv>
-        </tu>
-
-        <tu tuid='transaction.status'>
-	        <tuv xml:lang="en_US"><seg>Status</seg></tuv>
-        </tu>
+		<tu tuid='box_item_source.id'>
+			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
+		</tu>
+		<tu tuid='box_item_source.name'>
+			<tuv xml:lang="en_US"><seg>Name</seg></tuv>
+		</tu>
+		
 	</body>
 </tmx>

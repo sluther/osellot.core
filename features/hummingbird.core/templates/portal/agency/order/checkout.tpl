@@ -6,6 +6,16 @@
 						<label for="name" class="">Full name</label>
 						<input type="text" size="35" value="" name="name" id="name">
 					</div>
+					<span>The clients's e-mail address.</span>
+					<div>
+						<label for="email" class="">E-mail</label>
+						<input type="email" size="35" value="" name="email" id="email">
+					</div>
+					<span>The client's phone number.</span>
+					<div>
+						<label for="phone" class="">Phone</label>
+						<input type="phone" size="35" value="" name="phone" id="phone">
+					</div>
 					<fieldset>
 						<legend>Pickup or delivery</legend>
 						<span>Select whether you want to pickup your order or have it delivered.</span>

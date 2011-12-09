@@ -175,6 +175,15 @@ class OrderPortal_HummingbirdController extends Extension_Portal_Hummingbird_Con
 		);
 		
 		if($delivery) {
+			$boxCount = 0;
+			$deliveryCost = 3;
+			
+			foreach($order['items'] as $item) {
+				$boxCount += $item['quantity'];
+			}
+			
+			$remainder = $boxCount % 3;
+			
 			$dline1 = DevblocksPlatform::importGPC($_REQUEST['dline1'], 'string', '');
 			$dline2 = DevblocksPlatform::importGPC($_REQUEST['dline2'], 'string', '');
 			$municipality = DevblocksPlatform::importGPC($_REQUEST['dmunicipality'], 'string', '');
@@ -185,7 +194,9 @@ class OrderPortal_HummingbirdController extends Extension_Portal_Hummingbird_Con
 				'municipality' => $municipality,
 				'postal' => $postal
 			);
-			$order['amount'] += 3; 
+			$order['amount'] += $deliveryCost * ($boxCount - $remainder);
+			if($remainder)
+				$order['amount'] += 3;
 		} else {
 			$order['attributes']['pickup_location'] = array(
 				'line1' => $account->address_line1,
