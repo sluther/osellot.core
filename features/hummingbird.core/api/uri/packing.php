@@ -8,7 +8,6 @@ class PackingTab_Billing_Hummingbird extends Extension_Tab_Billing_Hummingbird {
 // 		$tpl->assign('items', $items);
 		
 		$products = DAO_Product::getAll();
-		$tpl->assign('products', $products);
 		$startdate = strtotime("December 1, 2011");
 		$enddate = strtotime("January 11, 2012");
 		
@@ -73,53 +72,27 @@ class PackingTab_Billing_Hummingbird extends Extension_Tab_Billing_Hummingbird {
 		echo json_encode($row);
 	}
 	
-	public function saveBoxItemsAction() {
-		@$rows = DevblocksPlatform::importGPC($_REQUEST['row'], 'array', array());
-		@$startdate = DevblocksPlatform::importGPC($_REQUEST['startdate'], 'integer', 0);
-		@$enddate = DevblocksPlatform::importGPC($_REQUEST['enddate'], 'integer', 0);
-		
-		foreach($rows as $row) {
-			if(!empty($row['item'])) {
-				if(null == ($box_item = DAO_BoxItem::get($row['id']))) {
-					DAO_BoxItem::create(array(
-						DAO_BoxItem::ITEM => $row['item'],
-						DAO_BoxItem::SOURCE => $row['source'],
-						DAO_BoxItem::ORIGIN => $row['origin'],
-						DAO_BoxItem::UNIT => $row['unit'],
-						DAO_BoxItem::WEIGHED => $row['weighed'],
-						DAO_BoxItem::CASECOST => $row['casecost'],
-						DAO_BoxItem::UNITSPERCASE => $row['unitspercase'],
-						DAO_BoxItem::UNITCOST => $row['unitcost'],
-						DAO_BoxItem::CASESNEEDED => $row['casesneeded'],
-						DAO_BoxItem::CASESROUNDED => $row['casesrounded'],
-						DAO_BoxItem::REMAINDER => $row['remainder'],
-						DAO_BoxItem::GUIDANCE => $row['guidance'],
-						DAO_BoxItem::STARTDATE => $startdate,
-						DAO_BoxItem::ENDDATE => $enddate,
-						DAO_BoxItem::TOTALCOST => $row['totalcost'],
-						DAO_BoxItem::PRODUCTS => json_encode($row['products'])
-					));
-				} else {
-					DAO_BoxItem::update($box_item->id, array(
-						DAO_BoxItem::ITEM => $row['item'],
-						DAO_BoxItem::SOURCE => $row['source'],
-						DAO_BoxItem::ORIGIN => $row['origin'],
-						DAO_BoxItem::UNIT => $row['unit'],
-						DAO_BoxItem::WEIGHED => $row['weighed'],
-						DAO_BoxItem::CASECOST => $row['casecost'],
-						DAO_BoxItem::UNITSPERCASE => $row['unitspercase'],
-						DAO_BoxItem::UNITCOST => $row['unitcost'],
-						DAO_BoxItem::CASESNEEDED => $row['casesneeded'],
-						DAO_BoxItem::CASESROUNDED => $row['casesrounded'],
-						DAO_BoxItem::REMAINDER => $row['remainder'],
-						DAO_BoxItem::GUIDANCE => $row['guidance'],
-						DAO_BoxItem::TOTALCOST => $row['totalcost'],
-						DAO_BoxItem::PRODUCTS => json_encode($row['products'])
-					));
-				}
-			}
+	public function printPackingSheetAction() {
+		$tpl = DevblocksPlatform::getTemplateService();
+
+		@$product_id = DevblocksPlatform::importGPC($_REQUEST['product_id'], 'integer', 0);
+	
+		$startdate = strtotime("December 1, 2011");
+		$enddate = strtotime("January 11, 2012");
+		if(null !== ($product = DAO_Product::get($product_id))) {
+			$products = array($product->id => $product);
+		} else {
+			$products = DAO_Product::getAll();
 		}
-		
-// 		DevblocksPlatform::redirect(new DevblocksHttpResponse(array('billing')));
+	
+		$items = DAO_BoxItem::getByDateRange($startdate, $enddate);
+		$sources = DAO_BoxItemSource::getAll();
+	
+		$tpl->assign('startdate', $startdate);
+		$tpl->assign('enddate', $enddate);
+		$tpl->assign('products', $products);
+		$tpl->assign('items', $items);
+		$tpl->assign('sources', $sources);
+		$tpl->display('devblocks:hummingbird.core::billing/tabs/packing/print.tpl');
 	}
 }

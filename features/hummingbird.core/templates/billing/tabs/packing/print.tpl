@@ -1,6 +1,4 @@
-<a href="{devblocks_url}ajax.php?c=billing&a=handleTabAction&tab=packing.tab.billing.hummingbird&action=printPackingSheet{/devblocks_url}">Print All Sheets</a>
 {foreach $products as $id => $product}
-<a href="{devblocks_url}ajax.php?c=billing&a=handleTabAction&tab=packing.tab.billing.hummingbird&action=printPackingSheet&product_id={$id}{/devblocks_url}">Print</a>
 <h1>{$product->name}</h1>
 <table class="packing">
 	<tr>
@@ -28,3 +26,6 @@
 	
 </table>
 {/foreach}
+<script type="text/javascript">
+window.print();
+</script>
