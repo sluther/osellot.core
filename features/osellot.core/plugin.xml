@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.devblocks.com/schema/plugin.xsd">
+	<id>osellot.core</id>
+	<name>[Osellot] Core</name>
+	<description>This plugin adds a billing system to your Cerberus Installation</description>
+	<author>WebGroup Media, LLC.</author>
+	<revision>0</revision>
+	<link>http://wiki.osellot.com/wiki/1.x</link>
+	
+    <!-- Plugin Dependencies -->
+	
+	<!--<dependencies>
+		<require plugin_id="cerberusweb.core" version="5.5.0" />
+	</dependencies>-->
+    
+    <patches>
+		<patch version="1.0.0-beta" revision="1" file="patches/1.0.0-beta.php" />
+	</patches>
+    
+   	<!-- Controller Routing -->
+
+	<uri_routing>
+		<uri name="billing" controller="core.controller.page" />
+	</uri_routing>
+	
+    
+    <!-- Exported Classes -->
+    
+    <class_loader>
+        <file path="api/dao/customer_profile.php">
+    	    <class name="DAO_CustomerProfile" />
+    	    <class name="Model_CustomerProfile" />
+    	    <class name="SearchFields_CustomerProfile" />
+    	    <class name="View_CustomerProfile" />
+        </file>
+        <file path="api/dao/gateway.php">
+    	    <class name="DAO_Gateway" />
+    	    <class name="Model_Gateway" />
+    	    <class name="SearchFields_Gateway" />
+    	    <class name="View_Gateway" />
+    	    <class name="DAO_GatewaySetting" />
+        </file>
+        <file path="api/dao/invoice.php">
+    	    <class name="DAO_Invoice" />
+    	    <class name="Model_Invoice" />
+    	    <class name="SearchFields_Invoice" />
+    	    <class name="View_Invoice" />
+       	    <class name="DAO_InvoiceItem" />
+    	    <class name="Model_InvoiceItem" />
+    	    <class name="DAO_InvoiceAttribute" />
+    	    <class name="Model_InvoiceAttribute" />
+        </file>
+        <file path="api/dao/payment_profile.php">
+    	    <class name="DAO_PaymentProfile" />
+    	    <class name="Model_PaymentProfile" />
+    	    <class name="SearchFields_PaymentProfile" />
+    	    <class name="View_PaymentProfile" />
+        </file>
+        <file path="api/dao/payment_profile_extra.php">
+    	    <class name="DAO_PaymentProfileExtra" />
+    	    <class name="Model_PaymentProfileExtra" />
+    	    <class name="SearchFields_PaymentProfileExtra" />
+    	    <class name="View_PaymentProfileExtra" />
+        </file>
+        <file path="api/dao/product.php">
+    	    <class name="DAO_Product" />
+    	    <class name="Model_Product" />
+    	    <class name="SearchFields_Product" />
+    	    <class name="View_Product" />
+        </file>
+        <file path="api/dao/transaction.php">
+    	    <class name="DAO_Transaction" />
+    	    <class name="Model_Transaction" />
+    	    <class name="SearchFields_Transaction" />
+    	    <class name="View_Transaction" />
+        </file>
+        <file path="api/App.php">
+    	    <class name="Extension_Portal_Osellot_Controller" />
+    	    <class name="Extension_Agency_Portal_Osellot_Controller" />
+    	    <class name="Extension_Tab_Billing_Osellot" />
+    	    <class name="Extension_Gateway_Osellot" />
+        </file>
+        <file path="api/uri/portal/ajax.php">
+			<class name="UmOsellotAjaxController" />
+		</file>
+    </class_loader>
+    
+    
+	<!-- Templates -->
+	
+	<templates set="osellot.portal">
+		<template path="portal/index.tpl" />
+		<template path="portal/header.tpl" />
+		<template path="portal/footer.tpl" />
+		<template path="portal/account/edit.tpl" />
+		<template path="portal/account/history.tpl" />
+		<template path="portal/account/index.tpl" />
+		<template path="portal/account/invoice.tpl" />
+		<template path="portal/login/confirmed.tpl" />
+		<template path="portal/login/login.tpl" />
+		<template path="portal/login/register.tpl" />
+		<template path="portal/order/checkout.tpl" />
+		<template path="portal/order/confirm.tpl" />
+		<template path="portal/order/index.tpl" />
+	</templates>
+ 
+	<extensions>
+		<!-- Controllers -->
+		<extension point="portal.controller.osellot">
+			<id>login.portal.controller.osellot</id>
+			<name>Login</name>
+			<class>
+				<file>api/uri/portal/login.php</file>
+				<name>LoginPortal_OsellotController</name>
+			</class>
+			<params>
+				<param key="uri" value="login" />
+				<param key="menu_title" value="login.portal.osellot" />
+			</params>
+		</extension>
+		
+		<extension point="portal.controller.osellot">
+			<id>account.portal.controller.osellot</id>
+			<name>My Account</name>
+			<class>
+				<file>api/uri/portal/account.php</file>
+				<name>AccountPortal_OsellotController</name>
+			</class>
+			<params>
+				<param key="uri" value="account" />
+				<param key="menu_title" value="account.portal.osellot" />
+			</params>
+		</extension>
+		
+		<extension point="portal.controller.osellot">
+			<id>order.portal.controller.osellot</id>
+			<name>Order</name>
+			<class>
+				<file>api/uri/portal/order.php</file>
+				<name>OrderPortal_OsellotController</name>
+			</class>
+			<params>
+				<param key="uri" value="order" />
+				<param key="menu_title" value="order.portal.osellot" />
+			</params>
+		</extension>
+		
+		<extension point="portal.controller.osellot">
+			<id>agency.portal.controller.osellot</id>
+			<name>Agency</name>
+			<class>
+				<file>api/uri/portal/agency.php</file>
+				<name>AgencyPortal_OsellotController</name>
+			</class>
+			<params>
+				<param key="uri" value="agency" />
+				<param key="menu_title" value="agency.portal.osellot" />
+			</params>
+		</extension>
+		
+		<extension point="agency.portal.controller.osellot">
+			<id>account.agency.portal.controller.osellot</id>
+			<name>Account</name>
+			<class>
+				<file>api/uri/portal/agency/account.php</file>
+				<name>AccountAgencyPortal_OsellotController</name>
+			</class>
+			<params>
+				<param key="uri" value="account" />
+				<param key="menu_title" value="account.portal.osellot" />
+			</params>
+		</extension>
+		
+		<extension point="agency.portal.controller.osellot">
+			<id>login.agency.portal.controller.osellot</id>
+			<name>Login</name>
+			<class>
+				<file>api/uri/portal/agency/login.php</file>
+				<name>LoginAgencyPortal_OsellotController</name>
+			</class>
+			<params>
+				<param key="uri" value="login" />
+				<param key="menu_title" value="login.portal.osellot" />
+			</params>
+		</extension>
+		
+		<extension point="agency.portal.controller.osellot">
+			<id>order.agency.portal.controller.osellot</id>
+			<name>Order</name>
+			<class>
+				<file>api/uri/portal/agency/order.php</file>
+				<name>OrderAgencyPortal_OsellotController</name>
+			</class>
+			<params>
+				<param key="uri" value="order" />
+				<param key="menu_title" value="order.portal.osellot" />
+			</params>
+		</extension>
+		
+		<!-- Usermeet Tools -->
+		
+		<extension point="usermeet.tool">
+			<id>osellot.portal</id>
+			<name>Osellot Portal</name>
+			<class>
+				<file>api/App.php</file>
+				<name>UmOsellotApp</name>
+			</class>
+			<params>
+				<param key="template_set" value="osellot.portal" />
+			</params>
+		</extension>
+		
+		<!-- Login Extensions -->
+
+		<extension point="usermeet.login.authenticator">
+			<id>default.auth.login.hb</id>
+			<name>Osellot (Default)</name>
+			<class>
+				<file>api/UmOsellotApp.php</file>
+				<name>UmOsellotLoginAuthenticator</name>
+			</class>
+			<params>
+				<param key="switcher_icon" value="images/mail.png" />
+				<param key="switcher_label" value="Log in with email and password" />
+			</params>
+		</extension>
+		
+		<!-- Pages -->
+		<extension point="cerberusweb.page">
+			<id>page.osellot.core</id>
+			<name>Osellot Main Page</name>
+			<class>
+				<file>api/App.php</file>
+				<name>OsellotPage</name>
+			</class>
+			<params>
+				<param key="uri" value="billing" />
+    			<param key="menutitle" value="title.osellot.core" />
+			</params>
+		</extension>
+
+		<!-- App Tabs -->
+        
+        <extension point="tab.billing.osellot">
+        	<id>invoices.tab.billing.osellot</id>
+			<name>Invoices Tab</name>
+			<class>
+				<file>api/uri/invoices.php</file>
+				<name>InvoicesTab_Billing_Osellot</name>
+			</class>
+			<params>
+				<param key="title" value="invoices.tab.billing" />
+				<param key="uri" value="invoices" />
+			</params>
+        </extension>
+
+        <extension point="tab.billing.osellot">
+        	<id>customers.tab.billing.osellot</id>
+			<name>Customers Tab</name>
+			<class>
+				<file>api/uri/customers.php</file>
+				<name>CustomersTab_Billing_Osellot</name>
+			</class>
+			<params>
+				<param key="title" value="customers.tab.billing" />
+				<param key="uri" value="customers" />
+			</params>
+        </extension>
+        
+        <extension point="tab.billing.osellot">
+        	<id>products.tab.billing.osellot</id>
+			<name>Products Tab</name>
+			<class>
+				<file>api/uri/products.php</file>
+				<name>ProductsTab_Billing_Osellot</name>
+			</class>
+			<params>
+				<param key="title" value="products.tab.billing" />
+				<param key="uri" value="products" />
+			</params>
+        </extension>
+        
+        <!-- Gateways -->
+        
+        <extension point="gateway.osellot.core">
+        	<id>authnet.gateway.osellot.core</id>
+			<name>Authorize.net Gateway</name>
+			<class>
+				<file>api/gateway/authnet.php</file>
+				<name>AuthNet</name>
+			</class>
+			<params>
+				<param key="menutitle" value="authnet.gateway.osellot.core" />
+				<param key="cc" value="true" />
+			</params>
+        </extension>
+        
+		<extension point="gateway.osellot.core">
+        	<id>paypal.gateway.osellot.core</id>
+			<name>PayPal</name>
+			<class>
+				<file>api/gateway/paypal.php</file>
+				<name>PayPal_Gateway</name>
+			</class>
+			<params>
+				<param key="menutitle" value="paypal.gateway.osellot.core" />
+			</params>
+        </extension>
+
+		<extension point="gateway.osellot.core">
+        	<id>googlecheckout.gateway.osellot.core</id>
+			<name>Google Checkout Gateway</name>
+			<class>
+				<file>api/gateway/googlecheckout.php</file>
+				<name>GoogleCheckout</name>
+			</class>
+			<params>
+				<param key="menutitle" value="googlecheckout.gateway.osellot.core" />
+			</params>
+        </extension>
+        
+        <!-- Setup Menu -->
+        
+        <extension point="cerberusweb.ui.page.menu">
+    		<id>menu.setup.osellot.core</id>
+    		<name>Osellot Configuration</name>
+    		<class>
+    			<file>api/App.php</file>
+    			<name>PageMenu_Setup_Osellot</name>
+    		</class>
+    		<params>
+    			<param key="page_id" value="core.page.configuration" />
+    			<param key="menu_id" value="core.setup.menu.plugins" />
+    		</params>
+    	</extension>
+    	
+    	<!-- Setup Menu Items -->
+        
+        <extension point="cerberusweb.ui.page.menu.item">
+    		<id>gateway.menu.setup.osellot.core</id>
+    		<name>Gateway Configuration</name>
+    		<class>
+    			<file>api/uri/config/gateway.php</file>
+    			<name>PageMenuItem_GatewayMenu_Setup_Osellot</name>
+    		</class>
+    		<params>
+    			<param key="page_id" value="core.page.configuration" />
+    			<param key="menu_id" value="menu.setup.osellot.core" />
+    		</params>
+    	</extension>
+    	
+    	<!-- Setup Page Sections -->
+    	
+    	<extension point="cerberusweb.ui.page.section">
+			<id>setup.osellot.core</id>
+			<name>Osellot Setup</name>
+			<class>
+				<file>api/App.php</file>
+				<name>SetupSection_Osellot</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="osellot" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.ui.page.section">
+			<id>gateway.setup.osellot.core</id>
+			<name>Gateway Setup</name>
+			<class>
+				<file>api/uri/config/gateway.php</file>
+				<name>Gateway_SetupSection_Osellot</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="gateway" />
+			</params>
+		</extension>
+		<!--
+    	<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.acl</id>
+			<name>ACL Section</name>
+			<class>
+				<file>api/uri/config/acl.php</file>
+				<name>PageSection_SetupACL</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="acl" />
+			</params>
+		</extension>
+	
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.branding</id>
+			<name>Branding Section</name>
+			<class>
+				<file>api/uri/config/branding.php</file>
+				<name>PageSection_SetupBranding</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="branding" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.fields</id>
+			<name>Custom Fields Section</name>
+			<class>
+				<file>api/uri/config/fields.php</file>
+				<name>PageSection_SetupCustomFields</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="fields" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.groups</id>
+			<name>Groups Section</name>
+			<class>
+				<file>api/uri/config/groups.php</file>
+				<name>PageSection_SetupGroups</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="groups" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.license</id>
+			<name>License Section</name>
+			<class>
+				<file>api/uri/config/license.php</file>
+				<name>PageSection_SetupLicense</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="license" />
+			</params>
+		</extension>
+
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.plugins</id>
+			<name>Plugins Section</name>
+			<class>
+				<file>api/uri/config/plugins.php</file>
+				<name>PageSection_SetupPlugins</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="plugins" />
+			</params>
+		</extension>
+	
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.portal</id>
+			<name>Portal Section</name>
+			<class>
+				<file>api/uri/config/portal.php</file>
+				<name>PageSection_SetupPortal</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="portal" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.portals</id>
+			<name>Portals Section</name>
+			<class>
+				<file>api/uri/config/portals.php</file>
+				<name>PageSection_SetupPortals</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="portals" />
+			</params>
+		</extension>
+	
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.scheduler</id>
+			<name>Scheduler Section</name>
+			<class>
+				<file>api/uri/config/scheduler.php</file>
+				<name>PageSection_SetupScheduler</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="scheduler" />
+			</params>
+		</extension>
+	
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.security</id>
+			<name>Security Section</name>
+			<class>
+				<file>api/uri/config/security.php</file>
+				<name>PageSection_SetupSecurity</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="security" />
+			</params>
+		</extension>
+	
+		<extension point="cerberusweb.ui.page.section">
+			<id>core.page.setup.workers</id>
+			<name>Workers Section</name>
+			<class>
+				<file>api/uri/config/workers.php</file>
+				<name>PageSection_SetupWorkers</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.configuration" />
+				<param key="uri" value="workers" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.page">
+			<id>core.page.preferences</id>
+			<name>Preferences Page</name>
+			<class>
+				<file>api/uri/preferences.php</file>
+				<name>ChPreferencesPage</name>
+			</class>
+			<params>
+				<param key="uri" value="preferences" />
+				<param key="menutitle" value="" />
+			</params>
+		</extension>
+		
+		<extension point="cerberusweb.page">
+			<id>core.page.profiles</id>
+			<name>Profiles Pages</name>
+			<class>
+				<file>api/uri/profiles.php</file>
+				<name>Page_Profiles</name>
+			</class>
+			<params>
+				<param key="uri" value="profiles" />
+				<param key="menutitle" value="" />
+			</params>
+		</extension>
+		-->
+	</extensions>
+	
+</plugin>

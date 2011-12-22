@@ -1,0 +1,1 @@
+<div class="account">Signed in as: {$active_profile->getPrimaryAddress()->email} ({if !$is_agency}<a href="{devblocks_url}a=account&c=edit{/devblocks_url}">edit account</a> | <a href="{devblocks_url}c=login&a=signout{/devblocks_url}">sign-out</a>{else}<a href="{devblocks_url}c=agency&a=login&action=signout{/devblocks_url}{/if}) </div>
