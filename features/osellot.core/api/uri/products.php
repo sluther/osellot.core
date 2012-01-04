@@ -123,12 +123,16 @@ class ProductsTab_Billing_Osellot extends Extension_Tab_Billing_Osellot {
 				return;
 			
 			// SKU is unique
-			if(null !== ($product = DAO_Product::getBySKU($sku)))
-				return;
+			if(null !== ($product = DAO_Product::getBySKU($sku))) {
+				if($product->id != $product_id) {
+					return;
+				}
+			}
+				
 			// Name must be set
 			if(empty($name))
 				return;
-			
+
 			$fields = array(
 				DAO_Product::PRICE => $price,
 				DAO_Product::PRICE_SETUP => $price_setup,
@@ -139,7 +143,7 @@ class ProductsTab_Billing_Osellot extends Extension_Tab_Billing_Osellot {
 			);
 
 			// Valid product?
-			if(null == ($product = DAO_Product::get($product_id))) {
+			if(null !== ($product = DAO_Product::get($product_id))) {
 				DAO_Product::update($product_id, $fields);
 			}
 		}
