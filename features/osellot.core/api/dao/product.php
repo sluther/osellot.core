@@ -70,7 +70,24 @@ class DAO_Product extends DevblocksORMHelper {
 	}
 	
 	/**
-	* @param integer $id
+	 * 
+	 * @param string $sku
+	 * @return Model_Product
+	 */
+	static function getBySKU($sku) {
+		$db = DevblocksPlatform::getDatabaseService();
+		$objects = self::getWhere(sprintf("%s = %s",
+			self::SKU,
+			$db->qstr($sku)
+		));
+		
+		if(count($objects))
+			return array_shift($objects);
+		
+		return null;
+	}
+	
+	/**
 	* @return array Model_Product
 	*/
 	static function getAll() {
@@ -128,7 +145,7 @@ class DAO_Product extends DevblocksORMHelper {
 	}
 	
 	public static function getSearchQueryComponents($columns, $params, $sortBy=null, $sortAsc=null) {
-		$fields = _Product::getFields();
+		$fields = View_Product::getFields();
 		
 		// Sanitize
 		if(!isset($fields[$sortBy]))
@@ -145,18 +162,17 @@ class DAO_Product extends DevblocksORMHelper {
 			"product.sku as %s, ".
 			"product.name as %s, ".
 			"product.description as %s ",
-				SearchFields_Product::ID,
-				SearchFields_Product::PRICE,
-				SearchFields_Product::PRICE_SETUP,
-				SearchFields_Product::RECURRING,
-				SearchFields_Product::TAXABLE,
-				SearchFields_Product::SKU,
-				SearchFields_Product::NAME,
-				SearchFields_Product::DESCRIPTION
-
-			);
+			SearchFields_Product::ID,
+			SearchFields_Product::PRICE,
+			SearchFields_Product::PRICE_SETUP,
+			SearchFields_Product::RECURRING,
+			SearchFields_Product::TAXABLE,
+			SearchFields_Product::SKU,
+			SearchFields_Product::NAME,
+			SearchFields_Product::DESCRIPTION
+		);
 			
-		$join_sql = "FROM product";
+		$join_sql = "FROM product ";
 		
 //		if(isset($tables['product_setting'])) {
 //			$select_sql .= sprintf(
@@ -327,18 +343,16 @@ class View_Product extends C4_AbstractView {
 		$this->renderSortAsc = true;
 
 		$this->view_columns = array(
-			SearchFields_Product::ID,
+			SearchFields_Product::NAME,
 			SearchFields_Product::PRICE,
 			SearchFields_Product::PRICE_SETUP,
 			SearchFields_Product::RECURRING,
 			SearchFields_Product::TAXABLE,
 			SearchFields_Product::SKU,
-			SearchFields_Product::NAME,
-			SearchFields_Product::DESCRIPTION,
-
 		);
 		// [TODO] Filter fields
 		$this->addColumnsHidden(array(
+			SearchFields_Product::DESCRIPTION,
 		));
 		
 		// [TODO] Filter fields
@@ -377,7 +391,7 @@ class View_Product extends C4_AbstractView {
 		//$tpl->assign('custom_fields', $custom_fields);
 
 		// [TODO] Set your template path
-		$tpl->display('devblocks:example.plugin::path/to/view.tpl');
+		$tpl->display('devblocks:osellot.core::billing/tabs/products/view.tpl');
 	}
 
 	function renderCriteria($field) {
@@ -673,5 +687,4 @@ class Model_ProductSetting {
 	public $product_id;
 	public $name;
 	public $value;
-
 };

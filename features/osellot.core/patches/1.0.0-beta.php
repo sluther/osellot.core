@@ -182,8 +182,6 @@ if(!isset($columns['address_province']))
 	$db->Execute("ALTER TABLE contact_person ADD COLUMN address_province VARCHAR(255) NOT NULL DEFAULT ''");
 if(!isset($columns['address_postal']))
 	$db->Execute("ALTER TABLE contact_person ADD COLUMN address_postal VARCHAR(255) NOT NULL DEFAULT ''");
-if(!isset($columns['position']))
-	$db->Execute("ALTER TABLE contact_person ADD COLUMN position INT UNSIGNED NOT NULL DEFAULT 0");
 
 $gateway_plugins = DevblocksPlatform::getExtensions('cc.gateway.osellot.core');
 foreach($gateway_plugins as $gateway) {

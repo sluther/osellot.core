@@ -1,5 +1,3 @@
-<h2>{'title.osellot.core'|devblocks_translate|capitalize}</h2>
-
 <div id="billingTabs">
 	<ul>
 		{foreach from=$tab_manifests item=tab_manifest}

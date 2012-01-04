@@ -18,15 +18,6 @@
 		<tu tuid='dao.contact_person.name'>
 			<tuv xml:lang="en_US"><seg>Name</seg></tuv>
 		</tu>
-		<tu tuid='dao.contact_person.email_id'>
-			<tuv xml:lang="en_US"><seg>Email</seg></tuv>
-		</tu>
-		<tu tuid='dao.contact_person.auth_salt'>
-			<tuv xml:lang="en_US"><seg>Auth Salt</seg></tuv>
-		</tu>
-		<tu tuid='dao.contact_person.auth_password'>
-			<tuv xml:lang="en_US"><seg>Password</seg></tuv>
-		</tu>
 		<tu tuid='dao.contact_person.address_line1'>
 			<tuv xml:lang="en_US"><seg>Line 1</seg></tuv>
 		</tu>
@@ -45,17 +36,8 @@
 		<tu tuid='dao.contact_person.position'>
 			<tuv xml:lang="en_US"><seg>Position</seg></tuv>
 		</tu>
-		<tu tuid='dao.contact_person.is_agency'>
-			<tuv xml:lang="en_US"><seg>Is Agency</seg></tuv>
-		</tu>
-				
+
 		<!--  App Tabs -->
-		<tu tuid='collating.tab.billing'>
-			<tuv xml:lang="en_US"><seg>Collating</seg></tuv>
-		</tu>
-		<tu tuid='packing.tab.billing'>
-			<tuv xml:lang="en_US"><seg>Packing Sheets</seg></tuv>
-		</tu>
 		<tu tuid='products.tab.billing'>
 			<tuv xml:lang="en_US"><seg>Products</seg></tuv>
 		</tu>
@@ -78,22 +60,6 @@
 			<tuv xml:lang="en_US"><seg>Authorize.Net</seg></tuv>
 		</tu>
 		
-		
-		<!-- Agency -->
-		
-		<tu tuid='agencies.tab.billing'>
-			<tuv xml:lang="en_US"><seg>Agencies</seg></tuv>
-		</tu>
-		<tu tuid='billing.agencies.add'>
-			<tuv xml:lang="en_US"><seg>Add Agency</seg></tuv>
-		</tu>
-		<tu tuid='agency.authentication'>
-			<tuv xml:lang="en_US"><seg>Authentication Details</seg></tuv>
-		</tu>
-		<tu tuid='agency.contactinfo'>
-			<tuv xml:lang="en_US"><seg>Contact Information</seg></tuv>
-		</tu>
-
 		<!-- CustomerProfile -->
 
 		<tu tuid='customer_profile.id'>
@@ -196,7 +162,7 @@
 			<tuv xml:lang="en_US"><seg>Price</seg></tuv>
 		</tu>
 		<tu tuid='product.price_setup'>
-			<tuv xml:lang="en_US"><seg>Price Setup</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Setup Price</seg></tuv>
 		</tu>
 		<tu tuid='product.recurring'>
 			<tuv xml:lang="en_US"><seg>Recurring</seg></tuv>
@@ -212,6 +178,12 @@
 		</tu>
 		<tu tuid='product.description'>
 			<tuv xml:lang="en_US"><seg>Description</seg></tuv>
+		</tu>
+		<tu tuid='billing.products.add'>
+			<tuv xml:lang="en_US"><seg>Add Product</seg></tuv>
+		</tu>
+		<tu tuid='product.details'>
+			<tuv xml:lang="en_US"><seg>Product Details</seg></tuv>
 		</tu>
 
 		<!-- ProductSetting -->
