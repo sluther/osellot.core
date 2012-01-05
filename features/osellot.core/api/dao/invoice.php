@@ -10,10 +10,10 @@ class DAO_Invoice extends DevblocksORMHelper {
 	const PAID_DATE = 'paid_date';
 
 	static function addItem($invoice_id, $product_id, &$invoice_total, $quantity=1) {
-		DAO_InvoiceItem::addItemToInvoice($invoice_id, $product_id, $invoice_total, $quantity);
+		DAO_InvoiceItem::addInvoiceItem($invoice_id, $product_id, $invoice_total, $quantity);
 	}
 	
-	static function addAttribute($invoice_id, $name, $value) {
+	static function setAttribute($invoice_id, $name, $value) {
 		if(!is_null($value)) {
 			DAO_InvoiceAttribute::setInvoiceAttribute($invoice_id, $name, $value);
 		}
@@ -95,6 +95,28 @@ class DAO_Invoice extends DevblocksORMHelper {
 		return null;
 	}
 	
+	/**
+	* @param integer $account_id
+	* @param integer $start
+	* @param integer $end
+	* @return Model_Invoice[]
+	*/
+	static function getByAccountAndDateRange($account_id, $start, $end) {
+		$objects = DAO_Invoice::getWhere(sprintf("%s = %d AND %s >= %d AND %s <= %d",
+			DAO_Invoice::ACCOUNT_ID,
+			$account_id,
+			DAO_Invoice::CREATED_DATE,
+			$start,
+			DAO_Invoice::CREATED_DATE,
+			$end
+		));
+		
+		if(count($objects))
+		return $objects;
+		
+		return null;
+	}
+	
 	
 	/**
 	* @param integer $account_id
@@ -117,7 +139,7 @@ class DAO_Invoice extends DevblocksORMHelper {
 	
 	/**
 	* @param integer $start
-	* @param integer $start
+	* @param integer $end
 	* @param array $statuses
 	* @return Model_Invoice[]
 	*/
@@ -211,14 +233,14 @@ class DAO_Invoice extends DevblocksORMHelper {
 			"i.number as %s ".
 			"i.created_date as %s ".
 			"i.paid_date as %s ",
-				SearchFields_Invoice::ID,
-				SearchFields_Invoice::ACCOUNT_ID,
-				SearchFields_Invoice::AMOUNT,
-				SearchFields_Invoice::AMOUNT_PAID,
-				SearchFields_Invoice::STATUS,
-				SearchFields_Invoice::NUMBER,
-				SearchFields_Invoice::CREATED_DATE,
-				SearchFields_Invoice::PAID_DATE
+			SearchFields_Invoice::ID,
+			SearchFields_Invoice::ACCOUNT_ID,
+			SearchFields_Invoice::AMOUNT,
+			SearchFields_Invoice::AMOUNT_PAID,
+			SearchFields_Invoice::STATUS,
+			SearchFields_Invoice::NUMBER,
+			SearchFields_Invoice::CREATED_DATE,
+			SearchFields_Invoice::PAID_DATE
 
 			);
 			
@@ -370,18 +392,54 @@ class Model_Invoice {
 	public $created_date;
 	public $paid_date;
 	
+	public function addItem($product_id, &$invoice_total, $quantity) {
+		DAO_InvoiceItem::addInvoiceItem($this->id, $product_id, $invoice_total, $quantity);
+	}
+	
 	public function getItems() {
 		return DAO_InvoiceItem::getInvoiceItems($this->id);
+	}
+	
+	public function deleteItem($item_id) {
+		DAO_InvoiceItem::deleteInvoiceItem($this->id, $item_id);
+	}
+	
+	public function deleteItems() {
+		DAO_InvoiceItem::deleteInvoiceItems($this->id);
+	}
+	
+	public function getAttribute($name, $default = '') {
+		return DAO_InvoiceAttribute::getInvoiceAttribute($this->id, $name, $default);
+	}
+	
+	public function getAttributeGroup($prefix) {
+		return DAO_InvoiceAttribute::getInvoiceAttributeGroup($this->id, $prefix);
 	}
 	
 	public function getAttributes() {
 		return DAO_InvoiceAttribute::getInvoiceAttributes($this->id);
 	}
 	
-	public function getAttribute($name, $default = '') {
-		return DAO_InvoiceAttribute::getInvoiceAttribute($this->id, $name, $default);
+	
+	public function setAttribute($name, $value) {
+		if(null == DAO_InvoiceAttribute::getInvoiceAttribute($this->id, $name, null)) {
+			DAO_InvoiceAttribute::addInvoiceAttribute($this->id, $name, $value);
+		} else {
+			DAO_InvoiceAttribute::setInvoiceAttribute($this->id, $name, $value);
+		}
 	}
-
+	
+	public function deleteAttribute($name) {
+		DAO_InvoiceAttribute::deleteInvoiceAttribute($this->id, $name);
+	}
+	
+	public function deleteAttributeGroup($prefix) {
+		DAO_InvoiceAttribute::deleteInvoiceAttributeGroup($this->id, $prefix);
+	}
+	
+	public function deleteAttributes() {
+		DAO_InvoiceAttribute::deleteInvoiceAttributes($this->id);
+	}
 };
 
 class View_Invoice extends C4_AbstractView {
@@ -406,7 +464,6 @@ class View_Invoice extends C4_AbstractView {
 			SearchFields_Invoice::NUMBER,
 			SearchFields_Invoice::CREATED_DATE,
 			SearchFields_Invoice::PAID_DATE,
-
 		);
 		// [TODO] Filter fields
 		$this->addColumnsHidden(array(
@@ -634,7 +691,7 @@ class DAO_InvoiceItem extends DevblocksORMHelper {
 	const QUANTITY = 'quantity';
 	const AMOUNT = 'amount';
 
-	static function addItemToInvoice($invoice_id, $product_id, &$invoice_total, $quantity) {
+	static function addInvoiceItem($invoice_id, $product_id, &$invoice_total, $quantity) {
 		$db = DevblocksPlatform::getDatabaseService();
 		
 		// update 
@@ -656,6 +713,41 @@ class DAO_InvoiceItem extends DevblocksORMHelper {
 		$invoice_total += $quantity * $item_price;
 		
 		return null;
+	}
+	
+	/**
+	* @param integer $invoice_id
+	* @param integer $product_id
+	*/
+	
+	static function deleteInvoiceItem($invoice_id, $product_id) {
+		$db = DevblocksPlatform::getDatabaseService();
+	
+		$sql = sprintf("DELETE FROM invoice_item WHERE %s = %d AND %s = %d",
+			self::INVOICE_ID,
+			$invoice_id,
+			self::PRODUCT_ID,
+			$product_id
+		);
+		$rs = $db->Execute($sql);
+	
+		return true;
+	}
+	
+	/**
+	* @param integer $invoice_id
+	*/
+	
+	static function deleteInvoiceItems($invoice_id) {
+		$db = DevblocksPlatform::getDatabaseService();
+	
+		$sql = sprintf("DELETE FROM invoice_item WHERE %s = %d",
+			self::INVOICE_ID,
+			$invoice_id
+		);
+		$rs = $db->Execute($sql);
+	
+		return true;
 	}
 	
 	/**
@@ -757,6 +849,28 @@ class DAO_InvoiceAttribute extends DevblocksORMHelper {
 	}
 	
 	/**
+	* @param integer $invoice_id
+	* @param string $name
+	* @param string value
+	* @return Model_InvoiceAttribute[]
+	*/
+	static function addInvoiceAttribute($invoice_id, $name, $value) {
+		$db = DevblocksPlatform::getDatabaseService();
+	
+		$sql = sprintf("INSERT INTO invoice_attribute (%s, %s, %s) VALUES (%s, %s, %s)",
+			self::INVOICE_ID,
+			self::NAME,
+			self::VALUE,
+			$invoice_id,
+			$db->qstr($name),
+			$db->qstr($value)
+		);
+		$db->Execute($sql);
+	
+		return null;
+	}
+	
+	/**
 	 * @param integer $invoice_id
 	 * @param string $name
 	 * @param string value
@@ -765,13 +879,13 @@ class DAO_InvoiceAttribute extends DevblocksORMHelper {
 	static function setInvoiceAttribute($invoice_id, $name, $value) {
 		$db = DevblocksPlatform::getDatabaseService();
 		
-		$sql = sprintf("REPLACE INTO invoice_attribute (%s, %s, %s) VALUES (%s, %s, %s)",
-			self::INVOICE_ID,
-			self::NAME,
+		$sql = sprintf("UPDATE invoice_attribute SET %s = %s WHERE %s = %d AND %s = %s",
 			self::VALUE,
+			$db->qstr($value),
+			self::INVOICE_ID,
 			$invoice_id,
-			$db->qstr($name),
-			$db->qstr($value)
+			self::NAME,
+			$db->qstr($name)
 		);
 		$db->Execute($sql);
 				
@@ -782,7 +896,7 @@ class DAO_InvoiceAttribute extends DevblocksORMHelper {
 	* @param integer $invoice_id
 	* @param string $name
 	* @param string $default
-	* @return Model_InvoiceAttribute[]
+	* @return string
 	*/
 	static function getInvoiceAttribute($invoice_id, $name, $default) {
 		$db = DevblocksPlatform::getDatabaseService();
@@ -795,10 +909,33 @@ class DAO_InvoiceAttribute extends DevblocksORMHelper {
 		));
 		
 		if(!empty($attribute)) {
-			return array_shift($attribute);
+			$attribute = array_shift($attribute);
+			return $attribute->value;
 		}
 	
 		return $default;
+	}
+	
+	/**
+	* @param integer $invoice_id
+	* @param string $prefix
+	* @return string
+	*/
+	static function getInvoiceAttributeGroup($invoice_id, $prefix) {
+		$db = DevblocksPlatform::getDatabaseService();
+	
+		$attributes = self::getWhere(sprintf("%s = %d AND %s LIKE %s",
+			self::INVOICE_ID,
+			$invoice_id,
+			self::NAME,
+			$db->qstr($prefix.'%')
+		));
+	
+		if(!empty($attributes)) {
+			return $attributes;
+		}
+	
+		return null;
 	}
 	
 	/**
@@ -807,7 +944,7 @@ class DAO_InvoiceAttribute extends DevblocksORMHelper {
 	 */
 	static function getInvoiceAttributes($invoice_id) {
 		$objects = self::getWhere(sprintf("%s = %d",
-			self::PRODUCT_ID,
+			self::INVOICE_ID,
 			$invoice_id
 		));
 		
@@ -815,6 +952,62 @@ class DAO_InvoiceAttribute extends DevblocksORMHelper {
 			return $objects;
 		
 		return null;
+	}
+	
+	/**
+	* @param integer $invoice_id
+	* @param string $name
+	*/
+	
+	static function deleteInvoiceAttribute($invoice_id, $name) {
+		$db = DevblocksPlatform::getDatabaseService();
+		
+		$sql = sprintf("DELETE FROM invoice_attribute WHERE %s = %d AND %s = %s",
+			self::INVOICE_ID,
+			$invoice_id,
+			self::NAME,
+			$db->qstr($name)
+		);
+		$rs = $db->Execute($sql);
+		
+		return true;
+	}
+	
+	/**
+	* @param integer $invoice_id
+	* @param string $prefix
+	*/
+	
+	static function deleteInvoiceAttributeGroup($invoice_id, $prefix) {
+		$db = DevblocksPlatform::getDatabaseService();
+	
+		$sql = sprintf("DELETE FROM invoice_attribute WHERE %s = %d AND %s LIKE %s",
+			self::INVOICE_ID,
+			$invoice_id,
+			self::NAME,
+			$db->qstr($prefix.'%')
+		);
+		print $sql;
+		$rs = $db->Execute($sql);
+	
+		return true;
+	}
+	
+	/**
+	* @param integer $invoice_id
+	* @param string $name
+	*/
+	
+	static function deleteInvoiceAttributes($invoice_id) {
+		$db = DevblocksPlatform::getDatabaseService();
+	
+		$sql = sprintf("DELETE FROM invoice_attribute WHERE %s = %d",
+			self::INVOICE_ID,
+			$invoice_id
+		);
+		$rs = $db->Execute($sql);
+	
+		return true;
 	}
 	
 	/**
@@ -844,5 +1037,4 @@ class Model_InvoiceAttribute {
 	public $invoice_id;
 	public $name;
 	public $value;
-
 };

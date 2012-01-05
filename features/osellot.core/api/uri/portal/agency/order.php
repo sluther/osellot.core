@@ -230,10 +230,10 @@ class OrderAgencyPortal_OsellotController extends Extension_Agency_Portal_Osello
 		foreach($order['attributes'] as $name => $value) {
 			if(is_array($value)) {
 				foreach($value as $key => $val) {
-					DAO_Invoice::addAttribute($invoice_id, $name.'.'.$key, $val);
+					DAO_Invoice::setAttribute($invoice_id, $name.'.'.$key, $val);
 				}
 			} else {
-				DAO_Invoice::addAttribute($invoice_id, $name, $value);
+				DAO_Invoice::setAttribute($invoice_id, $name, $value);
 			}
 		}
 		

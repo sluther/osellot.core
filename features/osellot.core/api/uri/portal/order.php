@@ -255,10 +255,10 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 		foreach($order['attributes'] as $name => $value) {
 			if(is_array($value)) {
 				foreach($value as $key => $val) {
-					DAO_Invoice::addAttribute($invoice_id, $name.'.'.$key, $val);
+					DAO_Invoice::setAttribute($invoice_id, $name.'.'.$key, $val);
 				}
 			} else {
-				DAO_Invoice::addAttribute($invoice_id, $name, $value);
+				DAO_Invoice::setAttribute($invoice_id, $name, $value);
 			}
 		}
 		
