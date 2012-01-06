@@ -15,7 +15,11 @@ class DAO_Invoice extends DevblocksORMHelper {
 	
 	static function setAttribute($invoice_id, $name, $value) {
 		if(!is_null($value)) {
-			DAO_InvoiceAttribute::setInvoiceAttribute($invoice_id, $name, $value);
+			if(null == DAO_InvoiceAttribute::getInvoiceAttribute($invoice_id, $name, null)) {
+				DAO_InvoiceAttribute::addInvoiceAttribute($invoice_id, $name, $value);
+			} else {
+				DAO_InvoiceAttribute::setInvoiceAttribute($invoice_id, $name, $value);
+			}
 		}
 	}
 	
