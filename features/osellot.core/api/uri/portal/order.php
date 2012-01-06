@@ -88,18 +88,18 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 		switch($section) { 
 			case 'add':
 				$item = array_shift($stack);
-				$item = DAO_Product::get($item);
+				$product = DAO_Product::get($item);
 				
-				if(isset($cart['items'][$item->id])) {
-					$cart['items'][$item->id]['quantity'] += 1;
-					$cart['items'][$item->id]['total'] = $cart['items'][$item->id]['price'] * $cart['items'][$item->id]['quantity'];
+				if(isset($cart['items'][$product->id])) {
+					$cart['items'][$product->id]['quantity'] += 1;
+					$cart['items'][$product->id]['total'] = $cart['items'][$product->id]['price'] * $cart['items'][$product->id]['quantity'];
 				} else {
-					$cart['items'][$item->id] = array(
-						'name' => $item->name,
-						'sku' => $item->sku,
-						'price' => $item->price,
-						'total' => $item->price,
- 						// 'price_setup' => $item->price_setup,
+					$cart['items'][$product->id] = array(
+						'name' => $product->name,
+						'sku' => $product->sku,
+						'price' => $product->price,
+						'total' => $product->price,
+ 						// 'price_setup' => $product->price_setup,
 						'quantity' => 1
 					);
 				}
@@ -113,14 +113,14 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 				break;
 			case 'remove':
 				$item = array_shift($stack);
-				$item = DAO_Product::get($item);
+				$product = DAO_Product::get($item);
 				
-				if(isset($cart['items'][$item->id])) {
-					if($cart['items'][$item->id]['quantity'] > 1) {
-						$cart['items'][$item->id]['quantity'] -= 1;
-						$cart['items'][$item->id]['total'] = $cart['items'][$item->id]['price'] * $cart['items'][$item->id]['quantity'];
+				if(isset($cart['items'][$product->id])) {
+					if($cart['items'][$product->id]['quantity'] > 1) {
+						$cart['items'][$product->id]['quantity'] -= 1;
+						$cart['items'][$product->id]['total'] = $cart['items'][$product->id]['price'] * $cart['items'][$product->id]['quantity'];
 					} else {
-						unset($cart['items'][$item->id]);
+						unset($cart['items'][$product->id]);
 					}
 				}
 				
