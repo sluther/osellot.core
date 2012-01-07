@@ -404,75 +404,6 @@ abstract class Extension_Portal_Osellot_Controller extends DevblocksExtension im
 	}
 };
 
-abstract class Extension_Agency_Portal_Osellot_Controller extends DevblocksExtension implements DevblocksHttpRequestHandler {
-
-	/*
-	 * Site Key
-	* Site Name
-	* Site URL
-	*/
-
-	/**
-	 * @param DevblocksHttpRequest
-	 * @return DevblocksHttpResponse
-	 */
-	public function handleRequest(DevblocksHttpRequest $request) {
-		$path = $request->path;
-		@$a = DevblocksPlatform::importGPC($_REQUEST['a'],'string');
-
-		if(empty($a)) {
-			@array_shift($path); // controller
-			@$action = array_shift($path) . 'Action';
-		} else {
-			@$action = $a . 'Action';
-		}
-
-		switch($action) {
-			case NULL:
-				// [TODO] Index/page render
-				break;
-				//
-			default:
-				// Default action, call arg as a method suffixed with Action
-				if(method_exists($this,$action)) {
-				call_user_func(array(&$this, $action)); // [TODO] Pass HttpRequest as arg?
-			}
-			break;
-		}
-	}
-
-	public function writeResponse(DevblocksHttpResponse $response) {
-		/* Expect Overload */
-	}
-
-	public function renderSidebar(DevblocksHttpResponse $response) {
-		/* Expect Overload */
-		return;
-	}
-
-	public function isVisible() {
-		/* Expect Overload */
-		return true;
-	}
-
-	public function configure(Model_CommunityTool $instance) {
-		// [TODO] Translate
-		echo "This module has no configuration options.<br><br>";
-	}
-
-	public function saveConfiguration(Model_CommunityTool $instance) {
-		/* Expect Overload */
-	}
-
-	public function getTitle(DevblocksHttpResponse $response) {
-		/* Expect Overload */
-	}
-
-	public function getHeader(DevblocksHttpResponse $response) {
-		/* Expect Overload */
-	}
-};
-
 abstract class Extension_OsellotLoginAuthenticator extends DevblocksExtension {
 
 	abstract function writeResponse(DevblocksHttpResponse $response);
@@ -616,13 +547,6 @@ class UmOsellotApp extends Extension_UsermeetTool {
 		$stack = $response->path;
 		
 		$module_uri = array_shift($stack);
-
-		$is_agency = $umsession->getProperty('agency', false);
-		// If they are logged in as an agency, redirect
-		// immediately if they aren't using the agency interface
-		if($is_agency && 0 !== strcasecmp($module_uri, 'agency')) {
-			DevblocksPlatform::redirect(new DevblocksHttpResponse(array('agency')));
-		}
 		
 		$tpl = DevblocksPlatform::getTemplateService();
 		$tpl->assign('portal_code', ChPortalHelper::getCode());
@@ -644,8 +568,6 @@ class UmOsellotApp extends Extension_UsermeetTool {
 			die("A problem occurred.");
 		}
         $tpl->assign('fingerprint', $fingerprint);
-        $tpl->assign('is_agency', $is_agency);
-
         
 		switch($module_uri) {
 			case 'rss':
