@@ -29,8 +29,6 @@ class DAO_ContactPerson extends DevblocksORMHelper {
 	const ADDRESS_CITY = 'address_city';
 	const ADDRESS_PROVINCE = 'address_province';
 	const ADDRESS_POSTAL = 'address_postal';
-	const POSITION = 'position';
-	const IS_AGENCY = 'is_agency';
 
 	static function create($fields) {
 		$db = DevblocksPlatform::getDatabaseService();
@@ -69,7 +67,7 @@ class DAO_ContactPerson extends DevblocksORMHelper {
 		
 		// SQL
 		$sql = "SELECT id, email_id, created, last_login, auth_salt, auth_password, ".
-				"phone, name, address_line1, address_line2, address_city, address_province, address_postal, position, is_agency ".
+				"phone, name, address_line1, address_line2, address_city, address_province, address_postal ".
 			"FROM contact_person ".
 			$where_sql.
 			$sort_sql.
@@ -215,8 +213,6 @@ class DAO_ContactPerson extends DevblocksORMHelper {
 			"contact_person.address_city as %s, ".
 			"contact_person.address_province as %s, ".
 			"contact_person.address_postal as %s, ".
-			"contact_person.position as %s, ".
-			"contact_person.is_agency as %s, ".
 			"address.first_name as %s, ".
 			"address.last_name as %s, ".
 			"address.email as %s ",
@@ -233,8 +229,6 @@ class DAO_ContactPerson extends DevblocksORMHelper {
 				SearchFields_ContactPerson::ADDRESS_CITY,
 				SearchFields_ContactPerson::ADDRESS_PROVINCE,
 				SearchFields_ContactPerson::ADDRESS_POSTAL,
-				SearchFields_ContactPerson::POSITION,
-				SearchFields_ContactPerson::IS_AGENCY,
 				SearchFields_ContactPerson::ADDRESS_FIRST_NAME,
 				SearchFields_ContactPerson::ADDRESS_LAST_NAME,
 				SearchFields_ContactPerson::ADDRESS_EMAIL
@@ -388,8 +382,6 @@ class SearchFields_ContactPerson implements IDevblocksSearchFields {
 	const ADDRESS_CITY = 'c_address_city';
 	const ADDRESS_PROVINCE = 'c_address_province';
 	const ADDRESS_POSTAL = 'c_address_postal';
-	const POSITION = 'c_position';
-	const IS_AGENCY = 'c_is_agency';
 	
 	const ADDRESS_EMAIL = 'a_email';
 	const ADDRESS_FIRST_NAME = 'a_first_name';
@@ -420,8 +412,6 @@ class SearchFields_ContactPerson implements IDevblocksSearchFields {
 			self::ADDRESS_CITY => new DevblocksSearchField(self::ADDRESS_CITY, 'contact_person', 'address_city', $translate->_('dao.contact_person.address_city')),
 			self::ADDRESS_PROVINCE => new DevblocksSearchField(self::ADDRESS_PROVINCE, 'contact_person', 'address_province', $translate->_('dao.contact_person.address_province')),
 			self::ADDRESS_POSTAL => new DevblocksSearchField(self::ADDRESS_POSTAL, 'contact_person', 'address_postal', $translate->_('dao.contact_person.address_postal')),
-			self::POSITION => new DevblocksSearchField(self::POSITION, 'contact_person', 'position', $translate->_('dao.contact_person.position')),
-			self::IS_AGENCY => new DevblocksSearchField(self::IS_AGENCY, 'contact_person', 'is_agency', $translate->_('dao.contact_person.is_agency')),
 			
 			self::ADDRESS_EMAIL => new DevblocksSearchField(self::ADDRESS_EMAIL, 'address', 'email', $translate->_('common.email')),
 			self::ADDRESS_FIRST_NAME => new DevblocksSearchField(self::ADDRESS_FIRST_NAME, 'address', 'first_name', $translate->_('address.first_name')),
@@ -463,8 +453,6 @@ class Model_ContactPerson {
 	public $address_city;
 	public $address_province;
 	public $address_postal;
-	public $position;
-	public $is_agency;
 	
 	private $_addresses = array();
 	

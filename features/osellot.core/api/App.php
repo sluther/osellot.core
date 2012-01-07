@@ -1064,37 +1064,19 @@ class UmOsellotLoginAuthenticator extends Extension_OsellotLoginAuthenticator {
 			// Find the address
 			if(null == ($addy = DAO_Address::lookupAddress($email, false)))
 				throw new Exception("Login failed.");
+
+			// Not registered
+			if(empty($addy->contact_person_id) || null == ($contact = DAO_ContactPerson::get($addy->contact_person_id)))
+				throw new Exception("Login failed.");
+				
+			// Compare salt
+			if(0 != strcmp(md5($contact->auth_salt.md5($pass)),$contact->auth_password))
+				throw new Exception("Login failed.");
+				
+			$umsession->login($contact);
 			
-			// Are they logging in as an agency?
-			if(0 == strcasecmp($stack[0], 'agency')) {
-				$response = array('portal',ChPortalHelper::getCode(), 'agency', 'login');
-				// Not registered
-				if(null == ($agency = DAO_ContactPerson::getAgency($addy->contact_person_id)))
-					throw new Exception("Login failed.");
-				
-				// Compare salt
-				if(0 != strcasecmp(md5($agency->auth_salt.md5($pass)),$agency->auth_password))
-					throw new Exception("Login failed.");
-				
-				$umsession->login($agency);
-				$umsession->setProperty('agency', true);
-				
-				header("Location: " . $url_writer->write('', true));
-				exit;
-			} else {
-				// Not registered
-				if(empty($addy->contact_person_id) || null == ($contact = DAO_ContactPerson::get($addy->contact_person_id)))
-					throw new Exception("Login failed.");
-					
-				// Compare salt
-				if(0 != strcmp(md5($contact->auth_salt.md5($pass)),$contact->auth_password))
-					throw new Exception("Login failed.");
-					
-				$umsession->login($contact);
-				
-				header("Location: " . $url_writer->write('', true));
-				exit;
-			}
+			header("Location: " . $url_writer->write('', true));
+			exit;
 		} catch (Exception $e) {
 			$tpl->assign('error', $e->getMessage());
 		}
