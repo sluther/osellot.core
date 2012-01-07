@@ -94,23 +94,6 @@ class DAO_ContactPerson extends DevblocksORMHelper {
 	}
 	
 	/**
-	* @param integer $id
-	* @return Model_ContactPerson	 */
-	static function getAgency($id) {
-		$objects = self::getWhere(sprintf("%s = %d AND %s = %d",
-			self::ID,
-			$id,
-			self::IS_AGENCY,
-			1
-		));
-		
-		if(isset($objects[$id]))
-			return $objects[$id];
-		
-		return null;
-	}
-	
-	/**
 	 * @param resource $rs
 	 * @return Model_ContactPerson[]
 	 */
