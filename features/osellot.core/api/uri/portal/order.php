@@ -3,11 +3,6 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 	public function writeResponse(DevblocksHttpResponse $response) {
 		$tpl = DevblocksPlatform::getTemplateService();
 		$umsession = ChPortalHelper::getSession();
-		$cart = $umsession->getProperty('hb_cart', null);
-		
-		// Sort cart items alphabetically by name
-		asort($cart['items']);
-		$tpl->assign('cart', $cart);
 		
 		$stack = $response->path;
 		
@@ -16,15 +11,22 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 		
 		switch($section) {
 			case 'checkout':
+				$cart = $umsession->getProperty('hb_cart', null);
+				
+				if($cart === null)
+					DevblocksPlatform::redirect(new DevblocksHttpResponse(array('order')));
+				
 				$enabled_plugins = DAO_Gateway::getEnabled();
 				$checkout_plugins = array();
 				foreach($enabled_plugins as $plugin) {
 					$plugins[] = DevblocksPlatform::getExtension($plugin->extension_id, true);				
 				}
+				$default_plugin = array_shift($plugins);
+				array_unshift($plugins, $default_plugin);
 				
 				$tpl->assign('checkout_plugins', $plugins);
-				$default_plugin = array_shift($plugins);
 				$tpl->assign('default_plugin', $default_plugin);
+				$tpl->assign('cart', $cart);
 				$tpl->display('devblocks:osellot.core::portal/order/checkout.tpl');
 				break;
 			case 'confirm':
@@ -53,6 +55,11 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 				
 				break;
 			default:
+				$cart = $umsession->getProperty('hb_cart', null);
+				
+				// Sort cart items alphabetically by name
+				asort($cart['items']);
+				
 				$products = DAO_Product::getAll();
 				
 				foreach($products as $id => $product) {
@@ -66,6 +73,7 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 				}
 				
 				$tpl->assign('products', $products);
+				$tpl->assign('cart', $cart);
 				$tpl->display('devblocks:osellot.core::portal/order/index.tpl');
 				break;
 		}
@@ -205,7 +213,6 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 				'province' => $account->address_province,
 				'postal' => $account->address_postal 
 			);
-// 			$order['attributes']['pickup_location'] = 
 		}
 		
 		// Save the order in the session
