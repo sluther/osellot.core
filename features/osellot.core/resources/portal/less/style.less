@@ -1,0 +1,427 @@
+@import "bootstrap.less";
+
+
+/*------- MODIFIED MEYER RESET -------*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, input, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 10px;
+	font: inherit;
+	vertical-align: baseline;
+	background:none;
+	color:@basedarkblue;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/*--- utility classes ---*/
+.fright {
+	float:right;
+}
+
+.fleft {
+	float:left;
+}
+
+.centr {
+	width:1060px;
+	margin:0 auto;
+}
+
+/*--- colors and stuff ---*/
+
+@darkbodybg: #80888a;
+
+@baseblue: #718e9e;
+@basedarkblue: #314964;
+@baselightblue: #a7c5cd;
+
+@accentblue: #8aabb7;
+@accentlightblue: #7ca9b6;
+
+@buttoncolor: #517e92;
+
+@footcolor: #21272c;
+
+@darkblue: darken(@baseblue, 8%);
+@darkerblue: darken(@baseblue, 20%);
+@darkerblue2: darken(@baseblue, 30%);
+@superdarkblue: darken(@baseblue, 40%);
+@lightblue: lighten(@baseblue, 8%);
+@lighterblue: lighten(@baseblue, 20%);
+@lighterblue2: lighten(@baseblue, 30%);
+@superlightblue: lighten(@baseblue, 40%);
+
+/*--- typog ---*/
+
+h1 {
+	font-size:53px;
+}
+
+html, body, h1, h2, h3, h4, h5, h6, p, span, label, input {
+	#font > .serif;
+
+}
+
+a, button, nav {
+	#font > .sans-serif;
+}
+
+h2 {
+	font-size:42px;
+	margin-bottom:25px;
+}
+
+h3 {
+	font-size:31px;
+	margin-bottom:20px;
+}
+
+/*--- actual stuff ---*/
+
+html, body {
+	color:@basedarkblue;
+	width:100%;
+}
+
+body {
+	background: @darkbodybg url('/osellot/comport/index.php/resource/osellot.core/portal/images/bodytopbg.png') top repeat-x;
+}
+
+div#dotmesh {
+	background-image:url('/osellot/comport/index.php/resource/osellot.core/portal/images/mesh.png');
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: -1;
+    opacity:.4;
+}
+
+div#wrapper {
+	background-image:url('/osellot/comport/index.php/resource/osellot.core/portal/images/mainbg.png');
+	width:1060px;
+	margin:0 auto;
+	z-index:10000;
+	box-shadow:0 0 70px rgba(0,0,0,0.5);
+
+	header {
+		padding:43px 80px 0 60px;
+		background-image:url('/osellot/comport/index.php/resource/osellot.core/portal/images/headerbg.png');
+		height:68px;
+		position:relative;
+		z-index:1;
+
+		div#logo {
+			height:55px;
+			width:198px;
+			background-image:url('/osellot/comport/index.php/resource/osellot.core/portal/images/paybillogo.png');
+			float:left;
+			margin-right:20px;
+		}
+
+		nav#topnav {
+			margin-top:-14px;
+			float:right;
+			position:relative;
+			z-index:1;
+
+			ul {
+				
+				li{
+					margin-top:1px;
+					.transition(all ease-out .25s);
+					position:static;
+					line-height:30px;
+					display:inline-block;
+					position:relative;
+					z-index:1;
+
+					a {
+						outline:0;
+						.transition(all ease-out .25s);
+						letter-spacing:5px;
+						font-weight:bold;
+						font-size:16px;
+						letter-spacing:2px;
+						color:@baselightblue;
+						text-decoration:none;
+						display:block;
+						line-height:80px;
+						padding: 0 15px;
+						text-shadow:0 -1px 0 @basedarkblue;
+
+					}
+
+					&:hover {
+						.transition(all ease-in .4s);
+						opacity:1;
+						box-shadow:0 0 5px @baselightblue inset;
+						background-color:@baseblue;
+						border-color:@basedarkblue;
+
+						a {
+							.transition(all ease-in .4s);
+							line-height:78px;
+							color:#fff;
+							text-shadow:0 1px 0 @basedarkblue;
+						}
+					}
+				}
+
+				li#selected {
+					border-style:none;
+					box-shadow:0 0 5px rgba(255,255,255,0.4);
+					background-color:#fff;
+					z-index:2;
+					border-color:@basedarkblue;
+					margin:0 1px;
+					opacity:1;
+					height:80px;
+					a {
+						display:block;
+						text-shadow:none;
+					}
+					&:hover {
+
+						.tabinsideborder(transparent);
+						box-shadow:0 0 5px rgba(255,255,255,0.4);
+						a {
+							line-height:80px;
+							border:none;
+							text-shadow:none;
+						}
+					}
+					a {
+						color:@basedarkblue;
+					}
+				}
+			}
+		}
+	}
+
+	div#main {
+		position:relative;
+		z-index:60;
+		padding:19px 0 20px;
+		margin:0 70px;
+
+	}
+}
+
+div.leftcolumn, div.rightcolumn {
+	width:430px;
+	h2 {
+		margin-left:-10px;
+	}
+}
+
+div.leftcolumn {
+	.fleft;
+	padding:20px 20px 20px 10px;
+}
+
+div.rightcolumn {
+	.fright;
+	padding:20px 10px 20px 20px;
+}
+
+div.lcontentbox, div.rcontentbox {
+	min-height:100px;
+	min-width:100px;
+	background-color:@baseblue;
+	border:solid 1px @baselightblue;
+	border-radius:10px;
+	padding:20px;
+	position:relative;
+	width:390px;
+	z-index:5;
+	.secondborder(@basedarkblue, 12px);
+
+	span, p {
+		#font > .serif(normal, 16px);
+		color:@white;
+		text-shadow:0 1px 1px @basedarkblue;
+		size:1.2em;
+		.highlighted {
+			padding:0 1px;
+			margin:0 1px;
+			.border-radius(3px);
+			background-color:rgba(255,255,255,0.7);
+			color:@basedarkblue;
+			text-shadow:none;
+			box-shadow:0 0 1px rgba(255,255,255,0.7);
+		}
+	}
+}
+
+div.lcontentbox {
+	float:left;
+}
+
+div.rcontentbox {
+	float:right;
+}
+
+.secondborder(@bcolor:@basedarkblue, @radius:0px) {
+	&:before{
+		content:"";
+		position:absolute;
+		top:-2px;
+		left:-2px;
+		right:-2px;
+		bottom:-2px;
+		border:1px solid @bcolor;
+		border-radius:@radius;
+		z-index:-1;
+	}
+}
+
+div.lcontentbox:before {
+	box-shadow: 2px 2px 0 @basedarkblue;
+}
+
+div.rcontentbox:before {
+	box-shadow: -2px 2px 0 @basedarkblue;
+}
+
+form label {
+	font-size:21px;
+	text-shadow:0 1px 0 @accentblue;
+}
+
+input.insettext {
+	font-size:21px;
+	color:#fff;
+	font-style:italic;
+	height:40px;
+	background:@baseblue;
+	padding:0 10px;
+	text-shadow: 0 1px 0 @basedarkblue;
+	margin-bottom:20px;
+	.border-radius(5px);
+	border:1px solid @basedarkblue;
+	.insideborder(@accentlightblue, 0 0 20px @basedarkblue inset);
+	width:360px;
+}
+
+a.button, button {
+	text-decoration:none;
+	display:inline-block;
+	.transition(all linear .4s);
+	padding:0 5px;
+	font-family:Helvetica, Verdana;
+	letter-spacing:1.5px;
+	color:@white;
+	text-shadow: 0 1px 0 @basedarkblue;
+	font-weight:bold;
+	font-size:16px;
+	.border-radius(5px);
+	line-height:30px;
+	border:solid 1px @basedarkblue;
+	background-color:@baseblue;
+	background-image:url('/osellot/comport/index.php/resource/osellot.core/portal/images/buttonhoverbg.png');
+	background-position:0 -10px;
+	.insideborder(@baselightblue);
+
+	&:hover {
+		.transition(all linear .15s);
+		background-position:0 -5px;
+		text-shadow: 0 -1px 0 lighten(@basedarkblue, 10%);
+		.insideborder(@baselightblue, 0 0 5px @baselightblue);
+	}
+
+	&:active {
+		.transition(all ease-in .0s);
+		background:saturate(@darkerblue, 15%);
+		color:saturate(@darkblue, 15%);
+		box-shadow:0 -1px 0 saturate(@darkblue, 15%) inset, 0 0 5px @basedarkblue;
+		text-shadow: 0 -1px 0 @darkerblue2;
+	}
+}
+
+div#footout {
+	width:100%;
+	background-color:@footcolor;
+	background-image:url('/osellot/comport/index.php/resource/osellot.core/portal/images/bodybtmbg.png');
+	background-repeat:repeat-x;
+	background-position:top;
+	position:absolute;
+	bottom:0;
+	height:120px;
+	z-index:-5;
+}
+
+div#footer {
+	height:100%;
+	background:transparent;
+	background-image:url('/osellot/comport/index.php/resource/osellot.core/portal/images/footerbg.png');
+	background-position:top center;
+	background-repeat:no-repeat;
+	width:940px;
+	margin:0 auto;
+	padding:40px 60px 10px;
+	z-index:20;
+	
+	p, h3 {
+		color:#fff;
+		text-shadow:0 1px 0 #151515;
+	}
+	
+	p {
+		padding:0 20px;
+		font-style:italic;
+	}
+
+	.footsection {
+		
+		padding:0 10px;
+		width:286px;
+		border-left: dotted 1px rgba(255,255,255,.2);
+		margin:0 9px 0 0;
+
+		&:nth-child(3) {
+			border-right:dotted 1px rgba(255,255,255,.2);
+			margin:0;
+		}
+	}
+}
+
+.cfix {
+	clear:both;
+	width:100%;
+}

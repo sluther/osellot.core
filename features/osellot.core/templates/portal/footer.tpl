@@ -1,13 +1,38 @@
-		{if $is_agency}</div>{/if}
-		</section>
-	    <footer>
-			<div id="footer-content">
-				<div role="copyright">&#169; 2009 &#8211; 2011 Capital Region Good Food Society. All rights reserved.</div>
-				<div class="contact">
-					<a class="email" href="mailto:info@thegoodfoodbox.ca">info@thegoodfoodbox.ca</a> 
-					<a class="tel" href="tel:+1-250-893-7635">+1 (250) 893-7635</a>
-				</div>
+		<!--{if $is_agency}</div>{/if}-->
+		</div>
+	<div class="clearfix"></div>
+	</div><!-- #wrapper -->
+	 	<div id="footer">
+	 		<div class="footsection fleft">
+				<h3>Contact us</h3>
+				<p>Some info lol</p>
+				<p>8690 5829 2060293</p>
+				<p>eee@mmaaill.lol</p>
+				<br>
+				<p>69 MegaMan Cir.</p>
+				<p>Pizzatown, California</p>
 			</div>
-	    </footer>
+	 		<div class="footsection fleft">
+				<h3>Contact us</h3>
+				<p>Some info lol</p>
+				<p>8690 5829 2060293</p>
+				<p>eee@mmaaill.lol</p>
+				<br>
+				<p>69 MegaMan Cir.</p>
+				<p>Pizzatown, California</p>
+			</div>
+	 		<div class="footsection fright">
+				<h3>Contact us</h3>
+				<p>Some info lol</p>
+				<p>8690 5829 2060293</p>
+				<p>eee@mmaaill.lol</p>
+				<br>
+				<p>69 MegaMan Cir.</p>
+				<p>Pizzatown, California</p>
+			</div>
+			<div class="cfix"></div>
+		</div><!-- #footer -->
+	<div id="dotmesh"></div>
+	<div id="footout"></div>
 	</body>
 </html>

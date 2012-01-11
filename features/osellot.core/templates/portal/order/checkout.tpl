@@ -1,4 +1,5 @@
-			<div id="place">
+			<div class="leftcolumn">
+			<div class="lcontentbox">
 				<form action="" method="post" id="buy">
 					<input type="hidden" name="a" value="doCheckout">
 					<fieldset>
@@ -20,15 +21,15 @@
 								<span>The street address you would like the order delivered to.</span>
 								<div>
 									<label for="dline1">Line 1</label>
-									<input type="text" size="35" value="" name="dline1" id="dline1">
+									<input type="text" class="insettext fullwidth" name="dline1" id="dline1">
 								</div>
 								<div>
 									<label for="dline2">Line 2</label>
-									<input type="text" size="35" value="" name="dline2" id="dline2">
+									<input type="text" class="insettext fullwidth" name="dline2" id="dline2">
 								</div>
 								<div class="condensed">
 									<label for="dmunicipality">Municipality</label>
-									<input type="text" size="35" value="" name="dmunicipality" id="dmunicipality">
+									<input type="text" class="insettext fullwidth" name="dmunicipality" id="dmunicipality">
 									<!--
 									<select id="municipality" name="municipality">
 										<option value="victoria" selected="selected">Victoria</option>
@@ -74,19 +75,19 @@
 							<span>Your billing address.</span>
 							<div>
 								<label for="bline1">Address line 1</label>
-								<input type="text" size="35" value="" name="bline1" id="b-line1">
+								<input type="text" class="insettext fullwidth" name="bline1" id="b-line1">
 							</div>
 							<div>
 								<label for="bline2">Address line 2</label>
-								<input type="text" size="35" value="" name="bline2" id="b-line2">
+								<input type="text" class="insettext fullwidth" name="bline2" id="b-line2">
 							</div>
 							<div class="condensed">
 								<label for="bcity">City</label>
-								<input type="text" size="35" value="" name="bcity" id="b-city">
+								<input type="text" class="insettext fullwidth" name="bcity" id="b-city">
 							</div>
 							<div class="condensed">
 								<label for="bpostal">Postal code</label>
-								<input type="text" size="35" value="" name="bpostal" id="b-postal">
+								<input type="text" class="insettext fullwidth" name="bpostal" id="b-postal">
 							</div>
 							<div>
 								<label for="bprovince">Province:</label>
@@ -113,6 +114,7 @@
 					</div>
 				</form>
 				<div class="return"><a href="/order-place1.html" class="button">‹ Back</a></div>
+			</div>
 			</div>
 			
 <script type="text/javascript">
