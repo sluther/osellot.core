@@ -991,7 +991,6 @@ class DAO_InvoiceAttribute extends DevblocksORMHelper {
 			self::NAME,
 			$db->qstr($prefix.'%')
 		);
-		print $sql;
 		$rs = $db->Execute($sql);
 	
 		return true;
