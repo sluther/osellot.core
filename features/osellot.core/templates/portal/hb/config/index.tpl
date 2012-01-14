@@ -29,10 +29,12 @@
 					{if 'account.portal.controller.osellot' != $module->manifest->id && 'order.portal.controller.osellot' != $module->manifest->id}
 					<option value="0" {if isset($visible_modules.$module_id) && '0'==$visible_modules.$module_id}selected="selected"{/if}>Everyone</option>
 					{/if}
-					{if 'login.portal.controller.osellot' != $module->manifest->id}
+					{if 'login.portal.controller.osellot' != $module->manifest->id && 'postback.portal.controller.osellot' != $module->manifest->id}
 					<option value="1" {if isset($visible_modules.$module_id) && '1'==$visible_modules.$module_id}selected="selected"{/if}>Logged in</option>
 					{/if}
+					{if 'postback.portal.controller.osellot' != $module->manifest->id}
 					<option value="2" {if !isset($visible_modules.$module_id) || '2'==$visible_modules.$module_id}selected="selected"{/if}>Disabled</option>
+					{/if}
 				</select>
 				<input type="hidden" name="idx_modules[]" value="{$module->manifest->id}">
 				{$module->manifest->name}
