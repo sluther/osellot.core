@@ -182,39 +182,6 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 			'account_id' => $account->id
 		);
 		
-		if($delivery) {
-			$boxCount = 0;
-			$deliveryCost = 3;
-			
-			foreach($order['items'] as $item) {
-				$boxCount += $item['quantity'];
-			}
-			
-			$remainder = $boxCount % 3;
-			
-			$dline1 = DevblocksPlatform::importGPC($_REQUEST['dline1'], 'string', '');
-			$dline2 = DevblocksPlatform::importGPC($_REQUEST['dline2'], 'string', '');
-			$municipality = DevblocksPlatform::importGPC($_REQUEST['dmunicipality'], 'string', '');
-			$postal = DevblocksPlatform::importGPC($_REQUEST['dpostal'], 'string', '');
-			$order['attributes']['delivery_address'] = array(
-				'line1' => $dline1,
-				'line2' => $dline2,
-				'municipality' => $municipality,
-				'postal' => $postal
-			);
-			$order['amount'] += $deliveryCost * ($boxCount - $remainder);
-			if($remainder)
-				$order['amount'] += 3;
-		} else {
-			$order['attributes']['pickup_location'] = array(
-				'line1' => $account->address_line1,
-				'line2' => $account->address_line2,
-				'city' => $account->address_city,
-				'province' => $account->address_province,
-				'postal' => $account->address_postal 
-			);
-		}
-		
 		// Save the order in the session
 		$umsession->setProperty('hb_order', $order);
 		DevblocksPlatform::redirect(new DevblocksHttpResponse(array('order', 'confirm')));
