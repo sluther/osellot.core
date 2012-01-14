@@ -92,6 +92,7 @@
 		<template path="portal/index.tpl" />
 		<template path="portal/header.tpl" />
 		<template path="portal/footer.tpl" />
+		<template path="portal/account_nav.tpl" />
 		<template path="portal/account/edit.tpl" />
 		<template path="portal/account/history.tpl" />
 		<template path="portal/account/index.tpl" />
@@ -146,54 +147,15 @@
 		</extension>
 		
 		<extension point="portal.controller.osellot">
-			<id>agency.portal.controller.osellot</id>
-			<name>Agency</name>
+			<id>postback.portal.controller.osellot</id>
+			<name>Postback</name>
 			<class>
-				<file>api/uri/portal/agency.php</file>
-				<name>AgencyPortal_OsellotController</name>
+				<file>api/uri/portal/postback.php</file>
+				<name>PostbackPortal_OsellotController</name>
 			</class>
 			<params>
-				<param key="uri" value="agency" />
-				<param key="menu_title" value="agency.portal.osellot" />
-			</params>
-		</extension>
-		
-		<extension point="agency.portal.controller.osellot">
-			<id>account.agency.portal.controller.osellot</id>
-			<name>Account</name>
-			<class>
-				<file>api/uri/portal/agency/account.php</file>
-				<name>AccountAgencyPortal_OsellotController</name>
-			</class>
-			<params>
-				<param key="uri" value="account" />
-				<param key="menu_title" value="account.portal.osellot" />
-			</params>
-		</extension>
-		
-		<extension point="agency.portal.controller.osellot">
-			<id>login.agency.portal.controller.osellot</id>
-			<name>Login</name>
-			<class>
-				<file>api/uri/portal/agency/login.php</file>
-				<name>LoginAgencyPortal_OsellotController</name>
-			</class>
-			<params>
-				<param key="uri" value="login" />
-				<param key="menu_title" value="login.portal.osellot" />
-			</params>
-		</extension>
-		
-		<extension point="agency.portal.controller.osellot">
-			<id>order.agency.portal.controller.osellot</id>
-			<name>Order</name>
-			<class>
-				<file>api/uri/portal/agency/order.php</file>
-				<name>OrderAgencyPortal_OsellotController</name>
-			</class>
-			<params>
-				<param key="uri" value="order" />
-				<param key="menu_title" value="order.portal.osellot" />
+				<param key="uri" value="postback" />
+				<param key="menu_title" value="postback.portal.osellot" />
 			</params>
 		</extension>
 		
