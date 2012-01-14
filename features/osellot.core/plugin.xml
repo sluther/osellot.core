@@ -14,7 +14,7 @@
 	</dependencies>-->
     
     <patches>
-		<patch version="1.0.0-beta" revision="1" file="patches/1.0.0-beta.php" />
+		<patch version="0.9.0" revision="1" file="patches/0.9.0.php" />
 	</patches>
     
    	<!-- Controller Routing -->

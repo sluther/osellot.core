@@ -66,8 +66,9 @@ if(!isset($tables['invoice_item'])) {
 		CREATE TABLE IF NOT EXISTS invoice_item (
 			invoice_id INT UNSIGNED NOT NULL DEFAULT 0,
 			product_id INT UNSIGNED NOT NULL DEFAULT 0,
-			quantity INT UNSIGNED NOT NULL DEFAULT 0,		
+			quantity INT UNSIGNED NOT NULL DEFAULT 0,
 			amount DECIMAL(25,6) UNSIGNED NOT NULL DEFAULT 0,
+			recurring INT UNSIGNED NOT NULL DEFAULT 0,
 			PRIMARY KEY (invoice_id, product_id),
 			INDEX invoice_id (invoice_id),
 			INDEX product_id (product_id)
