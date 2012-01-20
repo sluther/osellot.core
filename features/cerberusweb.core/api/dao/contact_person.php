@@ -115,7 +115,6 @@ class DAO_ContactPerson extends DevblocksORMHelper {
 			$object->address_city = $row['address_city'];
 			$object->address_province = $row['address_province'];
 			$object->address_postal = $row['address_postal'];
-			$object->position = $row['position'];
 			$objects[$object->id] = $object;
 		}
 		
