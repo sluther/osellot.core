@@ -745,22 +745,82 @@ class UmOsellotLoginAuthenticator extends Extension_OsellotLoginAuthenticator {
 		@$module = array_shift($stack);
 		@$section = array_shift($stack);
 		switch($module) {
-			case 'agency':
-				$tpl->display("devblocks:osellot.core:portal_".ChPortalHelper::getCode().":portal/agency/login/login.tpl");
-				break;			
 			case 'register':
-				if(isset($section) && 0==strcasecmp('confirmed', $section)) {
-					$tpl->display("devblocks:osellot.core:portal_".ChPortalHelper::getCode().":portal/login/registered.tpl");
-				} else {
-					$tpl->assign('title', 'Sign-up with the Good Food Box to order online');
-					$tpl->display("devblocks:osellot.core:portal_".ChPortalHelper::getCode().":portal/login/register.tpl");
+				switch($section) {
+					case 'confirm':
+						@$code = array_shift($stack);
+						try {
+							if(null == ($code = DAO_ConfirmationCode::getByCode('osellot.login.register.verify', $code)))
+								throw new Exception("Your confirmation code was invalid!");
+							
+							$fields = array(
+								DAO_Address::EMAIL => $code->meta['email'],
+								DAO_Address::FIRST_NAME => $code->meta['first_name'],
+								DAO_Address::LAST_NAME => $code->meta['last_name']
+							);
+							
+							if(null == $address = DAO_Address::lookupAddress($code->meta['email'])) {
+								$id = DAO_Address::create($fields);
+								$address = DAO_Address::get($id);
+							} else {
+								DAO_Address::update($address->id, $fields);
+							}
+							
+							// Create the contact
+							$salt = CerberusApplication::generatePassword(8);
+							$fields = array(
+								DAO_ContactPerson::EMAIL_ID => $address->id,
+								DAO_ContactPerson::LAST_LOGIN => time(),
+								DAO_ContactPerson::CREATED => time(),
+								DAO_ContactPerson::AUTH_SALT => $salt,
+								DAO_ContactPerson::AUTH_PASSWORD => md5($salt.$code->meta['password_hash']),
+								DAO_ContactPerson::PHONE => $phone
+							);
+							$contact_person_id = DAO_ContactPerson::create($fields);
+							
+							if(empty($contact_person_id) || null == ($contact = DAO_ContactPerson::get($contact_person_id)))
+								throw new Exception("There was an error creating your account.");
+							
+							// Link email
+							DAO_Address::update($address->id, array(
+								DAO_Address::CONTACT_PERSON_ID => $contact_person_id,
+							));
+							DAO_ConfirmationCode::delete($code->id);
+							// Log in the session
+							$umsession->login($contact);
+						} catch(Exception $e) {
+							$tpl->assign('error', $e->getMessage());
+							DevblocksPlatform::setHttpResponse(new DevblocksHttpResponse(array('login','register')));
+							return;
+						}
+						$tpl->display("devblocks:osellot.core:portal_".ChPortalHelper::getCode().":portal/login/register_confirm.tpl");
+						
+						break;
+					case 'sent':
+						$tpl->display("devblocks:osellot.core:portal_".ChPortalHelper::getCode().":portal/login/register_sent.tpl");
+						break;
+					default:
+						$tpl->display("devblocks:osellot.core:portal_".ChPortalHelper::getCode().":portal/login/register.tpl");
+					break;
 				}
+
 				break;
 			case 'forgot':
-				if(isset($section) && 0==strcasecmp('confirm', $section)) {
-					$tpl->display("devblocks:osellot.core:portal_".ChPortalHelper::getCode().":portal/login/forgot_confirm.tpl");
-				} else {
-					$tpl->display("devblocks:osellot.core:portal_".ChPortalHelper::getCode().":portal/login/forgot.tpl");
+				switch($section) {
+					case 'confirm':
+						@$email = array_shift($stack);
+						@$code = array_shift($stack);
+						
+						$tpl->assign('email', $email);
+						$tpl->assign('code', $code);
+						$tpl->display("devblocks:osellot.core:portal_".ChPortalHelper::getCode().":portal/login/forgot_confirm.tpl");
+						break;
+					case 'sent':
+						$tpl->display("devblocks:osellot.core:portal_".ChPortalHelper::getCode().":portal/login/forgot_sent.tpl");
+						break;
+					default:
+						$tpl->display("devblocks:osellot.core:portal_".ChPortalHelper::getCode().":portal/login/forgot.tpl");
+						break;
 				}
 				break;
 			default:
@@ -794,10 +854,10 @@ class UmOsellotLoginAuthenticator extends Extension_OsellotLoginAuthenticator {
 			// Check that email addresses are the same
 			if(!$email == $cemail)
 				throw new Exception("The provided email addresses did not match.");
-
+			
 			if(strlen($pass) < 12)
 				throw new Exception("The provided password was not long enough");
-				
+			
 			// Check that passwords are the same
 			if(!$pass == $cpass)
 				throw new Exception("The provided passwords did not match.");
@@ -809,64 +869,38 @@ class UmOsellotLoginAuthenticator extends Extension_OsellotLoginAuthenticator {
 			
 			if(!$parts > 1)
 				throw new Exception("You must enter both a First and Last name");
-				
-			if(empty($phone))
-				throw new Exception("You must enter a phone number.");
-			
+
 //			Update the preferred email address
 			$umsession->setProperty('register.email', $email);
 			
+			// Send a confirmation code
 			$fields = array(
-				DAO_Address::EMAIL => $email,
-				DAO_Address::FIRST_NAME => $first_name,
-				DAO_Address::LAST_NAME => $last_name
+				DAO_ConfirmationCode::CONFIRMATION_CODE => CerberusApplication::generatePassword(8),
+				DAO_ConfirmationCode::NAMESPACE_KEY => 'osellot.login.register.verify',
+				DAO_ConfirmationCode::META_JSON => json_encode(array(
+					'email' => $email,
+					'first_name' => $first_name,
+					'last_name' => $last_name,
+					'password_hash' => md5($pass)
+				)),
+				DAO_ConfirmationCode::CREATED => time(),
 			);
-			
-			if(null == $address = DAO_Address::lookupAddress($email)) {
-				$id = DAO_Address::create($fields);
-				$address = DAO_Address::get($id);
-			} else {
-				DAO_Address::update($address->id, $fields);
-			}
-			
-			// Create the contact
-			$salt = CerberusApplication::generatePassword(8);
-			$fields = array(
-				DAO_ContactPerson::EMAIL_ID => $address->id,
-				DAO_ContactPerson::LAST_LOGIN => time(),
-				DAO_ContactPerson::CREATED => time(),
-				DAO_ContactPerson::AUTH_SALT => $salt,
-				DAO_ContactPerson::AUTH_PASSWORD => md5($salt.md5($pass)),
-				DAO_ContactPerson::PHONE => $phone
-			);
-			$contact_person_id = DAO_ContactPerson::create($fields);
-			
-			if(empty($contact_person_id) || null == ($contact = DAO_ContactPerson::get($contact_person_id)))
-				throw new Exception("There was an error creating your account.");
-			
-			// Link email
-			DAO_Address::update($address->id, array(
-				DAO_Address::CONTACT_PERSON_ID => $contact_person_id,
-			));
-			
+			DAO_ConfirmationCode::create($fields);
 			
 			// Quick send
-			$msg = sprintf(
-			"Thank you for registering: %s",
-				urlencode($fields[DAO_ConfirmationCode::CONFIRMATION_CODE])
+			$msg = sprintf("Please confirm your account by clicking the following link:\r\n %s",
+				$url_writer->write('c=login&a=register&step=confirm&code='.urlencode($fields[DAO_ConfirmationCode::CONFIRMATION_CODE]), true)
 			);
-			CerberusMail::quickSend($email,"Please confirm your email address", $msg);
 			
-			// Log in the session
-			$umsession->login($contact);			
+			CerberusMail::quickSend($email,"Please confirm your account", $msg);
 
 		} catch(Exception $e) {
 			$tpl->assign('error', $e->getMessage());
-			DevblocksPlatform::setHttpResponse(new DevblocksHttpResponse(array('portal',ChPortalHelper::getCode(),'login','register')));
+			DevblocksPlatform::setHttpResponse(new DevblocksHttpResponse(array('login','register')));
 			return;
 		}
 
-		DevblocksPlatform::redirect(new DevblocksHttpResponse(array('portal',ChPortalHelper::getCode(),'login','register','confirmed')));
+		DevblocksPlatform::redirect(new DevblocksHttpResponse(array('login','register','sent')));
 	}
 
 	function doRecoverAction() {

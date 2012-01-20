@@ -1,4 +1,3 @@
-		<!--{if $is_agency}</div>{/if}-->
 		</div>
 	<div class="clearfix"></div>
 	</div><!-- #wrapper -->

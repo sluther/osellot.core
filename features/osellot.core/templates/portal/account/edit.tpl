@@ -28,12 +28,12 @@
 								<input type="text" id="cchange_email" name="cemail" value="{$active_profile->getPrimaryAddress()->email}" class="insettext fullwidth">
 							</div>
 							<br />
-							<span>Change your password. Passwords must be at least twelve characters.</span>
+							<span>Change your password. Passwords must be at least eight characters.</span>
 							<div>
 								<label for="password">Password</label>
 								<input type="password" id="password" name="password" class="insettext fullwidth">
 							</div>
-							<span>Confirm your changed password. Passwords must be at least twelve characters.</span>
+							<span>Confirm your changed password. Passwords must be at least eight characters.</span>
 							<div>
 								<label for="cpassword">Confirm password</label>
 								<input type="password" id="cpassword" name="cpassword" class="insettext fullwidth">

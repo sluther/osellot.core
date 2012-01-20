@@ -13,14 +13,12 @@
 							<input type="password" id="password" name="password" class="insettext fullwidth">
 							<label for="cpassword">Confirm password</label>
 							<input type="password" id="cpassword" name="cpassword" class="insettext fullwidth">
-							<span>Passwords must be at least twelve characters long.</span>
+							<span>Passwords must be at least eight characters long.</span>
+							<br>
 							<label for="name">Full name</label>
 							<input type="text" id="name" name="name" class="insettext fullwidth">
 							<span>Your first and last name.</span>
 							<br>
-							<label for="phone">Phone</label>
-							<input type="text" id="phone" name="phone" class="insettext fullwidth">
-							<span>The best number to contact you about your order.</span>
 							<button type="submit" class="fright" id="submit" name="submit" value="Register account">Submit</button>
 					</form>
 				</div>
