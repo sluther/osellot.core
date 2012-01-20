@@ -3,61 +3,6 @@
 				<form action="" method="post" id="buy">
 					<input type="hidden" name="a" value="doCheckout">
 					<fieldset>
-						<legend>Pickup or delivery</legend>
-						<span>Select whether you want to pickup your order or have it delivered.</span>
-						<div class="options">
-							<div>
-								<input type="radio" checked="checked" value="1" name="delivery" id="delivery">
-								<label for="delivery">I want it delivered ($3)</label><br>
-							</div>
-							<div>
-								<input type="radio" value="0" name="delivery" id="pickup">
-								<label for="pickup">I will pickup my order</label>
-							</div>
-						</div>
-						<br>
-						<div id="pickup_delivery">
-							<div id="deliveryForm">
-								<span>The street address you would like the order delivered to.</span>
-								<div>
-									<label for="dline1">Line 1</label>
-									<input type="text" class="insettext fullwidth" name="dline1" id="dline1">
-								</div>
-								<div>
-									<label for="dline2">Line 2</label>
-									<input type="text" class="insettext fullwidth" name="dline2" id="dline2">
-								</div>
-								<div class="condensed">
-									<label for="dmunicipality">Municipality</label>
-									<input type="text" class="insettext fullwidth" name="dmunicipality" id="dmunicipality">
-									<!--
-									<select id="municipality" name="municipality">
-										<option value="victoria" selected="selected">Victoria</option>
-										<option value="sooke">Sooke</option>
-										<option value="sidney">Sidney</option>
-										<option value="another">Another</option>
-									</select>
-									-->
-								</div>
-								<div class="condensed">
-									<label for="dpostal">Postal code</label>
-									<input type="text" size="35" value="" name="dpostal" id="postal">
-								</div>
-							</div>
-							<div id="pickupForm" style="display: none; visibility: hidden">
-								<span>The location you would like to pickup the order from.</span>
-								<label for="pickuploc">Location:</label> 
-								<select name="pickuploc" id="pickuploc">
-									<option selected="selected" value="fernwood">Fernwood Community Centre</option>
-									<option value="another1">Another location 1</option>
-									<option value="another2">Another location 2</option>
-									<option value="another3">Another location 3</option>
-								</select>
-							</div>
-							<br>
-						</div>
-					</fieldset>
-					<fieldset>
 						<legend>Payment details</legend>
 						<span>Select a payment method.</span>
 						<div class="options">
@@ -85,27 +30,65 @@
 								<label for="bcity">City</label>
 								<input type="text" class="insettext fullwidth" name="bcity" id="b-city">
 							</div>
+							<div>
+								<label for="bstate">State:</label>
+								<select name="bstate" id="b-state">
+									<option value="AL">Alabama</option>
+									<option value="AK">Alaska</option>
+									<option value="AZ">Arizona</option>
+									<option value="AR">Arkansas</option>
+									<option value="CA">California</option>
+									<option value="CO">Colorado</option>
+									<option value="CT">Connecticut</option>
+									<option value="DE">Delaware</option>
+									<option value="DC">District of Columbia
+									<option value="FL">Florida</option>
+									<option value="GA">Georgia</option>
+									<option value="HI">Hawaii</option>
+									<option value="ID">Idaho</option>
+									<option value="IL">Illinois</option>
+									<option value="IN">Indiana</option>
+									<option value="IA">Iowa</option>
+									<option value="KS">Kansas</option>
+									<option value="KY">Kentucky</option>
+									<option value="LA">Louisiana</option>
+									<option value="ME">Maine</option>
+									<option value="MD">Maryland</option>
+									<option value="MA">Massachusetts</option>
+									<option value="MI">Michigan</option>
+									<option value="MN">Minnesota</option>
+									<option value="MS">Mississippi</option>
+									<option value=""MO>Missouri</option>
+									<option value="MT">Montana</option>
+									<option value="NE">Nebraska</option>
+									<option value="NV">Nevada</option>
+									<option value="NH">New Hampshire</option>
+									<option value="NJ">New Jersey</option>
+									<option value="NM">New Mexico</option>
+									<option value="NY">New York</option>
+									<option value="NC">North Carolina</option>
+									<option value="ND">North Dakota</option>
+									<option value="OH">Ohio</option>
+									<option value="OK">Oklahoma</option>
+									<option value="OR">Oregon</option>
+									<option value="PA">Pennsylvania</option>
+									<option value="RI">Rhode Island</option>
+									<option value="SC">South Carolina</option>
+									<option value="SD">South Dakota</option>
+									<option value="TE">Tennessee</option>
+									<option value="TX">Texas</option>
+									<option value="UT">Utah</option>
+									<option value="VT">Vermont</option>
+									<option value="VA">Virginia</option>
+									<option value="WA">Washington</option>
+									<option value="WV">West Virginia</option>
+									<option value="WI">Wisconsin</option>
+									<option value="WY">Wyoming</option>
+								</select>
+							</div>
 							<div class="condensed">
 								<label for="bpostal">Postal code</label>
 								<input type="text" class="insettext fullwidth" name="bpostal" id="b-postal">
-							</div>
-							<div>
-								<label for="bprovince">Province:</label>
-								<select name="bprovince" id="b-province">
-									<option value="ab">Alberta</option>
-									<option selected="selected" value="bc">British Columbia</option>
-									<option value="mb">Manitoba</option>
-									<option value="nb">New Brunswick</option>
-									<option value="nf">Newfoundland &amp; Labrador</option>
-									<option value="nt">Northwest Territories</option>
-									<option value="ns">Nova Scotia</option>
-									<option value="nu">Nunavut</option>
-									<option value="on">Ontario</option>
-									<option value="pe">Prince Edward Island</option>
-									<option value="qc">Quebec</option>
-									<option value="sk">Saskatchewan</option>
-									<option value="yk">Yukon</option>
-								</select>
 							</div>
 						</div>
 					</fieldset>

@@ -152,7 +152,6 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 		$account = $umsession->getProperty('hb_login');
 		$cart = $umsession->getProperty('hb_cart', null);
 		
-		$delivery = DevblocksPlatform::importGPC($_REQUEST['delivery'], 'integer', 1);
 		$checkout_plugin = DevblocksPlatform::importGPC($_REQUEST['plugin'], 'string', '');
 		if($cart === null)
 			DevblocksPlatform::redirect(new DevblocksHttpResponse(array('order')));
@@ -160,7 +159,7 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 		$line1 = DevblocksPlatform::importGPC($_REQUEST['bline1'], 'string', '');
 		$line2 = DevblocksPlatform::importGPC($_REQUEST['bline2'], 'string', '');
 		$city = DevblocksPlatform::importGPC($_REQUEST['bcity'], 'string', '');
-		$province = DevblocksPlatform::importGPC($_REQUEST['bprovince'], 'string', '');
+		$state = DevblocksPlatform::importGPC($_REQUEST['bstate'], 'string', '');
 		$postal = DevblocksPlatform::importGPC($_REQUEST['bpostal'], 'string', '');
 		
 		// Create the order array
@@ -168,13 +167,11 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 			'items' => $cart['items'],
 			'attributes' => array(
 				'checkout_plugin' => $checkout_plugin,
-				'delivery' => $delivery,
-				'pickup' => $delivery == false ? true : false,
 				'billing_address' => array(
 					'line1' => $line1,
 					'line2' => $line2,
 					'city' => $city,
-					'state' => $province,
+					'state' => $state,
 					'postal' => $postal
 				)
 			),
@@ -218,11 +215,7 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 		
 		$invoice_id = DAO_Invoice::create($fields);
 		
-		if($order['attributes']['delivery']) {
-			$invoice_total = 3;
-		} else {
-			$invoice_total = 0;
-		}
+		$invoice_total = 0;
 		
 		// [TODO] Refactor this to lookup product attrs and get the price for them
 		// Add the attributes

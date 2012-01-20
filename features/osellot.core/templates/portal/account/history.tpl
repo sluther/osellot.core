@@ -4,8 +4,7 @@
 						<th>Order #</th>
 						<th>Order date</th>
 						<th>Ship date</th>
-						<th>Boxes</th>
-						<th>Delivery</th>
+						<th>Products</th>
 						<th>Cost</th>
 					</tr>
 					{foreach $invoices as $invoice}
@@ -20,7 +19,6 @@
 								{/foreach}
 							</ul>
 						</td>
-						<td>{if $invoice->getAttribute('delivery', false)->value} Yes (+$3){else} No {/if}</td>
 						<td>{if $invoice->status != 0}{number_format($invoice->amount_paid, 2)}{else}{number_format($invoice->amount, 2)}{/if}</td>
 					</tr>
 					{/foreach}

@@ -3,7 +3,7 @@
 		<tr>
 			<th>Order date</th>
 			<th>Ship date</th>
-			<th>Boxes</th>
+			<th>Products</th>
 			<th>Delivery</th>
 			<th>Cost</th>
 		</tr>
@@ -23,30 +23,12 @@
 	</table>
 	<table class="details" summary="Details of your order">
 		<tr>
-			{if $invoice->attributes.pickup}
-			<th>Pickup my order from:</th>
-			{else}
-			<th>Deliver my order to:</th>
-			{/if}
 			<th>Payment method:</th>
 			{if $plugin->getParam('cc')}
 			<th>Bill to:</th>
 			{/if}
 		</tr>
 		<tr>
-			<td>
-				{if $invoice->attributes.pickup}
-				{$invoice->attributes.pickup_location.line1}<br>
-				{if !empty($invoice->attributes.pickup_location.line2)}{$invoice->attributes.pickup_location.line2}<br>{/if}
-				{$invoice->attributes.pickup_location.city}, {$invoice->attributes.pickup_location.province} {$invoice->attributes.pickup_location.postal}
-				{else}
-				{$active_profile->getPrimaryAddress()->first_name} {$active_profile->getPrimaryAddress()->last_name}<br>
-				{$invoice->attributes.delivery_address.line1}<br>
-				{if !empty($invoice->attributes.delivery_address.line2)}{$invoice->attributes.delivery_address.line2}<br>{/if}
-				{$invoice->attributes.delivery_address.city}, {$invoice->attributes.delivery_address.province} {$invoice->attributes.delivery_address.postal}
-				{$invoice->attributes.pickup_location}
-				{/if}
-			</td>
 			<td>
 				<dl>
 					{if $plugin->getParam('cc')}
