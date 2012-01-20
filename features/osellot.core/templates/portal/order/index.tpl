@@ -22,18 +22,20 @@
 				<div class="rightcolumn">
 					<h2>My cart</h2>
 					<div class="rcontentbox">
-						{foreach $cart.items as $item_id => $item}
+						{$total = 0}
+						{foreach $cart.items as $item_id => $quantity}
+						{$item = DAO_Product::get($item_id)}
 						<div>
-							<strong>{$item.quantity}x</strong> {$item.name} (${number_format($item.price,2)} ea) <span>${number_format($item.total, 2)} </span>
+							<strong>{$quantity}x</strong> {$item->name} (${number_format($item->price,2)} ea) <span>${number_format($item->price * $quantity, 2)} </span>
 						</div>
-
+						{$total = $total + $item->price * $quantity}
 						{foreachelse}
 						<div>
-		                       Add Good food boxes to your cart from the left.
-		                   </div>
+		                       Add products to your cart from the left.
+		                </div>
 						{/foreach}
 						<div class="total">
-							<span>${number_format($cart.total, 2)}</span>
+							<span>${number_format($total, 2)}</span>
 						</div>
 						<form id="buy" method="post" action="">
 							<div class="submit">

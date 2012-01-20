@@ -11,13 +11,19 @@
 			<td>September 12, 2011</td>
 			<td>
 				<ul>
-					{foreach $order.items as $item}
-					<li><strong>{$item.quantity}x</strong> {$item.name} (${number_format($item.price, 2)} ea)</li>
+					{$total = 0}
+
+
+
+					{foreach $order.items as $item_id => $quantity}
+					{$item = DAO_Product::get($item_id)}
+					<li><strong>{$quantity}x</strong> {$item->name} (${number_format($item->price, 2)} ea)</li>
+					{$total = $total + $item->price * $quantity}
 					{/foreach}
 				</ul>
 
 			</td>
-			<td>${$order.amount}</td>
+			<td>${$total}</td>
 		</tr>
 	</table>
 	<table class="details" summary="Details of your order">

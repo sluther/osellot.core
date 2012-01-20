@@ -57,9 +57,6 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 			default:
 				$cart = $umsession->getProperty('hb_cart', null);
 				
-				// Sort cart items alphabetically by name
-				asort($cart['items']);
-				
 				$products = DAO_Product::getAll();
 				
 				foreach($products as $id => $product) {
@@ -99,24 +96,10 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 				$product = DAO_Product::get($item);
 				
 				if(isset($cart['items'][$product->id])) {
-					$cart['items'][$product->id]['quantity'] += 1;
-					$cart['items'][$product->id]['total'] = $cart['items'][$product->id]['price'] * $cart['items'][$product->id]['quantity'];
+					$cart['items'][$product->id] += 1;
 				} else {
-					$cart['items'][$product->id] = array(
-						'name' => $product->name,
-						'sku' => $product->sku,
-						'price' => $product->price,
-						'total' => $product->price,
- 						// 'price_setup' => $product->price_setup,
-						'quantity' => 1
-					);
+					$cart['items'][$product->id] = 1;
 				}
-				
-				$cart['total'] = 0;
-				foreach($cart['items'] as $item) {
-					$cart['total'] += $item['price'] * $item['quantity'];
-				}
-				
 				$umsession->setProperty('hb_cart', $cart);
 				break;
 			case 'remove':
@@ -124,17 +107,11 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 				$product = DAO_Product::get($item);
 				
 				if(isset($cart['items'][$product->id])) {
-					if($cart['items'][$product->id]['quantity'] > 1) {
-						$cart['items'][$product->id]['quantity'] -= 1;
-						$cart['items'][$product->id]['total'] = $cart['items'][$product->id]['price'] * $cart['items'][$product->id]['quantity'];
+					if($cart['items'][$product->id] > 1) {
+						$cart['items'][$product->id] -= 1;
 					} else {
 						unset($cart['items'][$product->id]);
 					}
-				}
-				
-				$cart['total'] = 0;
-				foreach($cart['items'] as $item) {
-					$cart['total'] += $item['price'] * $item['quantity'];
 				}
 				
 				$umsession->setProperty('hb_cart', $cart);
@@ -175,7 +152,6 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 					'postal' => $postal
 				)
 			),
-			'amount' => $cart['total'],
 			'account_id' => $account->id
 		);
 		
@@ -230,8 +206,8 @@ class OrderPortal_OsellotController extends Extension_Portal_Osellot_Controller 
 		}
 		
 		// Add the invoice items
-		foreach($order['items'] as $item_id => $item) {
-			DAO_Invoice::addItem($invoice_id, $item_id, $invoice_total, $item['quantity']);
+		foreach($order['items'] as $item_id => $quantity) {
+			DAO_Invoice::addItem($invoice_id, $item_id, $invoice_total, $quantity);
 		}
 		
 		$order['amount'] = $invoice_total;
