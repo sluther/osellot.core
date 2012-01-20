@@ -184,12 +184,12 @@ if(!isset($columns['address_province']))
 if(!isset($columns['address_postal']))
 	$db->Execute("ALTER TABLE contact_person ADD COLUMN address_postal VARCHAR(255) NOT NULL DEFAULT ''");
 
-$gateway_plugins = DevblocksPlatform::getExtensions('cc.gateway.osellot.core');
+$gateway_plugins = DevblocksPlatform::getExtensions('gateway.osellot.core');
 foreach($gateway_plugins as $gateway) {
 	$sql = sprintf("INSERT INTO gateway_setting (extension_id,enabled,test_mode,username,password,extra) " . 
 					"VALUES ('%s', '0', '0', '', '', '')", $gateway->id); 
 		
 	$db->Execute($sql);
-}	
+}
 
 return TRUE;
