@@ -1,1 +1,0 @@
-<a href="{devblocks_url}c=config&a=translations{/devblocks_url}">{'translators.common'|devblocks_translate|capitalize}</a>

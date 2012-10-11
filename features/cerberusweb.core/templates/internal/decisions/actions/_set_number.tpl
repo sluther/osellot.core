@@ -1,1 +1,0 @@
-<input type="text" name="{$namePrefix}[value]" value="{$params.value}" size="10" maxlength="11"><br>
