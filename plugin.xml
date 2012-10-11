@@ -9,10 +9,18 @@
 	
     <!-- Plugin Dependencies -->
 	
-	<!--<dependencies>
-		<require plugin_id="cerberusweb.core" version="5.5.0" />
-	</dependencies>-->
-    
+	<!-- Requirements -->
+
+	<requires>
+		<app_version min="6.1" max="6.1.99" />
+	</requires>
+	
+	<!-- Plugin Dependencies -->
+	
+	<dependencies>
+		<require plugin_id="cerberusweb.core" version="6.1.0" />
+	</dependencies>
+	
     <patches>
 		<patch version="0.9.0" revision="1" file="patches/0.9.0.php" />
 	</patches>
