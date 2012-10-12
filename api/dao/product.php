@@ -1,5 +1,5 @@
 <?php
-class DAO_Product extends DevblocksORMHelper {
+class DAO_Product extends C4_ORMHelper {
 	const ID = 'id';
 	const PRICE = 'price';
 	const PRICE_SETUP = 'price_setup';
@@ -96,12 +96,12 @@ class DAO_Product extends DevblocksORMHelper {
 	
 	/**
 	* @param integer $id
-	* @return Model_ProductSetting
+	* @return Model_ProductAttribute
 	*/
-	static function getProductSettings($id) {
-		$settings = DAO_ProductSetting::getProductSettings($id);
+	static function getProductAttributes($id) {
+		$attributes = DAO_ProductAttribute::getProductAttributes($id);
 
-		return $settings;
+		return $attributes;
 	}
 	
 	/**
@@ -144,6 +144,10 @@ class DAO_Product extends DevblocksORMHelper {
 		return true;
 	}
 	
+	public static function random() {
+		return self::_getRandom('product');
+	}
+	
 	public static function getSearchQueryComponents($columns, $params, $sortBy=null, $sortAsc=null) {
 		$fields = View_Product::getFields();
 		
@@ -174,14 +178,14 @@ class DAO_Product extends DevblocksORMHelper {
 			
 		$join_sql = "FROM product ";
 		
-//		if(isset($tables['product_setting'])) {
+//		if(isset($tables['product_attribute'])) {
 //			$select_sql .= sprintf(
 //				", pc.name AS %s, ".
 //				"pc.value AS %s",
-//				SearchFields_ProductSetting::NAME,
-//				SearchFields_ProductSetting::VALUE
+//				SearchFields_ProductAttribute::NAME,
+//				SearchFields_ProductAttribute::VALUE
 //			);
-//			$join_sql .= "LEFT JOIN product_setting pc ON (p.id=pc.product_id) ";
+//			$join_sql .= "LEFT JOIN product_attribute pc ON (p.id=pc.product_id) ";
 //		}
 		$has_multiple_values = false; // [TODO] Temporary when custom fields disabled
 				
@@ -320,16 +324,33 @@ class Model_Product {
 	public $name;
 	public $description;
 	
-	public function getSettings() {
-		return DAO_ProductSetting::getProductSettings($this->id);
+	public function getAttribute($name, $default = null) {
+		return DAO_ProductAttribute::getProductAttribute($this->id, $name, $default);
 	}
-
-	public function getSetting($name, $default = '') {
-		return DAO_ProductSetting::getProducSetting($this->id, $name, $default);
+	
+// 	public function getAttributeGroup($prefix) {
+// 		return DAO_InvoiceAttribute::getInvoiceAttributeGroup($this->id, $prefix);
+// 	}
+	
+	public function getAttributes() {
+		$attributes = DAO_ProductAttribute::getProductAttributes($this->id);
+		$product_attributes = array();
+		foreach($attributes as $attribute) {
+			$product_attributes[$attribute->name] = $attribute->value;
+		}
+		return $product_attributes;
+	}
+	
+	public function setAttribute($name, $value) {
+		if(null == DAO_ProductAttribute::getProductAttribute($this->id, $name, null)) {
+			DAO_ProductAttribute::addProductAttribute($this->id, $name, $value);
+		} else {
+			DAO_ProductAttribute::setProductAttribute($this->id, $name, $value);
+		}
 	}
 };
 
-class View_Product extends C4_AbstractView {
+class View_Product extends C4_AbstractView implements IAbstractView_Subtotals, IAbstractView_QuickSearch {
 	const DEFAULT_ID = 'product';
 
 	function __construct() {
@@ -378,6 +399,211 @@ class View_Product extends C4_AbstractView {
 	function getDataSample($size) {
 		return $this->_doGetDataSample('DAO_Product', $size);
 	}
+	
+	function getSubtotalFields() {
+		$all_fields = $this->getParamsAvailable();
+		
+		$fields = array();
+
+		if(is_array($all_fields))
+		foreach($all_fields as $field_key => $field_model) {
+			$pass = false;
+			
+			switch($field_key) {
+				// DAO
+				case SearchFields_Ticket::ORG_NAME:
+				case SearchFields_Ticket::TICKET_FIRST_WROTE:
+				case SearchFields_Ticket::TICKET_LAST_WROTE:
+				case SearchFields_Ticket::TICKET_SPAM_TRAINING:
+				case SearchFields_Ticket::TICKET_SUBJECT:
+				case SearchFields_Ticket::TICKET_GROUP_ID:
+				case SearchFields_Ticket::TICKET_OWNER_ID:
+					$pass = true;
+					break;
+
+				// Virtuals
+				case SearchFields_Ticket::VIRTUAL_STATUS:
+					$pass = true;
+					break;
+					
+				case SearchFields_Ticket::VIRTUAL_CONTEXT_LINK:
+				case SearchFields_Ticket::VIRTUAL_WATCHERS:
+					$pass = true;
+					break;
+					
+				// Valid custom fields
+				default:
+					if('cf_' == substr($field_key,0,3))
+						$pass = $this->_canSubtotalCustomField($field_key);
+					break;
+			}
+			
+			if($pass)
+				$fields[$field_key] = $field_model;
+		}
+		
+		return $fields;
+	}
+	
+	function getSubtotalCounts($column) {
+		$counts = array();
+		$fields = $this->getFields();
+
+		if(!isset($fields[$column]))
+			return array();
+		
+		switch($column) {
+			case SearchFields_Ticket::ORG_NAME:
+			case SearchFields_Ticket::TICKET_FIRST_WROTE:
+			case SearchFields_Ticket::TICKET_LAST_WROTE:
+			case SearchFields_Ticket::TICKET_SUBJECT:
+				$counts = $this->_getSubtotalCountForStringColumn('DAO_Ticket', $column);
+				break;
+				
+			case SearchFields_Ticket::TICKET_SPAM_TRAINING:
+				$label_map = array(
+					'' => 'Not trained',
+					'S' => 'Spam',
+					'N' => 'Not spam',
+				);
+				$counts = $this->_getSubtotalCountForStringColumn('DAO_Ticket', $column, $label_map);
+				break;
+				
+			case SearchFields_Ticket::TICKET_OWNER_ID:
+				$label_map = array();
+				$workers = DAO_Worker::getAll();
+				foreach($workers as $k => $v)
+					$label_map[$k] = $v->getName();
+				$counts = $this->_getSubtotalCountForStringColumn('DAO_Ticket', $column, $label_map, 'in', 'worker_id[]');
+				break;
+				
+			case SearchFields_Ticket::TICKET_GROUP_ID:
+				$counts = $this->_getSubtotalCountForBuckets();
+				break;
+				
+			case SearchFields_Ticket::VIRTUAL_STATUS:
+				$counts = $this->_getSubtotalCountForStatus();
+				break;
+				
+			case SearchFields_Ticket::VIRTUAL_CONTEXT_LINK:
+				$counts = $this->_getSubtotalCountForContextLinkColumn('DAO_Ticket', CerberusContexts::CONTEXT_TICKET, $column);
+				break;
+				
+			case SearchFields_Ticket::VIRTUAL_WATCHERS:
+				$counts = $this->_getSubtotalCountForWatcherColumn('DAO_Ticket', $column);
+				break;
+				
+			default:
+				// Custom fields
+				if('cf_' == substr($column,0,3)) {
+					$counts = $this->_getSubtotalCountForCustomColumn('DAO_Ticket', $column, 't.id');
+				}
+				
+				break;
+		}
+		
+		return $counts;
+	}
+	
+	function isQuickSearchField($token) {
+		switch($token) {
+			case SearchFields_Ticket::TICKET_GROUP_ID:
+			case SearchFields_Ticket::VIRTUAL_STATUS:
+				return true;
+			break;
+		}
+		
+		return false;
+	}
+	
+	function quickSearch($token, $query, &$oper, &$value) {
+		switch($token) {
+			case SearchFields_Ticket::VIRTUAL_STATUS:
+				$statuses = array();
+				$oper = DevblocksSearchCriteria::OPER_IN;
+				
+				if(preg_match('#([\!\=]+)(.*)#', $query, $matches)) {
+					$oper_hint = trim($matches[1]);
+					$query = trim($matches[2]);
+					
+					switch($oper_hint) {
+						case '!':
+						case '!=':
+							$oper = DevblocksSearchCriteria::OPER_NIN;
+							break;
+					}
+				}
+				
+				$inputs = DevblocksPlatform::parseCsvString($query);
+				
+				if(is_array($inputs))
+				foreach($inputs as $v) {
+					switch(strtolower(substr($v,0,1))) {
+						case 'o':
+							$statuses['open'] = true;
+							break;
+						case 'w':
+							$statuses['waiting'] = true;
+							break;
+						case 'c':
+							$statuses['closed'] = true;
+							break;
+						case 'd':
+							$statuses['deleted'] = true;
+							break;
+					}
+				}
+				
+				if(empty($statuses)) {
+					$value = null;
+					
+				} else {
+					$value = array_keys($statuses);
+				}
+				
+				return true;
+				break;
+				
+			case SearchFields_Ticket::TICKET_GROUP_ID:
+				$search_ids = array();
+				$oper = DevblocksSearchCriteria::OPER_IN;
+				
+				if(preg_match('#([\!\=]+)(.*)#', $query, $matches)) {
+					$oper_hint = trim($matches[1]);
+					$query = trim($matches[2]);
+					
+					switch($oper_hint) {
+						case '!':
+						case '!=':
+							$oper = DevblocksSearchCriteria::OPER_NIN;
+							break;
+					}
+				}
+				
+				$groups = DAO_Group::getAll();
+				$inputs = DevblocksPlatform::parseCsvString($query);
+
+				if(is_array($inputs))
+				foreach($inputs as $input) {
+					foreach($groups as $group_id => $group) {
+						if(0 == strcasecmp($input, substr($group->name,0,strlen($input))))
+							$search_ids[$group_id] = true;
+					}
+				}
+				
+				if(!empty($search_ids)) {
+					$value = array_keys($search_ids);
+				} else {
+					$value = null;
+				}
+				
+				return true;
+				break;
+				
+		}
+		
+		return false;
+	}
 
 	function render() {
 		$this->_sanitize();
@@ -391,7 +617,7 @@ class View_Product extends C4_AbstractView {
 		//$tpl->assign('custom_fields', $custom_fields);
 
 		// [TODO] Set your template path
-		$tpl->display('devblocks:osellot.core::billing/tabs/products/view.tpl');
+		$tpl->display('devblocks:osellot.core::products/view.tpl');
 	}
 
 	function renderCriteria($field) {
@@ -410,16 +636,16 @@ class View_Product extends C4_AbstractView {
 			case SearchFields_Product::DESCRIPTION:
 
 			case 'placeholder_string':
-				$tpl->display('devblocks:osellot.core::internal/views/criteria/__string.tpl');
+				$tpl->display('devblocks:cerberusweb.core::internal/views/criteria/__string.tpl');
 				break;
 			case 'placeholder_number':
-				$tpl->display('devblocks:osellot.core::internal/views/criteria/__number.tpl');
+				$tpl->display('devblocks:cerberusweb.core::internal/views/criteria/__number.tpl');
 				break;
 			case 'placeholder_bool':
-				$tpl->display('devblocks:osellot.core::internal/views/criteria/__bool.tpl');
+				$tpl->display('devblocks:cerberusweb.core::internal/views/criteria/__bool.tpl');
 				break;
 			case 'placeholder_date':
-				$tpl->display('devblocks:osellot.core::internal/views/criteria/__date.tpl');
+				$tpl->display('devblocks:cerberusweb.core::internal/views/criteria/__date.tpl');
 				break;
 			/*
 			default:
@@ -571,7 +797,221 @@ class View_Product extends C4_AbstractView {
 	}			
 };
 
-class DAO_ProductSetting extends DevblocksORMHelper {
+class Context_Product extends Extension_DevblocksContext implements IDevblocksContextProfile, IDevblocksContextPeek {
+	function authorize($context_id, Model_Worker $worker) {
+		return TRUE;
+	}
+	
+	function getRandom() {
+		return DAO_Product::random();
+	}
+
+	function profileGetUrl($context_id) {
+		if(empty($context_id))
+			return '';
+		
+		$url_writer = DevblocksPlatform::getUrlService();
+		$url = $url_writer->writeNoProxy(sprintf("c=profiles&type=product&id=%d", $context_id, true));
+		return $url;
+	}
+	
+	function getMeta($context_id) {
+		$product = DAO_Product::get($context_id);
+		
+		$url = $this->profileGetUrl($context_id);
+		$friendly = DevblocksPlatform::strToPermalink($product->name);
+		
+		if(!empty($friendly))
+			$url .= '-' . $friendly;
+		
+		return array(
+			'id' => $product->id,
+			'name' => $product->name,
+			'permalink' => $url,
+		);
+	}
+	
+	function getContext($product, &$token_labels, &$token_values, $prefix=null) {
+		if(is_null($prefix))
+			$prefix = 'Product:';
+		
+		$translate = DevblocksPlatform::getTranslationService();
+		$fields = DAO_CustomField::getByContext(CerberusContexts::CONTEXT_KB_ARTICLE);
+		
+		// Polymorph
+		if(is_numeric($product)) {
+			$product = DAO_Product::get($product);
+		} elseif($product instanceof Model_Product) {
+			// It's what we want already.
+		} else {
+			$product = null;
+		}
+		/* @var $product Model_Product */
+		
+		// Token labels
+		$token_labels = array(
+			'content' => $prefix.$translate->_('kb_article.content'),
+			'id' => $prefix.$translate->_('common.id'),
+			'title' => $prefix.$translate->_('kb_article.title'),
+			'updated|date' => $prefix.$translate->_('kb_article.updated'),
+			'views' => $prefix.$translate->_('kb_article.views'),
+			'record_url' => $prefix.$translate->_('common.url.record'),
+		);
+		
+		if(is_array($fields))
+		foreach($fields as $cf_id => $field) {
+			$token_labels['custom_'.$cf_id] = $prefix.$field->name;
+		}
+
+		// Token values
+		$token_values = array();
+		
+		$token_values['_context'] = CerberusContexts::CONTEXT_KB_ARTICLE;
+		
+		// Token values
+		if(null != $product) {
+			$token_values['_label'] = $product->name;
+			$token_values['content'] = $product->getContent();
+			$token_values['id'] = $product->id;
+			$token_values['title'] = $product->title;
+			$token_values['updated'] = $product->updated;
+			$token_values['views'] = $product->views;
+			
+			// URL
+			$url_writer = DevblocksPlatform::getUrlService();
+			$token_values['record_url'] = $url_writer->writeNoProxy(sprintf("c=profiles&type=product&id=%d-%s",$product->id, DevblocksPlatform::strToPermalink($product->title)), true);
+		}
+		
+		return TRUE;
+	}
+
+	function lazyLoadContextValues($token, $dictionary) {
+		if(!isset($dictionary['id']))
+			return;
+		
+		$context = CerberusContexts::CONTEXT_KB_ARTICLE;
+		$context_id = $dictionary['id'];
+		
+		@$is_loaded = $dictionary['_loaded'];
+		$values = array();
+		
+		if(!$is_loaded) {
+			$labels = array();
+			CerberusContexts::getContext($context, $context_id, $labels, $values);
+		}
+		
+		switch($token) {
+			case 'watchers':
+				$watchers = array(
+					$token => CerberusContexts::getWatchers($context, $context_id, true),
+				);
+				$values = array_merge($values, $watchers);
+				break;
+				
+			default:
+				if(substr($token,0,7) == 'custom_') {
+					$fields = $this->_lazyLoadCustomFields($context, $context_id);
+					$values = array_merge($values, $fields);
+				}
+				break;
+		}
+		
+		return $values;
+	}
+	
+	function getChooserView($view_id=null) {
+		$active_worker = CerberusApplication::getActiveWorker();
+
+		if(empty($view_id))
+			$view_id = 'chooser_'.str_replace('.','_',$this->id).time().mt_rand(0,9999);
+		
+		// View
+		$defaults = new C4_AbstractViewModel();
+		$defaults->id = $view_id;
+		$defaults->is_ephemeral = true;
+		$defaults->class_name = $this->getViewClass();
+		$view = C4_AbstractViewLoader::getView($view_id, $defaults);
+//		$view->name = 'Headlines';
+//		$view->view_columns = array(
+//			SearchFields_CallEntry::IS_OUTGOING,
+//			SearchFields_CallEntry::PHONE,
+//			SearchFields_CallEntry::UPDATED_DATE,
+//		);
+		$view->addParams(array(
+			//SearchFields_Product::IS_CLOSED => new DevblocksSearchCriteria(SearchFields_Product::IS_CLOSED,'=',0),
+		), true);
+		$view->renderSortBy = SearchFields_Product::NAME;
+		$view->renderSortAsc = false;
+		$view->renderLimit = 10;
+		$view->renderFilters = false;
+		$view->renderTemplate = 'contextlinks_chooser';
+		
+		C4_AbstractViewLoader::setView($view_id, $view);
+		return $view;
+	}
+	
+	function getView($context=null, $context_id=null, $options=array()) {
+		$view_id = str_replace('.','_',$this->id);
+		
+		$defaults = new C4_AbstractViewModel();
+		$defaults->id = $view_id;
+		$defaults->class_name = $this->getViewClass();
+		$view = C4_AbstractViewLoader::getView($view_id, $defaults);
+		
+		$params_req = array();
+		
+		if(!empty($context) && !empty($context_id)) {
+			$params_req = array(
+				new DevblocksSearchCriteria(SearchFields_Product::CONTEXT_LINK,'=',$context),
+				new DevblocksSearchCriteria(SearchFields_Product::CONTEXT_LINK_ID,'=',$context_id),
+			);
+		}
+		
+		$view->addParamsRequired($params_req, true);
+		
+		$view->renderTemplate = 'context';
+		C4_AbstractViewLoader::setView($view_id, $view);
+		return $view;
+	}
+	
+	function renderPeekPopup($context_id=0, $view_id='') {
+		$tpl = DevblocksPlatform::getTemplateService();
+		
+		$product_attributes = array(
+			'included_sd' => array('label' => 'Included SD Minutes', 'type' => 'int', 'value' => '0'),
+			'included_hd' => array('label' => 'Included HD Minutes', 'type' => 'int', 'value' => '0'),
+			'rate_sd_minutes' => array('label' => 'Live SD Overage Rate', 'type' => 'float', 'value' => '0'),
+			'rate_hd_minutes' => array('label' => 'Live HD Overage Rate', 'type' => 'float', 'value' => '0'),
+			'rate_clip_sd_minutes' => array('label' => 'Clip SD Overage Rate (Minutes)', 'type' => 'float', 'value' => '0'),
+			'rate_clip_hd_minutes' => array('label' => 'Clip HD Overage Rate (Minutes)', 'type' => 'float', 'value' => '0'),
+			'rate_clip_sd_megabytes' => array('label' => 'Clip SD Overage Rate (Megabytes)', 'type' => 'float', 'value' => '0'),
+			'rate_clip_hd_megabytes' => array('label' => 'Clip HD Overage Rate (Megabytes)', 'type' => 'float', 'value' => '0'),
+			'rate_file_transfer' => array('label' => 'File Transfer', 'type' => 'float', 'value' => '0'),
+			'pooled' => array('label' => 'Pooled Plan', 'type' => 'bool', 'value' => '0'),
+			'billed_as_data' => array('label' => 'Billed As Data', 'type' => 'bool', 'value' => '0')
+		);
+		
+		if(!empty($context_id)) {
+			if(null !== ($product = DAO_Product::get($context_id))) {
+				$tpl->assign('product', $product);
+				
+				foreach($product_attributes as $key => $attribute) {
+					$attribute['value'] = $product->getAttribute($key, isset($attribute['value']) ? $attribute['value'] : null);
+					$product_attributes[$key] = $attribute;
+				}
+			}
+		}
+		
+		$tpl->assign('product_attributes', $product_attributes);
+		
+		if(!empty($view_id))
+			$tpl->assign('view_id', $view_id);
+		
+		$tpl->display('devblocks:osellot.core::products/ajax/peek.tpl');
+	}
+};
+
+class DAO_ProductAttribute extends C4_ORMHelper {
 	const PRODUCT_ID = 'product_id';
 	const NAME = 'name';
 	const VALUE = 'value';
@@ -581,7 +1021,7 @@ class DAO_ProductSetting extends DevblocksORMHelper {
 	 * @param mixed $sortBy
 	 * @param mixed $sortAsc
 	 * @param integer $limit
-	 * @return Model_ProductSetting[]
+	 * @return Model_ProductAttribute[]
 	 */
 	static function getWhere($where=null, $sortBy=null, $sortAsc=true, $limit=null) {
 		$db = DevblocksPlatform::getDatabaseService();
@@ -590,7 +1030,7 @@ class DAO_ProductSetting extends DevblocksORMHelper {
 		
 		// SQL
 		$sql = "SELECT product_id, name, value ".
-			"FROM product_setting ".
+			"FROM product_attribute ".
 			$where_sql.
 			$sort_sql.
 			$limit_sql
@@ -600,15 +1040,15 @@ class DAO_ProductSetting extends DevblocksORMHelper {
 	}
 	
 	/**
-	 * @param integer $product_id
-	 * @param string $name
-	 * @param string value
-	 * @return Model_ProductSetting[]
-	 */
-	static function setProductSetting($product_id, $name, $value) {
+	* @param integer $product_id
+	* @param string $name
+	* @param string value
+	* @return Model_ProductAttribute[]
+	*/
+	static function addProductAttribute($product_id, $name, $value) {
 		$db = DevblocksPlatform::getDatabaseService();
 		
-		$sql = sprintf("REPLACE INTO product_setting (%s, %s, %s) VALUES (%s, %s, %s)",
+		$sql = sprintf("INSERT INTO product_attribute (%s, %s, %s) VALUES (%s, %s, %s)",
 			self::PRODUCT_ID,
 			self::NAME,
 			self::VALUE,
@@ -617,28 +1057,50 @@ class DAO_ProductSetting extends DevblocksORMHelper {
 			$db->qstr($value)
 		);
 		$db->Execute($sql);
+		
+		return null;
+	}
+	
+	/**
+	 * @param integer $product_id
+	 * @param string $name
+	 * @param string value
+	 * @return Model_ProductAttribute[]
+	 */
+	static function setProductAttribute($product_id, $name, $value) {
+		$db = DevblocksPlatform::getDatabaseService();
+		
+		$sql = sprintf("UPDATE product_attribute SET %s = %s WHERE %s = %d AND %s = %s",
+			self::VALUE,
+			$db->qstr($value),
+			self::PRODUCT_ID,
+			$product_id,
+			self::NAME,
+			$db->qstr($name)
+		);
+		$db->Execute($sql);
 				
 		return null;
 	}
-
 	/**
 	* @param integer $product_id
 	* @param string $name
 	* @param string $default
-	* @return Model_ProductSetting[]
+	* @return Model_ProductAttribute[]
 	*/
-	static function getProductSetting($product_id, $name, $default) {
+	static function getProductAttribute($product_id, $name, $default) {
 		$db = DevblocksPlatform::getDatabaseService();
 		
-		$setting = self::getWhere(sprintf("%s = %d AND %s = %s",
+		$attribute = self::getWhere(sprintf("%s = %d AND %s = %s",
 			self::PRODUCT_ID,
 			$product_id,
 			self::NAME,
 			$db->qstr($name)
 		));
 		
-		if(!empty($setting)) {
-			return array_shift($setting);
+		if(!empty($attribute)) {
+			$attribute = array_shift($attribute);
+			return $attribute->value;
 		}
 		
 		return $default;
@@ -646,9 +1108,9 @@ class DAO_ProductSetting extends DevblocksORMHelper {
 	
 	/**
 	 * @param integer $product_id
-	 * @return Model_ProductSetting[]
+	 * @return Model_ProductAttribute[]
 	 */
-	static function getProductSettings($product_id) {
+	static function getProductAttributes($product_id) {
 		$objects = self::getWhere(sprintf("%s = %d",
 			self::PRODUCT_ID,
 			$product_id
@@ -662,13 +1124,13 @@ class DAO_ProductSetting extends DevblocksORMHelper {
 	
 	/**
 	 * @param resource $rs
-	 * @return Model_ProductSetting[]
+	 * @return Model_ProductAttribute[]
 	 */
 	static private function _getObjectsFromResult($rs) {
 		$objects = array();
 		
 		while($row = mysql_fetch_assoc($rs)) {
-			$object = new Model_ProductSetting();
+			$object = new Model_ProductAttribute();
 			$object->product_id = $row['product_id'];
 			$object->name = $row['name'];
 			$object->value = $row['value'];
@@ -683,7 +1145,7 @@ class DAO_ProductSetting extends DevblocksORMHelper {
 
 };
 
-class Model_ProductSetting {
+class Model_ProductAttribute {
 	public $product_id;
 	public $name;
 	public $value;

@@ -2,7 +2,7 @@
 $db = DevblocksPlatform::getDatabaseService();
 $tables = $db->metaTables();
 
-// `customer_profile` ========================
+// customer_profile ========================
 if(!isset($tables['customer_profile'])) {
 	$sql = sprintf("
 		CREATE TABLE IF NOT EXISTS customer_profile (
@@ -15,7 +15,7 @@ if(!isset($tables['customer_profile'])) {
 	$db->Execute($sql);
 }
 
-// `gateway_setting` ========================
+// gateway_setting ========================
 if(!isset($tables['gateway'])) {
 	$sql = sprintf("
 		CREATE TABLE IF NOT EXISTS gateway (
@@ -30,7 +30,7 @@ if(!isset($tables['gateway'])) {
 	$db->Execute($sql);
 }
 
-// `gateway_setting` ========================
+// gateway_setting ========================
 if(!isset($tables['gateway_setting'])) {
 	$sql = sprintf("
 		CREATE TABLE IF NOT EXISTS gateway_setting (
@@ -43,31 +43,33 @@ if(!isset($tables['gateway_setting'])) {
 }
 
 
-// `invoice` ========================
+// invoice ========================
 if(!isset($tables['invoice'])) {
 	$sql = sprintf("
 		CREATE TABLE IF NOT EXISTS invoice (
 			id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 			account_id INT UNSIGNED NOT NULL,
-			amount DECIMAL(25,6) UNSIGNED NOT NULL DEFAULT 0,
-			amount_paid DECIMAL(25,6) UNSIGNED NOT NULL DEFAULT 0,
+			amount DECIMAL(10,2) UNSIGNED NOT NULL DEFAULT 0,
+			amount_paid DECIMAL(10,2) UNSIGNED NOT NULL DEFAULT 0,
 			status TINYINT(2) UNSIGNED NOT NULL DEFAULT 0,
 			number VARCHAR(32) NOT NULL DEFAULT '',
-			number INT(11) NOT NULL 0,
+			created_date INT UNSIGNED NOT NULL DEFAULT 0,
+			updated_date INT UNSIGNED NOT NULL DEFAULT 0,
+			paid_date INT UNSIGNED NOT NULL DEFAULT 0,
 			PRIMARY KEY (id)
 		) ENGINE=%s;
 	", APP_DB_ENGINE);
 	$db->Execute($sql);
 }
 
-// `invoice_item` ========================
+// invoice_item ========================
 if(!isset($tables['invoice_item'])) {
 	$sql = sprintf("
 		CREATE TABLE IF NOT EXISTS invoice_item (
 			invoice_id INT UNSIGNED NOT NULL DEFAULT 0,
 			product_id INT UNSIGNED NOT NULL DEFAULT 0,
 			quantity INT UNSIGNED NOT NULL DEFAULT 0,
-			amount DECIMAL(25,6) UNSIGNED NOT NULL DEFAULT 0,
+			amount DECIMAL(10,2) UNSIGNED NOT NULL DEFAULT 0,
 			recurring INT UNSIGNED NOT NULL DEFAULT 0,
 			PRIMARY KEY (invoice_id, product_id),
 			INDEX invoice_id (invoice_id),
@@ -77,7 +79,7 @@ if(!isset($tables['invoice_item'])) {
 	$db->Execute($sql);
 }
 
-// `invoice_attribute` ========================
+// invoice_attribute ========================
 if(!isset($tables['invoice_attribute'])) {
 	$sql = sprintf("
 		CREATE TABLE IF NOT EXISTS invoice_attribute (
@@ -89,7 +91,7 @@ if(!isset($tables['invoice_attribute'])) {
 	$db->Execute($sql);
 }
 
-// `payment_profile` ========================
+// payment_profile ========================
 if(!isset($tables['payment_profile'])) {
 	$sql = sprintf("
 		CREATE TABLE IF NOT EXISTS payment_profile (
@@ -103,7 +105,7 @@ if(!isset($tables['payment_profile'])) {
 	$db->Execute($sql);
 }
 
-// `payment_profile_extra` ========================
+// payment_profile_extra ========================
 if(!isset($tables['payment_profile_extra'])) {
 	$sql = sprintf("
 		CREATE TABLE IF NOT EXISTS payment_profile_extra (
@@ -117,13 +119,13 @@ if(!isset($tables['payment_profile_extra'])) {
 	$db->Execute($sql);
 }
 
-// `product` ========================
+// product ========================
 if(!isset($tables['product'])) {
 	$sql = sprintf("
 		CREATE TABLE IF NOT EXISTS product (
 			id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-			price DECIMAL(25,6) UNSIGNED NOT NULL DEFAULT 0,
-			price_setup DECIMAL(25,6) UNSIGNED NOT NULL DEFAULT 0,
+			price DECIMAL(10,2) UNSIGNED NOT NULL DEFAULT 0,
+			price_setup DECIMAL(10,2) UNSIGNED NOT NULL DEFAULT 0,
 			recurring TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
 			taxable TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
 			sku VARCHAR(32) NOT NULL DEFAULT '',
@@ -135,27 +137,26 @@ if(!isset($tables['product'])) {
 	$db->Execute($sql);
 }
 
-// `product_setting` ========================
-if(!isset($tables['product_setting'])) {
+// product_attribute ========================
+if(!isset($tables['product_attribute'])) {
 	$sql = sprintf("
-		CREATE TABLE IF NOT EXISTS product_setting (
+		CREATE TABLE IF NOT EXISTS product_attribute (
 			product_id INT UNSIGNED NOT NULL DEFAULT 0,
 			name VARCHAR(255) NOT NULL DEFAULT '',
-			value TEXT NOT NULL,
-			PRIMARY KEY (id)
+			value TEXT NOT NULL
 		) ENGINE=%s;
 	", APP_DB_ENGINE);
 	$db->Execute($sql);
 }
 
-// `transaction` ========================
+// transaction ========================
 if(!isset($tables['transaction'])) {
 	$sql = sprintf("
 		CREATE TABLE IF NOT EXISTS transaction (
 			id INT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
 			to_address_id INT UNSIGNED NOT NULL DEFAULT 0,
 			from_address_id INT UNSIGNED NOT NULL DEFAULT 0,
-			amount DECIMAL(25,6) UNSIGNED NOT NULL DEFAULT 0,
+			amount DECIMAL(10,2) UNSIGNED NOT NULL DEFAULT 0,
 			plugin_id VARCHAR(255) NOT NULL DEFAULT '',
 			trans_id INT UNSIGNED NOT NULL DEFAULT 0 UNIQUE,
 			profile_id INT UNSIGNED NOT NULL DEFAULT 0,
@@ -166,7 +167,7 @@ if(!isset($tables['transaction'])) {
 	$db->Execute($sql);
 }
 
-// `contact_person` ========================
+// contact_person ========================
 list($columns, $indexes) = $db->metaTable('contact_person');
 
 if(!isset($columns['phone']))
@@ -187,7 +188,7 @@ if(!isset($columns['address_postal']))
 $gateway_plugins = DevblocksPlatform::getExtensions('gateway.osellot.core');
 foreach($gateway_plugins as $gateway) {
 	$sql = sprintf("INSERT INTO gateway_setting (extension_id,enabled,test_mode,username,password,extra) " . 
-					"VALUES ('%s', '0', '0', '', '', '')", $gateway->id); 
+					"VALUES ('%s', 0, 0, '', '', '')", $gateway->id);
 		
 	$db->Execute($sql);
 }

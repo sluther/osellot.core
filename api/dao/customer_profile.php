@@ -1,7 +1,7 @@
 <?php
-class DAO_CustomerProfile extends DevblocksORMHelper {
+class DAO_CustomerProfile extends C4_ORMHelper {
 	const ID = 'id';
-	const ADDRESS_ID = 'address_id';
+    const ADDRESS_ID = 'address_id';
 	const PROFILE_ID = 'profile_id';
 
 	static function create($fields) {

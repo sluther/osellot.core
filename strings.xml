@@ -36,17 +36,6 @@
 		<tu tuid='dao.contact_person.position'>
 			<tuv xml:lang="en_US"><seg>Position</seg></tuv>
 		</tu>
-
-		<!--  App Tabs -->
-		<tu tuid='products.tab.billing'>
-			<tuv xml:lang="en_US"><seg>Products</seg></tuv>
-		</tu>
-		<tu tuid='invoices.tab.billing'>
-			<tuv xml:lang="en_US"><seg>Invoices</seg></tuv>
-		</tu>
-		<tu tuid='customers.tab.billing'>
-			<tuv xml:lang="en_US"><seg>Customers</seg></tuv>
-		</tu>
 		
 		<!-- Setup Tabs -->
 		
@@ -71,9 +60,9 @@
 		<tu tuid='customer_profile.profile_id'>
 			<tuv xml:lang="en_US"><seg>Profile Id</seg></tuv>
 		</tu>
-
+		
 		<!-- Gateway -->
-
+		
 		<tu tuid='gateway.id'>
 			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
 		</tu>
@@ -86,9 +75,9 @@
 		<tu tuid='gateway.enabled'>
 			<tuv xml:lang="en_US"><seg>Enabled</seg></tuv>
 		</tu>
-
+		
 		<!-- Invoice -->
-
+		
 		<tu tuid='invoice.id'>
 			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
 		</tu>
@@ -108,7 +97,13 @@
 			<tuv xml:lang="en_US"><seg>Number</seg></tuv>
 		</tu>
 		<tu tuid='invoice.created_date'>
-			<tuv xml:lang="en_US"><seg>Order date</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Created date</seg></tuv>
+		</tu>
+		<tu tuid='invoice.updated_date'>
+			<tuv xml:lang="en_US"><seg>Updated date</seg></tuv>
+		</tu>
+		<tu tuid='invoice.paid_date'>
+			<tuv xml:lang="en_US"><seg>Paid date</seg></tuv>
 		</tu>
 		
 		<!-- InvoiceItem -->
@@ -122,9 +117,9 @@
 		<tu tuid='invoice_item.product_id'>
 			<tuv xml:lang="en_US"><seg>Product Id</seg></tuv>
 		</tu>
-
+		
 		<!-- PaymentProfile -->
-
+		
 		<tu tuid='payment_profile.id'>
 			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
 		</tu>
@@ -137,9 +132,9 @@
 		<tu tuid='payment_profile.plugin_id'>
 			<tuv xml:lang="en_US"><seg>Plugin Id</seg></tuv>
 		</tu>
-
+		
 		<!-- PaymentProfileExtra -->
-
+		
 		<tu tuid='payment_profile_extra.id'>
 			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
 		</tu>
@@ -152,9 +147,9 @@
 		<tu tuid='payment_profile_extra.value'>
 			<tuv xml:lang="en_US"><seg>Value</seg></tuv>
 		</tu>
-
+		
 		<!-- Product -->
-
+		
 		<tu tuid='product.id'>
 			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
 		</tu>
@@ -185,24 +180,27 @@
 		<tu tuid='product.details'>
 			<tuv xml:lang="en_US"><seg>Product Details</seg></tuv>
 		</tu>
-
-		<!-- ProductSetting -->
-
-		<tu tuid='product_setting.id'>
+		<tu tuid='product.attributes'>
+			<tuv xml:lang="en_US"><seg>Product Attributes</seg></tuv>
+		</tu>
+		
+		<!-- ProductAttribute -->
+		
+		<tu tuid='product_attribute.id'>
 			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
 		</tu>
-		<tu tuid='product_setting.product_id'>
+		<tu tuid='product_attribute.product_id'>
 			<tuv xml:lang="en_US"><seg>Product Id</seg></tuv>
 		</tu>
-		<tu tuid='product_setting.name'>
+		<tu tuid='product_attribute.name'>
 			<tuv xml:lang="en_US"><seg>Name</seg></tuv>
 		</tu>
-		<tu tuid='product_setting.value'>
+		<tu tuid='product_attribute.value'>
 			<tuv xml:lang="en_US"><seg>Value</seg></tuv>
 		</tu>
-
+		
 		<!-- Transaction -->
-
+		
 		<tu tuid='transaction.id'>
 			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
 		</tu>
@@ -226,66 +224,6 @@
 		</tu>
 		<tu tuid='transaction.status'>
 			<tuv xml:lang="en_US"><seg>Status</seg></tuv>
-		</tu>
-		
-		<!-- BoxItem -->
-
-		<tu tuid='box_item.id'>
-			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
-		</tu>
-		<tu tuid='box_item.item'>
-			<tuv xml:lang="en_US"><seg>Item</seg></tuv>
-		</tu>
-		<tu tuid='box_item.source'>
-			<tuv xml:lang="en_US"><seg>Source</seg></tuv>
-		</tu>
-		<tu tuid='box_item.origin'>
-			<tuv xml:lang="en_US"><seg>Origin</seg></tuv>
-		</tu>
-		<tu tuid='box_item.unit'>
-			<tuv xml:lang="en_US"><seg>Unit</seg></tuv>
-		</tu>
-		<tu tuid='box_item.weighed'>
-			<tuv xml:lang="en_US"><seg>Weighed</seg></tuv>
-		</tu>
-		<tu tuid='box_item.casecost'>
-			<tuv xml:lang="en_US"><seg>Case Cost</seg></tuv>
-		</tu>
-		<tu tuid='box_item.unitspercase'>
-			<tuv xml:lang="en_US"><seg>Units/Case</seg></tuv>
-		</tu>
-		<tu tuid='box_item.unitcost'>
-			<tuv xml:lang="en_US"><seg>Unitcost</seg></tuv>
-		</tu>
-		<tu tuid='box_item.casesneeded'>
-			<tuv xml:lang="en_US"><seg>Cases Needed</seg></tuv>
-		</tu>
-		<tu tuid='box_item.casesrounded'>
-			<tuv xml:lang="en_US"><seg>Cases Rounded</seg></tuv>
-		</tu>
-		<tu tuid='box_item.remainder'>
-			<tuv xml:lang="en_US"><seg>Remainder</seg></tuv>
-		</tu>
-		<tu tuid='box_item.guidance'>
-			<tuv xml:lang="en_US"><seg>Guidance</seg></tuv>
-		</tu>
-		<tu tuid='box_item.startdate'>
-			<tuv xml:lang="en_US"><seg>Date Start</seg></tuv>
-		</tu>
-		<tu tuid='box_item.enddate'>
-			<tuv xml:lang="en_US"><seg>Date End</seg></tuv>
-		</tu>
-		<tu tuid='box_item.totalcost'>
-			<tuv xml:lang="en_US"><seg>Totalcost</seg></tuv>
-		</tu>
-		
-		<!-- BoxItemSource -->
-
-		<tu tuid='box_item_source.id'>
-			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
-		</tu>
-		<tu tuid='box_item_source.name'>
-			<tuv xml:lang="en_US"><seg>Name</seg></tuv>
 		</tu>
 		
 	</body>

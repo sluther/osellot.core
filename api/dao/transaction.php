@@ -1,5 +1,5 @@
 <?php
-class DAO_Transaction extends DevblocksORMHelper {
+class DAO_Transaction extends C4_ORMHelper {
 	const ID = 'id';
 	const TO_ADDRESS_ID = 'to_address_id';
 	const FROM_ADDRESS_ID = 'from_address_id';

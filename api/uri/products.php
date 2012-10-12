@@ -1,82 +1,18 @@
 <?php
-class ProductsTab_Billing_Osellot extends Extension_Tab_Billing_Osellot {
-	const EXTENSION_ID = 'products.tab.billing.osellot';
-	const VIEW_ACTIVITY_PRODUCTS = 'products';
+
+class OsellotProductsPage extends CerberusPageExtension {
 	
-	public function showTab() {
-		$tpl = DevblocksPlatform::getTemplateService();
-		$visit = CerberusApplication::getVisit();
-		$translate = DevblocksPlatform::getTranslationService();
-		$active_worker = CerberusApplication::getActiveWorker();
-		
-		// Index
-		$defaults = new C4_AbstractViewModel();
-		$defaults->class_name = 'View_Product';
-		$defaults->id = self::VIEW_ACTIVITY_PRODUCTS;
-		$defaults->name = $translate->_('products.tab.billing');
-		$defaults->renderSortBy = SearchFields_Product::NAME;
-		$defaults->renderSortAsc = 0;
-		$defaults->renderLimit = 100;
-		
-		$view = C4_AbstractViewLoader::getView(self::VIEW_ACTIVITY_PRODUCTS, $defaults);
-		
-		C4_AbstractViewLoader::setView($view->id, $view);
-		
-		// 		$quick_search_type = $visit->get('crm.opps.quick_search_type');
-		// 		$tpl->assign('quick_search_type', $quick_search_type);
-		
-		$tpl->assign('view', $view);
-		
-// 		$fields = array(
-// 			DAO_Product::NAME => 'Product 1',
-// 			DAO_Product::DESCRIPTION => 'This is a description of a product',
-// 			DAO_Product::PRICE => '9.99',
-// 			DAO_Product::PRICE_SETUP => '0',
-// 			DAO_Product::RECURRING => '0',
-// 			DAO_Product::SKU => 'prod1',
-// 			DAO_Product::TAXABLE => 0,
-// 		);
-		
-// 		$product = DAO_Product::get(1);
-
-		
-// 		DAO_ProductSetting::setProductSetting(1, 'test_setting', 'test_value');
-		
-// 		$settings = DAO_ProductSetting::getProductSettings(1);
-// 		$product->settings = array();
-// 		foreach($settings as $setting) {
-// 			$product->settings[$setting->name] = $setting->value;
-// 		}
-// 		var_dump($product);
-
-		$tpl->display('devblocks:osellot.core::billing/tabs/products.tpl');
+	function isVisible() {
+		// The current session must be a logged-in worker to use this page.
+		if(null == ($worker = CerberusApplication::getActiveWorker()))
+			return false;
+		return true;
 	}
 	
-	public function showProductPanelAction() {
-		$tpl = DevblocksPlatform::getTemplateService();
-		
-		@$product_id = DevblocksPlatform::importGPC($_REQUEST['id'],'integer',0);
+	function saveProductPeekAction() {
 		@$view_id = DevblocksPlatform::importGPC($_REQUEST['view_id'],'string','');
 		
-		$tpl->assign('view_id', $view_id);
-		
-		// Handle context links ([TODO] as an optional array)
-		@$context = DevblocksPlatform::importGPC($_REQUEST['context'],'string','');
-		@$context_id = DevblocksPlatform::importGPC($_REQUEST['context_id'],'integer','');
-		$tpl->assign('context', $context);
-		$tpl->assign('context_id', $context_id);
-		
-		if(!empty($product_id) && null != ($product = DAO_Product::get($product_id))) {
-			$tpl->assign('product', $product);
-		}
-				
-		$tpl->display('devblocks:osellot.core::billing/tabs/products/panel.tpl');
-	}
-	
-	function saveProductPanelAction() {
-		@$view_id = DevblocksPlatform::importGPC($_REQUEST['view_id'],'string','');
-	
-		@$product_id = DevblocksPlatform::importGPC($_REQUEST['product_id'],'integer',0);
+		@$id = DevblocksPlatform::importGPC($_REQUEST['id'],'integer',0);
 		@$price = DevblocksPlatform::importGPC($_REQUEST['price'], 'integer', 0);
 		@$price_setup = DevblocksPlatform::importGPC($_REQUEST['price_setup'], 'integer', 0);
 		@$recurring = DevblocksPlatform::importGPC($_REQUEST['recurring'], 'integer', 0);
@@ -86,29 +22,25 @@ class ProductsTab_Billing_Osellot extends Extension_Tab_Billing_Osellot {
 		@$description = DevblocksPlatform::importGPC($_REQUEST['description'], 'string', '');
 		@$do_delete = DevblocksPlatform::importGPC($_REQUEST['do_delete'],'integer',0);
 		
+		// Product Attributes
+		$product_attributes = DevblocksPlatform::importGPC($_REQUEST['product_attributes'], 'array', array());
+		
 		// Dates
 		$created_date = time();
 				
 		// Worker
 		$active_worker = CerberusApplication::getActiveWorker();
 	
+		// Name must be set
+		if(empty($name))
+			return;
+		
 		// Save
-		if($do_delete) {
-			if(null != ($product = DAO_Product::get($product_id))) {
-				DAO_Product::delete($product_id);
-				$product_id = null;
+		if(!empty($id) && !empty($do_delete)) {
+			if(null != ($product = DAO_Product::get($id))) {
+				DAO_Product::delete($id);
 			}
-				
-		} elseif(empty($product_id)) {
-			// Check privs
-			
-			// SKU is unique
-			if(null !== ($product = DAO_Product::getBySKU($sku)))
-				return;
-			// Name must be set
-			if(empty($name))
-				return;
-			
+		} else {
 			$fields = array(
 				DAO_Product::PRICE => $price,
 				DAO_Product::PRICE_SETUP => $price_setup,
@@ -117,42 +49,45 @@ class ProductsTab_Billing_Osellot extends Extension_Tab_Billing_Osellot {
 				DAO_Product::NAME => $name,
 				DAO_Product::DESCRIPTION => $description
 			);
-			$product_id = DAO_Product::create($fields);			
-		} else {
-			if(empty($product_id))
-				return;
 			
-			// SKU is unique
-			if(null !== ($product = DAO_Product::getBySKU($sku))) {
-				if($product->id != $product_id) {
+			if(!empty($id)) {
+				// SKU is unique
+				if(null !== ($product = DAO_Product::getBySKU($sku))) {
+					if($product->id != $id) {
+						return;
+					}
+				}
+				
+				// Valid product?
+				if(null !== ($product = DAO_Product::get($id))) {
+					DAO_Product::update($id, $fields);
+					foreach($product_attributes as $key => $value) {
+						$product->setAttribute($key, $value);
+					}
+				}
+			} else {
+				// SKU is unique
+				if(null !== ($product = DAO_Product::getBySKU($sku))) {
 					return;
 				}
-			}
 				
-			// Name must be set
-			if(empty($name))
-				return;
-
-			$fields = array(
-				DAO_Product::PRICE => $price,
-				DAO_Product::PRICE_SETUP => $price_setup,
-				DAO_Product::RECURRING => $recurring,
-				DAO_Product::SKU => $sku,
-				DAO_Product::NAME => $name,
-				DAO_Product::DESCRIPTION => $description
-			);
-
-			// Valid product?
-			if(null !== ($product = DAO_Product::get($product_id))) {
-				DAO_Product::update($product_id, $fields);
+				// Name must be set
+				if(empty($name))
+					return;
+				
+				//$fields[DAO_Product::]
+				$id = DAO_Product::create($fields);
+				if(null !== ($product = DAO_Product::get($id)))
+					foreach($product_attributes as $key => $value) {
+						$product->setAttribute($key, $value);
+					}
+				
+				// View marquee
+				if(!empty($id) && !empty($view_id)) {
+					C4_AbstractView::setMarqueeContextCreated($view_id, 'osellot.contexts.product', $id);
+				}
 			}
 		}
-	
-		// Reload view (if linked)
-		if(!empty($view_id) && null != ($view = C4_AbstractViewLoader::getView($view_id))) {
-			$view->render();
-		}
-	
 		exit;
 	}
-}
+};

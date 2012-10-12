@@ -1,5 +1,5 @@
 <?php
-class DAO_Gateway extends DevblocksORMHelper {
+class DAO_Gateway extends C4_ORMHelper {
 	const ID = 'id';
 	const EXTENSION_ID = 'extension_id';
 	const NAME = 'name';
@@ -517,7 +517,7 @@ class View_Gateway extends C4_AbstractView {
 	}			
 };
 
-class DAO_GatewaySetting extends DevblocksORMHelper {
+class DAO_GatewaySetting extends C4_ORMHelper {
 	const PRODUCT_ID = 'gateway_id';
 	const NAME = 'name';
 	const VALUE = 'value';

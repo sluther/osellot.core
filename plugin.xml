@@ -4,13 +4,11 @@
 	<name>[Osellot] Core</name>
 	<description>This plugin adds a billing system to your Cerberus Installation</description>
 	<author>WebGroup Media, LLC.</author>
-	<revision>0</revision>
+	<version>0.9.0</version>
 	<link>http://wiki.osellot.com/wiki/1.x</link>
 	
-    <!-- Plugin Dependencies -->
-	
 	<!-- Requirements -->
-
+	
 	<requires>
 		<app_version min="6.1" max="6.1.99" />
 	</requires>
@@ -20,18 +18,17 @@
 	<dependencies>
 		<require plugin_id="cerberusweb.core" version="6.1.0" />
 	</dependencies>
-	
+    
     <patches>
 		<patch version="0.9.0" revision="1" file="patches/0.9.0.php" />
 	</patches>
     
    	<!-- Controller Routing -->
-
+	
 	<uri_routing>
 		<uri name="billing" controller="core.controller.page" />
 	</uri_routing>
 	
-    
     <!-- Exported Classes -->
     
     <class_loader>
@@ -91,6 +88,18 @@
         <file path="api/uri/portal/ajax.php">
 			<class name="UmOsellotAjaxController" />
 		</file>
+		<file path="api/dao/station.php">
+			<class name="DAO_Station" />
+			<class name="Model_Station" />
+			<class name="SearchFields_Station" />
+			<class name="View_Station" />
+		</file>
+		<file path="api/dao/transmitter.php">
+			<class name="DAO_Transmitter" />
+			<class name="Model_Transmitter" />
+			<class name="SearchFields_Transmitter" />
+			<class name="View_Transmitter" />
+		</file>
     </class_loader>
     
     
@@ -114,6 +123,69 @@
 	</templates>
  
 	<extensions>
+		
+		<!-- Contexts -->
+		<extension point="devblocks.context">
+			<id>osellot.contexts.product</id>
+			<name>Product</name>
+			<class>
+				<file>api/dao/product.php</file>
+				<name>Context_Product</name>
+			</class>
+			<params>
+				<param key="alias" value="product" />
+				<param key="dao_class" value="DAO_Product" />
+				<param key="view_class" value="View_Product" />
+				<param key="options">
+					<value>
+						<data key="create" />
+						<data key="find" />
+						<data key="snippets" />
+						<data key="va_variable" />
+						<data key="workspace" />
+					</value>
+				</param>
+			</params>
+		</extension>
+		
+		<extension point="devblocks.context">
+			<id>osellot.contexts.invoice</id>
+			<name>Invoice</name>
+			<class>
+				<file>api/dao/invoice.php</file>
+				<name>Context_Invoice</name>
+			</class>
+			<params>
+				<param key="alias" value="invoice" />
+				<param key="dao_class" value="DAO_Invoice" />
+				<param key="view_class" value="View_Invoice" />
+				<param key="options">
+					<value>
+						<data key="create" />
+						<data key="find" />
+						<data key="snippets" />
+						<data key="va_variable" />
+						<data key="workspace" />
+					</value>
+				</param>
+			</params>
+		</extension>
+		
+		<!-- Profile Page Sections -->
+		
+		<extension point="cerberusweb.ui.page.section">
+			<id>osellot.page.profiles.product</id>
+			<name>Product Section</name>
+			<class>
+				<file>api/profiles/product.php</file>
+				<name>PageSection_ProfilesProduct</name>
+			</class>
+			<params>
+				<param key="page_id" value="core.page.profiles" />
+				<param key="uri" value="product" />
+			</params>
+		</extension>
+		
 		<!-- Controllers -->
 		<extension point="portal.controller.osellot">
 			<id>login.portal.controller.osellot</id>
@@ -195,61 +267,47 @@
 				<param key="switcher_label" value="Log in with email and password" />
 			</params>
 		</extension>
-		
-		<!-- Pages -->
-		<extension point="cerberusweb.page">
-			<id>page.osellot.core</id>
-			<name>Osellot Main Page</name>
-			<class>
-				<file>api/App.php</file>
-				<name>OsellotPage</name>
-			</class>
-			<params>
-				<param key="uri" value="billing" />
-    			<param key="menutitle" value="title.osellot.core" />
-			</params>
-		</extension>
 
-		<!-- App Tabs -->
-        
-        <extension point="tab.billing.osellot">
-        	<id>invoices.tab.billing.osellot</id>
-			<name>Invoices Tab</name>
+		<!-- App Pages -->
+		
+		<extension point="cerberusweb.page">
+			<id>invoices.page</id>
+			<name>Invoices Page</name>
 			<class>
 				<file>api/uri/invoices.php</file>
-				<name>InvoicesTab_Billing_Osellot</name>
+				<name>OsellotInvoicesPage</name>
 			</class>
 			<params>
-				<param key="title" value="invoices.tab.billing" />
 				<param key="uri" value="invoices" />
+				<param key="menutitle" value="" />
 			</params>
-        </extension>
-
-        <extension point="tab.billing.osellot">
-        	<id>customers.tab.billing.osellot</id>
-			<name>Customers Tab</name>
+		</extension>
+        
+		<extension point="cerberusweb.page">
+			<id>customers.page</id>
+			<name>Customers Page</name>
 			<class>
 				<file>api/uri/customers.php</file>
-				<name>CustomersTab_Billing_Osellot</name>
+				<name>OsellotCustomersPage</name>
 			</class>
 			<params>
-				<param key="title" value="customers.tab.billing" />
 				<param key="uri" value="customers" />
+				<param key="menutitle" value="" />
 			</params>
-        </extension>
-        
-        <extension point="tab.billing.osellot">
-        	<id>products.tab.billing.osellot</id>
-			<name>Products Tab</name>
+		</extension>
+		
+		<extension point="cerberusweb.page">
+			<id>products.page</id>
+			<name>Products Page</name>
 			<class>
 				<file>api/uri/products.php</file>
-				<name>ProductsTab_Billing_Osellot</name>
+				<name>OsellotProductsPage</name>
 			</class>
 			<params>
-				<param key="title" value="products.tab.billing" />
 				<param key="uri" value="products" />
+				<param key="menutitle" value="" />
 			</params>
-        </extension>
+		</extension>
         
         <!-- Gateways -->
         

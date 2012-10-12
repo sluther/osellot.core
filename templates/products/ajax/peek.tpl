@@ -1,9 +1,7 @@
 <form action="{devblocks_url}{/devblocks_url}" method="POST" id="formProductPeek" name="formProductPeek">
-<input type="hidden" name="c" value="billing">
-<input type="hidden" name="a" value="handleTabAction">
-<input type="hidden" name="tab" value="products.tab.billing.osellot">
-<input type="hidden" name="action" value="saveProductPanel">
-<input type="hidden" name="product_id" value="{$product->id}">
+<input type="hidden" name="c" value="products">
+<input type="hidden" name="a" value="saveProductPeek">
+<input type="hidden" name="id" value="{$product->id}">
 <input type="hidden" name="view_id" value="{$view_id}">
 <input type="hidden" name="do_delete" value="0">
 
@@ -47,10 +45,17 @@
 		<tr>
 			<td width="0%" nowrap="nowrap" align="right" valign="top">{$translate->_('product.description')|capitalize}: </td>
 			<td width="100%">
-				<textarea name="description" id="productdescription">{$product->description}</textarea>
+				<textarea name="description" id="productdescription" cols="45" rows="10">{$product->description}</textarea>
 			</td>
 		</tr>
 	</table>
+</fieldset>
+
+{if !empty($product_attributes)}
+<fieldset>
+    <legend>{'product.attributes'|devblocks_translate}</legend>
+    {include file="devblocks:osellot.core::products/attributes.tpl"}
+{/if}
 </fieldset>
 {if !empty($custom_fields)}
 <fieldset>
@@ -66,7 +71,7 @@
 
 
 <button type="button" onclick="if($('#formProductPeek').validate().form()) { genericAjaxPopupPostCloseReloadView('peek','formProductPeek','{$view_id}',false,'product_save'); } "><span class="cerb-sprite2 sprite-tick-circle-frame"></span> {$translate->_('common.save_changes')}</button>
-{if !empty($product)}<button type="button" onclick="if(confirm('Are you sure you want to permanently delete this product?')) { this.form.do_delete.value='1';genericAjaxPopupClose('peek');genericAjaxPost('formProductPeek', 'view{$view_id}'); } "><span class="cerb-sprite2 sprite-cross-circle-frame"></span> {$translate->_('common.delete')|capitalize}</button>{/if}
+{if !empty($product)}<button type="button" onclick="if(confirm('Are you sure you want to permanently delete this product?')) { $('#formProductPeek input[name=do_delete]').val('1'); genericAjaxPopupPostCloseReloadView(null,'formProductPeek','{$view_id}',false,'product_delete'); } "><span class="cerb-sprite2 sprite-cross-circle-frame"></span> {$translate->_('common.delete')|capitalize}</button>{/if}
 <br>
 
 {if !empty($product)}

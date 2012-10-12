@@ -1,5 +1,5 @@
 <?php
-class DAO_PaymentProfile extends DevblocksORMHelper {
+class DAO_PaymentProfile extends C4_ORMHelper {
 	const ID = 'id';
 	const ADDRESS_ID = 'address_id';
 	const PROFILE_ID = 'profile_id';
