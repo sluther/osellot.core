@@ -88,18 +88,6 @@
         <file path="api/uri/portal/ajax.php">
 			<class name="UmOsellotAjaxController" />
 		</file>
-		<file path="api/dao/station.php">
-			<class name="DAO_Station" />
-			<class name="Model_Station" />
-			<class name="SearchFields_Station" />
-			<class name="View_Station" />
-		</file>
-		<file path="api/dao/transmitter.php">
-			<class name="DAO_Transmitter" />
-			<class name="Model_Transmitter" />
-			<class name="SearchFields_Transmitter" />
-			<class name="View_Transmitter" />
-		</file>
     </class_loader>
     
     

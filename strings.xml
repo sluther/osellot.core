@@ -11,32 +11,6 @@
 			<tuv xml:lang="en_US"><seg>Billing</seg></tuv>
 		</tu>
 		
-		<!-- Contact Person -->
-		<tu tuid='dao.contact_person.phone'>
-			<tuv xml:lang="en_US"><seg>Phone Number</seg></tuv>
-		</tu>
-		<tu tuid='dao.contact_person.name'>
-			<tuv xml:lang="en_US"><seg>Name</seg></tuv>
-		</tu>
-		<tu tuid='dao.contact_person.address_line1'>
-			<tuv xml:lang="en_US"><seg>Line 1</seg></tuv>
-		</tu>
-		<tu tuid='dao.contact_person.address_line2'>
-			<tuv xml:lang="en_US"><seg>Line2</seg></tuv>
-		</tu>
-		<tu tuid='dao.contact_person.address_city'>
-			<tuv xml:lang="en_US"><seg>City</seg></tuv>
-		</tu>
-		<tu tuid='dao.contact_person.address_province'>
-			<tuv xml:lang="en_US"><seg>Province</seg></tuv>
-		</tu>
-		<tu tuid='dao.contact_person.address_postal'>
-			<tuv xml:lang="en_US"><seg>Postal Code</seg></tuv>
-		</tu>
-		<tu tuid='dao.contact_person.position'>
-			<tuv xml:lang="en_US"><seg>Position</seg></tuv>
-		</tu>
-		
 		<!-- Setup Tabs -->
 		
 		<tu tuid='gateway.setup.osellot'>
@@ -70,7 +44,7 @@
 			<tuv xml:lang="en_US"><seg>Name</seg></tuv>
 		</tu>
 		<tu tuid='gateway.extension_id'>
-			<tuv xml:lang="en_US"><seg>Extension Id</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Extension ID</seg></tuv>
 		</tu>
 		<tu tuid='gateway.enabled'>
 			<tuv xml:lang="en_US"><seg>Enabled</seg></tuv>
@@ -79,22 +53,22 @@
 		<!-- Invoice -->
 		
 		<tu tuid='invoice.id'>
-			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Invoice ID</seg></tuv>
 		</tu>
 		<tu tuid='invoice.account_id'>
-			<tuv xml:lang="en_US"><seg>Account Id</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Account ID</seg></tuv>
 		</tu>
 		<tu tuid='invoice.amount'>
-			<tuv xml:lang="en_US"><seg>Amount</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Invoice Amount</seg></tuv>
 		</tu>
 		<tu tuid='invoice.amount_paid'>
-			<tuv xml:lang="en_US"><seg>Amount Paid</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Invoice Amount Paid</seg></tuv>
 		</tu>
 		<tu tuid='invoice.status'>
-			<tuv xml:lang="en_US"><seg>Status</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Invoice Status</seg></tuv>
 		</tu>
 		<tu tuid='invoice.number'>
-			<tuv xml:lang="en_US"><seg>Number</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Invoice Number</seg></tuv>
 		</tu>
 		<tu tuid='invoice.created_date'>
 			<tuv xml:lang="en_US"><seg>Created date</seg></tuv>
@@ -151,13 +125,13 @@
 		<!-- Product -->
 		
 		<tu tuid='product.id'>
-			<tuv xml:lang="en_US"><seg>Id</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Product Id</seg></tuv>
 		</tu>
 		<tu tuid='product.price'>
-			<tuv xml:lang="en_US"><seg>Price</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Product Price</seg></tuv>
 		</tu>
 		<tu tuid='product.price_setup'>
-			<tuv xml:lang="en_US"><seg>Setup Price</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Product Setup Price</seg></tuv>
 		</tu>
 		<tu tuid='product.recurring'>
 			<tuv xml:lang="en_US"><seg>Recurring</seg></tuv>
@@ -166,13 +140,13 @@
 			<tuv xml:lang="en_US"><seg>Taxable</seg></tuv>
 		</tu>
 		<tu tuid='product.sku'>
-			<tuv xml:lang="en_US"><seg>Sku</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Product SKU</seg></tuv>
 		</tu>
 		<tu tuid='product.name'>
-			<tuv xml:lang="en_US"><seg>Name</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Product Name</seg></tuv>
 		</tu>
 		<tu tuid='product.description'>
-			<tuv xml:lang="en_US"><seg>Description</seg></tuv>
+			<tuv xml:lang="en_US"><seg>Product Description</seg></tuv>
 		</tu>
 		<tu tuid='billing.products.add'>
 			<tuv xml:lang="en_US"><seg>Add Product</seg></tuv>
