@@ -980,12 +980,9 @@ class Context_Product extends Extension_DevblocksContext implements IDevblocksCo
 		$product_attributes = array(
 			'included_sd' => array('label' => 'Included SD Minutes', 'type' => 'int', 'value' => '0'),
 			'included_hd' => array('label' => 'Included HD Minutes', 'type' => 'int', 'value' => '0'),
-			'rate_sd_minutes' => array('label' => 'Live SD Overage Rate', 'type' => 'float', 'value' => '0'),
-			'rate_hd_minutes' => array('label' => 'Live HD Overage Rate', 'type' => 'float', 'value' => '0'),
-			'rate_clip_sd_minutes' => array('label' => 'Clip SD Overage Rate (Minutes)', 'type' => 'float', 'value' => '0'),
-			'rate_clip_hd_minutes' => array('label' => 'Clip HD Overage Rate (Minutes)', 'type' => 'float', 'value' => '0'),
-			'rate_clip_sd_megabytes' => array('label' => 'Clip SD Overage Rate (Megabytes)', 'type' => 'float', 'value' => '0'),
-			'rate_clip_hd_megabytes' => array('label' => 'Clip HD Overage Rate (Megabytes)', 'type' => 'float', 'value' => '0'),
+			'rate_sd_minutes' => array('label' => 'SD Overage Rate', 'type' => 'float', 'value' => '0'),
+			'rate_hd_minutes' => array('label' => 'HD Overage Rate', 'type' => 'float', 'value' => '0'),
+			'rate_clip_megabytes' => array('label' => 'Clip Overage Rate (Megabytes)', 'type' => 'float', 'value' => '0'),
 			'rate_file_transfer' => array('label' => 'File Transfer', 'type' => 'float', 'value' => '0'),
 			'pooled' => array('label' => 'Pooled Plan', 'type' => 'bool', 'value' => '0'),
 			'billed_as_data' => array('label' => 'Billed As Data', 'type' => 'bool', 'value' => '0')
